@@ -14,8 +14,8 @@ Turborepo monorepo with three apps:
 
 ```
 apps/
-├── web/       → Customer Portal + Bakery Portal (Next.js 15)
-├── admin/     → Admin Dashboard (Next.js 15)
+├── web/       → Customer Portal + Bakery Portal (Next.js 16)
+├── admin/     → Admin Dashboard (Next.js 16)
 └── api/       → Backend API (Express.js)
 packages/
 └── shared/    → Shared types, schemas, utilities
@@ -25,7 +25,7 @@ packages/
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | Next.js 15 + TypeScript + Tailwind CSS + shadcn/ui |
+| Frontend | Next.js 16 + TypeScript + Tailwind CSS + shadcn/ui |
 | Backend | Express.js + TypeScript |
 | Database | PostgreSQL (Supabase) |
 | ORM | Drizzle ORM |

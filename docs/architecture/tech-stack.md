@@ -5,7 +5,7 @@
 
 ## Frontend
 
-- Framework: Next.js 15
+- Framework: Next.js 16 (LTS)
 - Language: TypeScript
 - Styling: Tailwind CSS
 - UI Component Library: shadcn/ui

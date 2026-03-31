@@ -6,8 +6,8 @@ B2B birthday cake delivery platform for the Turkish market. Automates employee b
 
 ```
 apps/
-├── web/              # Next.js 15 — Customer portal + Bakery portal
-├── admin/            # Next.js 15 — Admin dashboard
+├── web/              # Next.js 16 — Customer portal + Bakery portal
+├── admin/            # Next.js 16 — Admin dashboard
 └── api/              # Express.js — Backend API
 packages/
 └── shared/           # Shared types, utils, Zod schemas
@@ -23,7 +23,7 @@ docs/
 
 See `docs/architecture/tech-stack.md` for full details.
 
-- **Frontend:** Next.js 15 + TypeScript + Tailwind + shadcn/ui
+- **Frontend:** Next.js 16 + TypeScript + Tailwind + shadcn/ui
 - **Backend:** Express.js + TypeScript
 - **Database:** PostgreSQL via Supabase
 - **ORM:** Drizzle
