@@ -1,7 +1,7 @@
 ---
 name: product-owner
 description: Product vision, user stories, prioritization, and roadmap management
-model: sonnet
+model: haiku
 tools:
   - Read
   - Write

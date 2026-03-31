@@ -1,7 +1,7 @@
 ---
 name: dba
 description: Database schema design, migrations, index optimization, and query performance
-model: sonnet
+model: haiku
 tools:
   - Read
   - Write

@@ -1,7 +1,7 @@
 ---
 name: technical-writer
 description: API documentation, user guides, README files, and technical documents
-model: sonnet
+model: haiku
 tools:
   - Read
   - Write

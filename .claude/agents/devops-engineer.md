@@ -1,7 +1,7 @@
 ---
 name: devops-engineer
 description: CI/CD pipelines, Docker, infrastructure management, monitoring, and deployment automation
-model: sonnet
+model: haiku
 tools:
   - Read
   - Write

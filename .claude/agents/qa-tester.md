@@ -1,7 +1,7 @@
 ---
 name: qa-tester
 description: Test planning, test scenario writing, automation, bug reporting, and quality assurance
-model: sonnet
+model: haiku
 tools:
   - Read
   - Write

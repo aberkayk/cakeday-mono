@@ -1,7 +1,7 @@
 ---
 name: business-analyst
 description: Business analysis, requirements documentation, process modeling, and data flow definition
-model: sonnet
+model: haiku
 tools:
   - Read
   - Write
