@@ -49,6 +49,16 @@ export class AuthController {
     }
   }
 
+  async verifyEmail(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { token } = req.body as { token: string };
+      const result = await authService.verifyEmail(token);
+      sendSuccess(res, result);
+    } catch (err) {
+      next(err);
+    }
+  }
+
   async getMe(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const userId = req.user!.id;

@@ -85,13 +85,23 @@ export class CompanyService {
         .where(eq(companies.id, companyId));
     }
 
+    // Convert numeric fields to strings for Drizzle numeric columns
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { cancellation_fee_pct, ...remainingSettingsFields } = settingsFields;
+    const settingsDbFields: typeof remainingSettingsFields & { cancellation_fee_pct?: string } = {
+      ...remainingSettingsFields,
+      ...(cancellation_fee_pct !== undefined && {
+        cancellation_fee_pct: String(cancellation_fee_pct),
+      }),
+    };
+
     // Upsert settings row
     const [settings] = await db
       .insert(companySettings)
-      .values({ company_id: companyId, ...settingsFields })
+      .values({ company_id: companyId, ...settingsDbFields })
       .onConflictDoUpdate({
         target: companySettings.company_id,
-        set: { ...settingsFields, updated_at: new Date() },
+        set: { ...settingsDbFields, updated_at: new Date() },
       })
       .returning();
 

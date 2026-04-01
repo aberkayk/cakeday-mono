@@ -89,16 +89,16 @@ export const adminApi = {
 
   // Catalogue
   catalogue: () =>
-    api.get<ApiListResponse<CakeType>>("/catalogue"),
+    api.get<ApiListResponse<CakeType>>("/cakes"),
 
   createCakeType: (data: unknown) =>
-    api.post<ApiResponse<CakeType>>("/catalogue", data),
+    api.post<ApiResponse<CakeType>>("/admin/catalogue/cakes", data),
 
   updateCakeType: (id: string, data: unknown) =>
-    api.patch<ApiResponse<CakeType>>(`/catalogue/${id}`, data),
+    api.patch<ApiResponse<CakeType>>(`/admin/catalogue/cakes/${id}`, data),
 
   deleteCakeType: (id: string) =>
-    api.delete<ApiResponse<{ message: string }>>(`/catalogue/${id}`),
+    api.delete<ApiResponse<{ message: string }>>(`/admin/catalogue/cakes/${id}`),
 
   // Pricing requests
   pricingRequests: (params?: Record<string, string | number | boolean | undefined>) =>

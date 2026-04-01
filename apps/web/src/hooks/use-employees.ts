@@ -28,7 +28,7 @@ export function useEmployees(options: UseEmployeesOptions = {}) {
         const res = await employeesApi.list({
           page: opts?.page ?? page,
           pageSize,
-          search: opts?.search ?? search || undefined,
+          search: (opts?.search ?? search) || undefined,
           status: opts?.status ?? statusFilter,
           department: opts?.department ?? departmentFilter,
         });

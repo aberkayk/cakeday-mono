@@ -9,7 +9,7 @@ export function validate(schema: ZodSchema, target: ValidateTarget = 'body') {
     try {
       const parsed = schema.parse(req[target]);
       // Replace the target with the parsed (coerced/defaulted) value
-      (req as Record<string, unknown>)[target] = parsed;
+      (req as unknown as Record<string, unknown>)[target] = parsed;
       next();
     } catch (err) {
       if (err instanceof ZodError) {

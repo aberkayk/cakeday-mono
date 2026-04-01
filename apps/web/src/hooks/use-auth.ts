@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/utils/supabase/client";
 import { useAuthStore } from "@/stores/auth-store";
 import { authApi } from "@/lib/api";
 
@@ -10,6 +10,10 @@ export function useAuth() {
   const router = useRouter();
   const { user, session, isLoading, userRole, companyId, bakeryId, setSession, setLoading, clearAuth } =
     useAuthStore();
+
+  // Create a stable supabase client reference for this hook instance
+  const supabaseRef = useRef(createClient());
+  const supabase = supabaseRef.current;
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -25,7 +29,7 @@ export function useAuth() {
     });
 
     return () => subscription.unsubscribe();
-  }, [setSession, setLoading]);
+  }, [setSession, setLoading, supabase]);
 
   const login = useCallback(
     async (email: string, password: string) => {
@@ -41,7 +45,7 @@ export function useAuth() {
         router.push("/dashboard");
       }
     },
-    [setSession, router]
+    [setSession, router, supabase]
   );
 
   const register = useCallback(
@@ -61,13 +65,13 @@ export function useAuth() {
         email: data.email,
         password: data.password,
         company_name: data.companyName,
-        contact_name: data.contactName,
+        primary_contact_name: data.contactName,
         phone: data.phone,
         vkn: data.vkn,
         sector: data.sector,
         company_size_range: data.companySize,
         billing_address: data.billingAddress,
-        district: data.district,
+        billing_district: data.district,
       });
       return res;
     },
@@ -78,14 +82,14 @@ export function useAuth() {
     await supabase.auth.signOut();
     clearAuth();
     router.push("/login");
-  }, [clearAuth, router]);
+  }, [clearAuth, router, supabase]);
 
   const forgotPassword = useCallback(async (email: string) => {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset-password`,
     });
     if (error) throw new Error(error.message);
-  }, []);
+  }, [supabase]);
 
   return {
     user,

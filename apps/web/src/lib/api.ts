@@ -98,7 +98,7 @@ import type {
   Company,
   SubscriptionPlan,
   Invoice,
-  PricingRequest,
+  PriceChangeRequest,
 } from "@cakeday/shared";
 
 // Auth
@@ -136,12 +136,29 @@ export const employeesApi = {
   delete: (id: string) =>
     api.delete<ApiResponse<{ message: string }>>(`/employees/${id}`),
 
-  importCsv: (formData: FormData) =>
-    request<ApiResponse<{ imported: number; skipped: number; errors: string[] }>>("/employees/import", {
+  importCsv: async (formData: FormData) => {
+    const url = `${API_BASE}/employees/import/preview`;
+    let authHeader: Record<string, string> = {};
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("access_token");
+      if (token) authHeader = { Authorization: `Bearer ${token}` };
+    }
+    const res = await fetch(url, {
       method: "POST",
-      body: undefined,
-      headers: {},
-    }),
+      headers: { ...authHeader },
+      body: formData,
+    });
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({ error: { message: "Sunucu hatası. Lütfen tekrar deneyin." } }));
+      throw new ApiError(
+        res.status,
+        errorData?.error?.code ?? "UNKNOWN_ERROR",
+        errorData?.error?.message ?? "Bir hata oluştu.",
+        errorData?.error?.details
+      );
+    }
+    return res.json() as Promise<ApiResponse<{ imported: number; skipped: number; errors: string[] }>>;
+  },
 };
 
 // Orders
@@ -177,7 +194,7 @@ export const rulesApi = {
 // Cake Catalogue
 export const catalogueApi = {
   list: () =>
-    api.get<ApiListResponse<CakeType>>("/catalogue"),
+    api.get<ApiListResponse<CakeType>>("/cakes"),
 };
 
 // Company
@@ -213,8 +230,8 @@ export const bakeryApi = {
     api.patch<ApiResponse<Order>>(`/bakery/orders/${id}/delivered`),
 
   pricingRequests: () =>
-    api.get<ApiListResponse<PricingRequest>>("/bakery/pricing-requests"),
+    api.get<ApiListResponse<PriceChangeRequest>>("/bakery/pricing-requests"),
 
   createPricingRequest: (data: unknown) =>
-    api.post<ApiResponse<PricingRequest>>("/bakery/pricing-requests", data),
+    api.post<ApiResponse<PriceChangeRequest>>("/bakery/pricing-requests", data),
 };

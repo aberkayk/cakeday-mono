@@ -601,7 +601,7 @@ export const publicHolidays = pgTable('public_holidays', {
   id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
   date: date('date').notNull().unique(),
   name: varchar('name', { length: 150 }).notNull(),
-  year: smallint('year').generatedAlwaysAs(sql`EXTRACT(YEAR FROM date)::SMALLINT`).notNull(),
+  year: smallint('year').notNull(),
   created_at: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 

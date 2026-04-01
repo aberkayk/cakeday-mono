@@ -191,6 +191,22 @@ export class AuthService {
   }
 
   /**
+   * Verify email using OTP token from Supabase confirmation email.
+   */
+  async verifyEmail(token: string) {
+    const { error } = await supabaseAdmin.auth.verifyOtp({
+      token_hash: token,
+      type: 'email',
+    });
+
+    if (error) {
+      throw new BadRequestError('Dogrulama basarisiz. Token gecersiz veya suresi dolmus olabilir.');
+    }
+
+    return { message: 'E-posta adresiniz basariyla dogrulandi.' };
+  }
+
+  /**
    * Reset password using token from Supabase email link.
    */
   async resetPassword(input: ResetPasswordInput) {

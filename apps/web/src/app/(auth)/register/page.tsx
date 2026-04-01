@@ -34,7 +34,7 @@ const schema = z.object({
   email: z.string().email("Geçerli bir e-posta adresi girin."),
   phone: z
     .string()
-    .regex(/^(\+90|0)?[5][0-9]{9}$/, "Geçerli bir Türk cep telefonu girin."),
+    .regex(/^\+90[5][0-9]{9}$/, "Geçerli bir Türk cep telefonu girin. (+905XXXXXXXXX)"),
   billingAddress: z.string().min(5, "Fatura adresi en az 5 karakter olmalı."),
   district: z.string().min(1, "İlçe seçin."),
   password: z

@@ -12,6 +12,7 @@ export interface Toast {
   title?: string;
   description?: string;
   variant?: ToastVariant;
+  action?: React.ReactNode;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }

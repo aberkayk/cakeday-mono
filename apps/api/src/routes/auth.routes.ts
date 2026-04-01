@@ -8,6 +8,7 @@ import {
   loginSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
+  verifyEmailSchema,
 } from '@cakeday/shared';
 
 const router = Router();
@@ -26,6 +27,9 @@ router.post('/forgot-password', authRateLimiter, validate(forgotPasswordSchema),
 
 // POST /api/v1/auth/reset-password
 router.post('/reset-password', authRateLimiter, validate(resetPasswordSchema), authController.resetPassword.bind(authController));
+
+// POST /api/v1/auth/verify-email
+router.post('/verify-email', authRateLimiter, validate(verifyEmailSchema), authController.verifyEmail.bind(authController));
 
 // GET /api/v1/auth/me
 router.get('/me', authenticate, authController.getMe.bind(authController));

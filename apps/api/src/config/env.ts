@@ -17,8 +17,8 @@ const envSchema = z.object({
   // Database (direct connection for Drizzle ORM)
   DATABASE_URL: z.string().min(1),
 
-  // JWT (Supabase signs JWTs with this secret)
-  SUPABASE_JWT_SECRET: z.string().min(1),
+  // JWT (optional — auth middleware uses supabaseAdmin.auth.getUser() instead)
+  SUPABASE_JWT_SECRET: z.string().min(1).optional(),
 
   // iyzico
   IYZICO_API_KEY: z.string().min(1).optional(),
