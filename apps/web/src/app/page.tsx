@@ -144,28 +144,29 @@ function NavBar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-surface-container-lowest/90 backdrop-blur-md h-20 flex flex-col justify-center" style={{ boxShadow: "inset 0 -1px 0 0 #e0c0b1" }}>
-      <div className="max-w-7xl mx-auto px-6 w-full flex items-center justify-between">
+    <header className="sticky top-0 z-50 flex flex-col items-center pt-3 px-4">
+      <div className="bg-[#3E2723] rounded-full px-3 py-1.5 flex items-center gap-1 max-w-3xl w-full shadow-lg">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5">
-          <Cake className="h-7 w-7 text-primary" strokeWidth={2} />
-          <span className="font-headline font-bold text-xl text-primary">CakeDay</span>
+        <Link href="/" className="flex items-center gap-2 px-3 py-1.5">
+          <Cake className="h-5 w-5 text-white" strokeWidth={2} />
+          <span className="font-headline font-bold text-base text-white italic">CakeDay</span>
         </Link>
 
         {/* Center nav — desktop */}
-        <nav className="hidden md:flex items-center gap-8">
-          {["Nasıl Çalışır", "Özellikler", "Ücretlendirme", "SSS"].map((label) => {
+        <nav className="hidden md:flex items-center gap-1 flex-1 justify-center">
+          {["Nasıl Çalışır", "Özellikler", "Ücretlendirme", "SSS", "İletişim"].map((label) => {
             const href = {
               "Nasıl Çalışır": "#how-it-works",
               Özellikler: "#features",
               Ücretlendirme: "#pricing",
               SSS: "#faq",
+              İletişim: "#contact",
             }[label]!;
             return (
               <a
                 key={label}
                 href={href}
-                className="text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors"
+                className="text-sm font-medium text-white/80 hover:text-white transition-colors px-3 py-1.5 rounded-full hover:bg-white/10"
               >
                 {label}
               </a>
@@ -174,24 +175,24 @@ function NavBar() {
         </nav>
 
         {/* Right CTA — desktop */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-2">
           <Link
             href="/login"
-            className="text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors px-3 py-2"
+            className="text-sm font-medium text-white/80 hover:text-white transition-colors px-3 py-1.5"
           >
             Giriş Yap
           </Link>
           <Link
             href="/register"
-            className="gradient-primary text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-md hover:opacity-90 transition-opacity"
+            className="bg-tertiary-container text-on-tertiary-container text-sm font-bold px-5 py-2 rounded-full hover:brightness-110 transition-all"
           >
-            Hemen Başla
+            Kutlamaya Başla
           </Link>
         </div>
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden p-2 text-on-surface-variant"
+          className="md:hidden p-2 text-white/80 ml-auto"
           onClick={() => setMobileOpen((v) => !v)}
           aria-label="Menü"
         >
@@ -201,37 +202,38 @@ function NavBar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-outline-variant bg-surface-container-lowest px-6 py-4 space-y-3 absolute top-20 left-0 right-0 shadow-lg">
-          {["Nasıl Çalışır", "Özellikler", "Ücretlendirme", "SSS"].map((label) => {
+        <div className="md:hidden mt-2 bg-[#3E2723] rounded-2xl px-4 py-3 space-y-1 w-full max-w-3xl shadow-lg">
+          {["Nasıl Çalışır", "Özellikler", "Ücretlendirme", "SSS", "İletişim"].map((label) => {
             const href = {
               "Nasıl Çalışır": "#how-it-works",
               Özellikler: "#features",
               Ücretlendirme: "#pricing",
               SSS: "#faq",
+              İletişim: "#contact",
             }[label]!;
             return (
               <a
                 key={label}
                 href={href}
-                className="block text-sm font-medium text-on-surface-variant py-2"
+                className="block text-sm font-medium text-white/80 hover:text-white py-2 px-3 rounded-lg hover:bg-white/10"
                 onClick={() => setMobileOpen(false)}
               >
                 {label}
               </a>
             );
           })}
-          <div className="pt-2 flex flex-col gap-2">
+          <div className="pt-2 flex flex-col gap-2 border-t border-white/10 mt-2">
             <Link
               href="/login"
-              className="block text-center text-sm font-medium border border-outline rounded-xl py-2.5 text-on-surface hover:bg-surface-container-low transition-colors"
+              className="block text-center text-sm font-medium text-white/80 py-2"
             >
               Giriş Yap
             </Link>
             <Link
               href="/register"
-              className="block text-center gradient-primary text-white text-sm font-semibold rounded-xl py-2.5"
+              className="block text-center bg-tertiary-container text-on-tertiary-container text-sm font-bold rounded-full py-2.5"
             >
-              Hemen Başla
+              Kutlamaya Başla
             </Link>
           </div>
         </div>
