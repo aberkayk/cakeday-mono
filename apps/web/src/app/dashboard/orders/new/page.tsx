@@ -30,15 +30,21 @@ export default function NewOrderPage() {
 
   return (
     <div className="max-w-2xl space-y-6">
+      {/* Header */}
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          asChild
+          className="h-9 w-9 rounded-xl border border-gray-200 bg-white shadow-sm hover:bg-gray-50"
+        >
           <Link href="/dashboard/orders">
-            <ArrowLeft className="h-5 w-5" />
+            <ArrowLeft className="h-4 w-4 text-gray-600" />
           </Link>
         </Button>
         <div>
-          <h1 className="text-2xl font-bold">Yeni Sipariş</h1>
-          <p className="text-muted-foreground text-sm mt-1">
+          <h1 className="text-2xl font-bold text-gray-900">Yeni Sipariş</h1>
+          <p className="text-sm text-gray-500 mt-0.5">
             Manuel pasta siparişi oluşturun.
           </p>
         </div>

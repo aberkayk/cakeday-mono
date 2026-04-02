@@ -9,7 +9,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-muted/20">
+    <div className="flex min-h-screen bg-[#FAFAF9]">
       <div className="hidden lg:flex">
         <Sidebar />
       </div>
@@ -18,7 +18,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       <div className="flex flex-1 flex-col min-w-0">
         <Header onMenuToggle={() => setMobileNavOpen(true)} />
-        <main className="flex-1 p-6 overflow-auto">{children}</main>
+        <main className="flex-1 p-6 lg:p-8 overflow-auto">{children}</main>
       </div>
     </div>
   );

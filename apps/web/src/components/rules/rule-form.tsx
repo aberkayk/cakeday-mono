@@ -95,92 +95,117 @@ export function RuleForm({ open, onClose, onSubmit, rule }: RuleFormProps) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle>{isEdit ? "Kuralı Düzenle" : "Yeni Kural Oluştur"}</DialogTitle>
+      <DialogContent className="max-w-md rounded-2xl">
+        <DialogHeader className="pb-2">
+          <DialogTitle className="text-lg font-bold text-gray-900">
+            {isEdit ? "Kuralı Düzenle" : "Yeni Kural Oluştur"}
+          </DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Kural Adı *</Label>
-            <Input id="name" placeholder="Tüm Çalışanlar — Doğum Günü" {...register("name")} />
-            {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-5">
+          {/* Basic */}
+          <div className="space-y-4">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Kural Bilgileri</p>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="name" className="text-sm font-medium text-gray-700">Kural Adı *</Label>
+              <Input
+                id="name"
+                placeholder="Tüm Çalışanlar — Doğum Günü"
+                {...register("name")}
+                className="rounded-xl border-gray-200 focus:border-coral-300"
+              />
+              {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
+            </div>
+
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium text-gray-700">Kural Tipi *</Label>
+              <Select
+                defaultValue={rule?.rule_type ?? "all_birthdays"}
+                onValueChange={(v) => setValue("rule_type", v as FormData["rule_type"])}
+              >
+                <SelectTrigger className="rounded-xl border-gray-200">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl">
+                  <SelectItem value="all_birthdays">🎂 Tüm Doğum Günleri</SelectItem>
+                  <SelectItem value="round_birthdays">⭐ Yuvarlak Doğum Günleri</SelectItem>
+                  <SelectItem value="work_anniversary">💼 İş Yıldönümü</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <Label>Kural Tipi *</Label>
-            <Select
-              defaultValue={rule?.rule_type ?? "all_birthdays"}
-              onValueChange={(v) => setValue("rule_type", v as FormData["rule_type"])}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all_birthdays">Tüm Doğum Günleri</SelectItem>
-                <SelectItem value="round_birthdays">Yuvarlak Doğum Günleri</SelectItem>
-                <SelectItem value="work_anniversary">İş Yıldönümü</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
+          {/* Conditional fields */}
           {ruleType === "round_birthdays" && (
-            <div className="space-y-2">
-              <Label htmlFor="milestone_ages">Yuvarlak Yaşlar</Label>
+            <div className="space-y-1.5 rounded-xl bg-purple-50/50 border border-purple-100 p-4">
+              <Label htmlFor="milestone_ages" className="text-sm font-medium text-gray-700">Yuvarlak Yaşlar</Label>
               <Input
                 id="milestone_ages"
                 placeholder="30, 40, 50"
                 {...register("milestone_ages")}
+                className="rounded-xl border-gray-200 focus:border-purple-300 bg-white"
               />
-              <p className="text-xs text-muted-foreground">Virgülle ayırın. Örn: 30, 40, 50</p>
+              <p className="text-xs text-gray-500">Virgülle ayırın. Örn: 30, 40, 50</p>
             </div>
           )}
 
           {ruleType === "work_anniversary" && (
-            <div className="space-y-2">
-              <Label htmlFor="anniversary_years">Yıldönümü Yılları</Label>
+            <div className="space-y-1.5 rounded-xl bg-blue-50/50 border border-blue-100 p-4">
+              <Label htmlFor="anniversary_years" className="text-sm font-medium text-gray-700">Yıldönümü Yılları</Label>
               <Input
                 id="anniversary_years"
                 placeholder="1, 3, 5, 10"
                 {...register("anniversary_years")}
+                className="rounded-xl border-gray-200 focus:border-blue-300 bg-white"
               />
-              <p className="text-xs text-muted-foreground">Virgülle ayırın. Örn: 1, 3, 5, 10</p>
+              <p className="text-xs text-gray-500">Virgülle ayırın. Örn: 1, 3, 5, 10</p>
             </div>
           )}
 
-          <div className="space-y-2">
-            <Label>Varsayılan Pasta Boyutu *</Label>
-            <Select
-              defaultValue={rule?.default_cake_size ?? "medium"}
-              onValueChange={(v) => setValue("default_cake_size", v as FormData["default_cake_size"])}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.entries(CAKE_SIZE_LABELS).map(([k, v]) => (
-                  <SelectItem key={k} value={k}>{v}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          {/* Cake config */}
+          <div className="space-y-4 pt-1">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Pasta Ayarları</p>
+
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium text-gray-700">Varsayılan Pasta Boyutu *</Label>
+              <Select
+                defaultValue={rule?.default_cake_size ?? "medium"}
+                onValueChange={(v) => setValue("default_cake_size", v as FormData["default_cake_size"])}
+              >
+                <SelectTrigger className="rounded-xl border-gray-200">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl">
+                  {Object.entries(CAKE_SIZE_LABELS).map(([k, v]) => (
+                    <SelectItem key={k} value={k}>{v}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="custom_text_template" className="text-sm font-medium text-gray-700">Pasta Mesajı Şablonu</Label>
+              <Textarea
+                id="custom_text_template"
+                placeholder="İyi ki doğdun {{ad}}! 🎂"
+                rows={2}
+                {...register("custom_text_template")}
+                className="rounded-xl border-gray-200 focus:border-coral-300 resize-none"
+              />
+              <p className="text-xs text-gray-400">{"{{ad}} çalışan adıyla otomatik değiştirilir."}</p>
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="custom_text_template">Pasta Mesajı Şablonu</Label>
-            <Textarea
-              id="custom_text_template"
-              placeholder="İyi ki doğdun {{ad}}! 🎂"
-              rows={2}
-              {...register("custom_text_template")}
-            />
-            <p className="text-xs text-muted-foreground">{"{{ad}} çalışan adıyla değiştirilir."}</p>
-          </div>
-
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
+          <DialogFooter className="gap-2 pt-2">
+            <Button type="button" variant="outline" onClick={onClose} className="flex-1 rounded-xl border-gray-200">
               İptal
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="flex-1 rounded-xl bg-coral-500 hover:bg-coral-600 text-white"
+            >
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isEdit ? "Güncelle" : "Oluştur"}
             </Button>

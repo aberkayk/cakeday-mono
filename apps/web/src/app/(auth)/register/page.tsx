@@ -2,15 +2,24 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Eye, EyeOff, Loader2, CheckCircle2 } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Loader2,
+  CheckCircle2,
+  ChevronDown,
+  ChevronUp,
+  Building2,
+  User,
+  Mail,
+  Lock,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -21,47 +30,90 @@ import {
 import { useAuth } from "@/hooks/use-auth";
 import { SECTOR_OPTIONS, COMPANY_SIZE_LABELS, DISTRICT_LABELS } from "@/lib/utils";
 
-const schema = z.object({
-  companyName: z.string().min(2, "Şirket adı en az 2 karakter olmalı."),
-  vkn: z
-    .string()
-    .length(10, "Vergi numarası 10 haneli olmalı.")
-    .regex(/^\d+$/, "Vergi numarası sadece rakam içermeli."),
-  sector: z.string().min(1, "Sektör seçin."),
-  companySize: z.string().min(1, "Çalışan sayısı aralığı seçin."),
-  contactName: z.string().min(2, "Ad Soyad en az 2 karakter olmalı."),
-  contactTitle: z.string().optional(),
-  email: z.string().email("Geçerli bir e-posta adresi girin."),
-  phone: z
-    .string()
-    .regex(/^\+90[5][0-9]{9}$/, "Geçerli bir Türk cep telefonu girin. (+905XXXXXXXXX)"),
-  billingAddress: z.string().min(5, "Fatura adresi en az 5 karakter olmalı."),
-  district: z.string().min(1, "İlçe seçin."),
-  password: z
-    .string()
-    .min(8, "Şifre en az 8 karakter olmalı.")
-    .regex(/[A-Z]/, "En az bir büyük harf içermeli.")
-    .regex(/[0-9]/, "En az bir rakam içermeli."),
-  passwordConfirm: z.string(),
-}).refine((d) => d.password === d.passwordConfirm, {
-  path: ["passwordConfirm"],
-  message: "Şifreler eşleşmiyor.",
-});
+const schema = z
+  .object({
+    companyName: z.string().min(2, "Şirket adı en az 2 karakter olmalı."),
+    vkn: z
+      .string()
+      .length(10, "Vergi numarası 10 haneli olmalı.")
+      .regex(/^\d+$/, "Vergi numarası sadece rakam içermeli."),
+    sector: z.string().min(1, "Sektör seçin."),
+    companySize: z.string().min(1, "Çalışan sayısı aralığı seçin."),
+    contactName: z.string().min(2, "Ad Soyad en az 2 karakter olmalı."),
+    contactTitle: z.string().optional(),
+    email: z.string().email("Geçerli bir e-posta adresi girin."),
+    phone: z
+      .string()
+      .regex(/^\+90[5][0-9]{9}$/, "Geçerli bir Türk cep telefonu girin. (+905XXXXXXXXX)"),
+    billingAddress: z.string().min(5, "Fatura adresi en az 5 karakter olmalı."),
+    district: z.string().min(1, "İlçe seçin."),
+    password: z
+      .string()
+      .min(8, "Şifre en az 8 karakter olmalı.")
+      .regex(/[A-Z]/, "En az bir büyük harf içermeli.")
+      .regex(/[0-9]/, "En az bir rakam içermeli."),
+    passwordConfirm: z.string(),
+    terms: z.literal(true, { errorMap: () => ({ message: "Kullanım koşullarını kabul etmelisiniz." }) }),
+  })
+  .refine((d) => d.password === d.passwordConfirm, {
+    path: ["passwordConfirm"],
+    message: "Şifreler eşleşmiyor.",
+  });
 type FormData = z.infer<typeof schema>;
 
+function getPasswordStrength(pw: string): { score: number; label: string; color: string } {
+  if (!pw) return { score: 0, label: "", color: "" };
+  let score = 0;
+  if (pw.length >= 8) score++;
+  if (pw.length >= 12) score++;
+  if (/[A-Z]/.test(pw)) score++;
+  if (/[0-9]/.test(pw)) score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+  if (score <= 1) return { score, label: "Çok zayıf", color: "bg-red-500" };
+  if (score === 2) return { score, label: "Zayıf", color: "bg-orange-400" };
+  if (score === 3) return { score, label: "Orta", color: "bg-yellow-400" };
+  if (score === 4) return { score, label: "Güçlü", color: "bg-green-400" };
+  return { score, label: "Çok güçlü", color: "bg-green-600" };
+}
+
+const COMPANY_SIZE_OPTIONS = [
+  { value: "1-10", label: "1–10" },
+  { value: "11-50", label: "11–50" },
+  { value: "51-200", label: "51–200" },
+  { value: "200+", label: "200+" },
+];
+
+/* ─── Input wrapper with icon ─── */
+function FieldIcon({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+      {children}
+    </div>
+  );
+}
+
+/* ─── Reusable input classes ─── */
+const inputCls =
+  "h-11 rounded-xl border-gray-200 bg-gray-50 focus:bg-white text-[#1a1a2e] placeholder:text-gray-400 focus-visible:ring-[#F97316] focus-visible:ring-offset-0";
+const inputWithIconCls = `pl-10 ${inputCls}`;
+
 export default function RegisterPage() {
-  const router = useRouter();
   const { register: registerUser } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [showOptional, setShowOptional] = useState(false);
 
   const {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
+
+  const watchedPassword = watch("password") ?? "";
+  const strength = getPasswordStrength(watchedPassword);
 
   const onSubmit = async (data: FormData) => {
     setServerError(null);
@@ -86,186 +138,356 @@ export default function RegisterPage() {
     }
   };
 
+  /* ─── Success state ─── */
   if (success) {
     return (
-      <Card className="shadow-lg">
-        <CardContent className="pt-8 pb-8 text-center space-y-4">
-          <CheckCircle2 className="mx-auto h-16 w-16 text-green-500" />
-          <h2 className="text-2xl font-bold">Kayıt Başarılı!</h2>
-          <p className="text-muted-foreground">
+      <div className="text-center space-y-6 py-8">
+        <div className="mx-auto w-20 h-20 rounded-full bg-green-100 flex items-center justify-center">
+          <CheckCircle2 className="h-10 w-10 text-green-600" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-2xl font-extrabold text-[#1a1a2e]">Kayıt Başarılı! 🎉</h2>
+          <p className="text-gray-500 max-w-xs mx-auto leading-relaxed">
             E-posta adresinize doğrulama bağlantısı gönderdik. Hesabınızı aktif etmek için e-postanızdaki bağlantıya tıklayın.
           </p>
-          <Button asChild className="w-full">
-            <Link href="/login">Giriş Sayfasına Git</Link>
-          </Button>
-        </CardContent>
-      </Card>
+        </div>
+        <Button
+          asChild
+          className="w-full h-12 bg-[#F97316] hover:bg-[#ea580c] text-white font-semibold rounded-xl"
+        >
+          <Link href="/login">Giriş Sayfasına Git</Link>
+        </Button>
+      </div>
     );
   }
 
   return (
-    <Card className="shadow-lg">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl">Şirketinizi Kaydedin</CardTitle>
-        <CardDescription>
-          CakeDay'e katılın, çalışan doğum günlerini otomatikleştirin.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          {serverError && (
-            <div className="rounded-md bg-destructive/10 border border-destructive/20 px-4 py-3 text-sm text-destructive">
-              {serverError}
+    <div className="space-y-7">
+      {/* Heading */}
+      <div className="space-y-1.5">
+        <h1 className="text-3xl font-extrabold text-[#1a1a2e] tracking-tight">
+          Şirketinizi Kaydedin 🎉
+        </h1>
+        <p className="text-gray-500 text-base">1 dakikada başlayın</p>
+      </div>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {/* Server error */}
+        {serverError && (
+          <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700 flex items-start gap-2.5">
+            <svg className="w-4 h-4 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+            {serverError}
+          </div>
+        )}
+
+        {/* ── Section: Şirket Adı ── */}
+        <div className="space-y-1.5">
+          <Label htmlFor="companyName" className="text-sm font-medium text-[#1a1a2e]">
+            Şirket Adı <span className="text-[#F97316]">*</span>
+          </Label>
+          <div className="relative">
+            <FieldIcon><Building2 className="h-[18px] w-[18px]" /></FieldIcon>
+            <Input
+              id="companyName"
+              placeholder="Örnek A.Ş."
+              className={inputWithIconCls}
+              {...register("companyName")}
+            />
+          </div>
+          {errors.companyName && <p className="text-xs text-red-600">{errors.companyName.message}</p>}
+        </div>
+
+        {/* ── Section: Yetkili ── */}
+        <div className="space-y-1.5">
+          <Label htmlFor="contactName" className="text-sm font-medium text-[#1a1a2e]">
+            Yetkili Ad Soyad <span className="text-[#F97316]">*</span>
+          </Label>
+          <div className="relative">
+            <FieldIcon><User className="h-[18px] w-[18px]" /></FieldIcon>
+            <Input
+              id="contactName"
+              placeholder="Ad Soyad"
+              className={inputWithIconCls}
+              {...register("contactName")}
+            />
+          </div>
+          {errors.contactName && <p className="text-xs text-red-600">{errors.contactName.message}</p>}
+        </div>
+
+        {/* ── Section: Email ── */}
+        <div className="space-y-1.5">
+          <Label htmlFor="email" className="text-sm font-medium text-[#1a1a2e]">
+            İş E-postası <span className="text-[#F97316]">*</span>
+          </Label>
+          <div className="relative">
+            <FieldIcon><Mail className="h-[18px] w-[18px]" /></FieldIcon>
+            <Input
+              id="email"
+              type="email"
+              placeholder="ad@sirket.com"
+              autoComplete="email"
+              className={inputWithIconCls}
+              {...register("email")}
+            />
+          </div>
+          {errors.email && <p className="text-xs text-red-600">{errors.email.message}</p>}
+        </div>
+
+        {/* ── Section: Phone ── */}
+        <div className="space-y-1.5">
+          <Label htmlFor="phone" className="text-sm font-medium text-[#1a1a2e]">
+            Telefon <span className="text-[#F97316]">*</span>
+          </Label>
+          <div className="flex">
+            <div className="flex items-center px-3.5 h-11 rounded-l-xl border border-r-0 border-gray-200 bg-gray-100 text-sm text-gray-500 font-medium select-none flex-shrink-0">
+              +90
+            </div>
+            <Input
+              id="phone"
+              type="tel"
+              placeholder="5XX XXX XX XX"
+              className="h-11 rounded-l-none rounded-r-xl border-gray-200 bg-gray-50 focus:bg-white text-[#1a1a2e] placeholder:text-gray-400 focus-visible:ring-[#F97316] focus-visible:ring-offset-0 flex-1"
+              {...register("phone")}
+            />
+          </div>
+          {errors.phone && <p className="text-xs text-red-600">{errors.phone.message}</p>}
+        </div>
+
+        {/* ── Section: Password ── */}
+        <div className="space-y-1.5">
+          <Label htmlFor="password" className="text-sm font-medium text-[#1a1a2e]">
+            Şifre <span className="text-[#F97316]">*</span>
+          </Label>
+          <div className="relative">
+            <FieldIcon><Lock className="h-[18px] w-[18px]" /></FieldIcon>
+            <Input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="En az 8 karakter"
+              className={`${inputWithIconCls} pr-11`}
+              {...register("password")}
+            />
+            <button
+              type="button"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+              onClick={() => setShowPassword((v) => !v)}
+              tabIndex={-1}
+              aria-label={showPassword ? "Şifreyi gizle" : "Şifreyi göster"}
+            >
+              {showPassword ? <EyeOff className="h-[18px] w-[18px]" /> : <Eye className="h-[18px] w-[18px]" />}
+            </button>
+          </div>
+          {/* Strength meter */}
+          {watchedPassword.length > 0 && (
+            <div className="space-y-1.5">
+              <div className="flex gap-1">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div
+                    key={i}
+                    className={`h-1 flex-1 rounded-full transition-colors ${
+                      i <= strength.score ? strength.color : "bg-gray-200"
+                    }`}
+                  />
+                ))}
+              </div>
+              {strength.label && (
+                <p className={`text-xs font-medium ${
+                  strength.score <= 2 ? "text-red-500" :
+                  strength.score === 3 ? "text-yellow-600" : "text-green-600"
+                }`}>
+                  {strength.label}
+                </p>
+              )}
             </div>
           )}
+          {errors.password && <p className="text-xs text-red-600">{errors.password.message}</p>}
+        </div>
 
-          <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-foreground">Şirket Bilgileri</h3>
-
-            <div className="space-y-2">
-              <Label htmlFor="companyName">Şirket Adı *</Label>
-              <Input id="companyName" placeholder="Örnek A.Ş." {...register("companyName")} />
-              {errors.companyName && <p className="text-xs text-destructive">{errors.companyName.message}</p>}
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <Label htmlFor="vkn">Vergi Numarası *</Label>
-                <Input id="vkn" placeholder="0000000000" maxLength={10} {...register("vkn")} />
-                {errors.vkn && <p className="text-xs text-destructive">{errors.vkn.message}</p>}
-              </div>
-              <div className="space-y-2">
-                <Label>İlçe *</Label>
-                <Select onValueChange={(v) => setValue("district", v)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seçin" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(DISTRICT_LABELS).map(([k, v]) => (
-                      <SelectItem key={k} value={k}>{v}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {errors.district && <p className="text-xs text-destructive">{errors.district.message}</p>}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <Label>Sektör *</Label>
-                <Select onValueChange={(v) => setValue("sector", v)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seçin" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {SECTOR_OPTIONS.map((s) => (
-                      <SelectItem key={s} value={s}>{s}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {errors.sector && <p className="text-xs text-destructive">{errors.sector.message}</p>}
-              </div>
-              <div className="space-y-2">
-                <Label>Çalışan Sayısı *</Label>
-                <Select onValueChange={(v) => setValue("companySize", v)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seçin" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(COMPANY_SIZE_LABELS).map(([k, v]) => (
-                      <SelectItem key={k} value={k}>{v}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {errors.companySize && <p className="text-xs text-destructive">{errors.companySize.message}</p>}
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="billingAddress">Fatura Adresi *</Label>
-              <Input id="billingAddress" placeholder="Tam adres" {...register("billingAddress")} />
-              {errors.billingAddress && <p className="text-xs text-destructive">{errors.billingAddress.message}</p>}
-            </div>
+        {/* ── Section: Password Confirm ── */}
+        <div className="space-y-1.5">
+          <Label htmlFor="passwordConfirm" className="text-sm font-medium text-[#1a1a2e]">
+            Şifre Tekrar <span className="text-[#F97316]">*</span>
+          </Label>
+          <div className="relative">
+            <FieldIcon><Lock className="h-[18px] w-[18px]" /></FieldIcon>
+            <Input
+              id="passwordConfirm"
+              type={showPassword ? "text" : "password"}
+              placeholder="Şifrenizi tekrar girin"
+              className={inputWithIconCls}
+              {...register("passwordConfirm")}
+            />
           </div>
+          {errors.passwordConfirm && <p className="text-xs text-red-600">{errors.passwordConfirm.message}</p>}
+        </div>
 
-          <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-foreground">Yönetici Bilgileri</h3>
+        {/* ── Collapsible: Ek Bilgiler ── */}
+        <div className="rounded-xl border border-gray-200 overflow-hidden">
+          <button
+            type="button"
+            onClick={() => setShowOptional((v) => !v)}
+            className="w-full flex items-center justify-between px-4 py-3.5 bg-gray-50 hover:bg-gray-100 transition-colors text-left"
+          >
+            <span className="text-sm font-semibold text-[#1a1a2e]">
+              Ek Bilgiler{" "}
+              <span className="text-gray-400 font-normal">(Opsiyonel)</span>
+            </span>
+            {showOptional ? (
+              <ChevronUp className="h-4 w-4 text-gray-500" />
+            ) : (
+              <ChevronDown className="h-4 w-4 text-gray-500" />
+            )}
+          </button>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <Label htmlFor="contactName">Ad Soyad *</Label>
-                <Input id="contactName" placeholder="Ad Soyad" {...register("contactName")} />
-                {errors.contactName && <p className="text-xs text-destructive">{errors.contactName.message}</p>}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="contactTitle">Unvan</Label>
-                <Input id="contactTitle" placeholder="İK Müdürü" {...register("contactTitle")} />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="email">İş E-postası *</Label>
-              <Input id="email" type="email" placeholder="ad@sirket.com" {...register("email")} />
-              {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="phone">Telefon *</Label>
-              <Input id="phone" type="tel" placeholder="05XX XXX XX XX" {...register("phone")} />
-              {errors.phone && <p className="text-xs text-destructive">{errors.phone.message}</p>}
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-foreground">Şifre</h3>
-
-            <div className="space-y-2">
-              <Label htmlFor="password">Şifre *</Label>
-              <div className="relative">
+          {showOptional && (
+            <div className="px-4 pb-4 pt-3 space-y-4 border-t border-gray-200 bg-white">
+              {/* VKN */}
+              <div className="space-y-1.5">
+                <Label htmlFor="vkn" className="text-sm font-medium text-[#1a1a2e]">
+                  Vergi Kimlik No (VKN)
+                </Label>
                 <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="En az 8 karakter"
-                  {...register("password")}
+                  id="vkn"
+                  placeholder="0000000000"
+                  maxLength={10}
+                  className={inputCls}
+                  {...register("vkn")}
                 />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="absolute right-1 top-1 h-8 w-8 text-muted-foreground"
-                  onClick={() => setShowPassword((v) => !v)}
-                >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </Button>
+                {errors.vkn && <p className="text-xs text-red-600">{errors.vkn.message}</p>}
               </div>
-              {errors.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
+
+              {/* Fatura Adresi */}
+              <div className="space-y-1.5">
+                <Label htmlFor="billingAddress" className="text-sm font-medium text-[#1a1a2e]">
+                  Fatura Adresi
+                </Label>
+                <Input
+                  id="billingAddress"
+                  placeholder="Tam adres"
+                  className={inputCls}
+                  {...register("billingAddress")}
+                />
+                {errors.billingAddress && <p className="text-xs text-red-600">{errors.billingAddress.message}</p>}
+              </div>
+
+              {/* Sektör + İlçe */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label className="text-sm font-medium text-[#1a1a2e]">Sektör</Label>
+                  <Select onValueChange={(v) => setValue("sector", v)}>
+                    <SelectTrigger className={`${inputCls} px-3`}>
+                      <SelectValue placeholder="Seçin" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SECTOR_OPTIONS.map((s) => (
+                        <SelectItem key={s} value={s}>{s}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {errors.sector && <p className="text-xs text-red-600">{errors.sector.message}</p>}
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-sm font-medium text-[#1a1a2e]">İlçe</Label>
+                  <Select onValueChange={(v) => setValue("district", v)}>
+                    <SelectTrigger className={`${inputCls} px-3`}>
+                      <SelectValue placeholder="Seçin" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(DISTRICT_LABELS).map(([k, v]) => (
+                        <SelectItem key={k} value={k}>{v}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {errors.district && <p className="text-xs text-red-600">{errors.district.message}</p>}
+                </div>
+              </div>
+
+              {/* Şirket Büyüklüğü — radio pills */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-[#1a1a2e]">Şirket Büyüklüğü</Label>
+                <div className="flex gap-2 flex-wrap">
+                  {COMPANY_SIZE_OPTIONS.map((opt) => (
+                    <label key={opt.value} className="cursor-pointer">
+                      <input
+                        type="radio"
+                        value={opt.value}
+                        className="sr-only peer"
+                        {...register("companySize")}
+                      />
+                      <span className="
+                        block px-4 py-1.5 rounded-full text-sm font-medium border border-gray-200
+                        bg-gray-50 text-gray-600
+                        peer-checked:bg-[#F97316] peer-checked:text-white peer-checked:border-[#F97316]
+                        hover:border-[#F97316]/40 transition-all cursor-pointer
+                      ">
+                        {opt.label}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+                {errors.companySize && <p className="text-xs text-red-600">{errors.companySize.message}</p>}
+              </div>
+
+              {/* Unvan */}
+              <div className="space-y-1.5">
+                <Label htmlFor="contactTitle" className="text-sm font-medium text-[#1a1a2e]">
+                  Unvan
+                </Label>
+                <Input
+                  id="contactTitle"
+                  placeholder="İK Müdürü"
+                  className={inputCls}
+                  {...register("contactTitle")}
+                />
+              </div>
             </div>
+          )}
+        </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="passwordConfirm">Şifre Tekrar *</Label>
-              <Input
-                id="passwordConfirm"
-                type={showPassword ? "text" : "password"}
-                placeholder="Şifrenizi tekrar girin"
-                {...register("passwordConfirm")}
-              />
-              {errors.passwordConfirm && <p className="text-xs text-destructive">{errors.passwordConfirm.message}</p>}
-            </div>
-          </div>
+        {/* ── Terms ── */}
+        <label className="flex items-start gap-3 cursor-pointer group">
+          <input
+            type="checkbox"
+            className="w-4 h-4 mt-0.5 rounded border-gray-300 accent-[#F97316] cursor-pointer flex-shrink-0"
+            {...register("terms")}
+          />
+          <span className="text-sm text-gray-600 leading-relaxed group-hover:text-[#1a1a2e] transition-colors">
+            <Link href="/terms" className="text-[#F97316] hover:text-[#ea580c] font-medium underline">
+              Kullanım koşullarını
+            </Link>{" "}
+            kabul ediyorum
+          </span>
+        </label>
+        {errors.terms && <p className="text-xs text-red-600 -mt-4">{errors.terms.message}</p>}
 
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Kayıt Ol
-          </Button>
+        {/* ── Submit ── */}
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full h-12 bg-[#F97316] hover:bg-[#ea580c] text-white font-semibold rounded-xl text-base shadow-sm shadow-orange-200 transition-all hover:shadow-md hover:shadow-orange-200 disabled:opacity-60"
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Kaydediliyor...
+            </>
+          ) : (
+            "Kayıt Ol"
+          )}
+        </Button>
 
-          <p className="text-center text-sm text-muted-foreground">
-            Zaten hesabınız var mı?{" "}
-            <Link href="/login" className="text-primary hover:underline font-medium">
-              Giriş Yapın
-            </Link>
-          </p>
-        </form>
-      </CardContent>
-    </Card>
+        <p className="text-center text-sm text-gray-500">
+          Zaten hesabınız var mı?{" "}
+          <Link
+            href="/login"
+            className="text-[#F97316] hover:text-[#ea580c] font-semibold transition-colors"
+          >
+            Giriş Yapın
+          </Link>
+        </p>
+      </form>
+    </div>
   );
 }

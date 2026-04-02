@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Loader2, Building2, Bell } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Loader2, Building2, Bell, Mail, MessageCircle, Clock, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import { companyApi } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
-import { SECTOR_OPTIONS, COMPANY_SIZE_LABELS, DISTRICT_LABELS } from "@/lib/utils";
+import { SECTOR_OPTIONS, COMPANY_SIZE_LABELS } from "@/lib/utils";
 import type { Company } from "@cakeday/shared";
 
 const schema = z.object({
@@ -33,11 +32,38 @@ const schema = z.object({
 });
 type FormData = z.infer<typeof schema>;
 
+function SectionCard({ icon: Icon, title, description, children }: {
+  icon: React.ElementType;
+  title: string;
+  description?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className="px-6 py-5 border-b border-gray-50">
+        <div className="flex items-center gap-3">
+          <div className="h-9 w-9 rounded-xl bg-coral-50 flex items-center justify-center shrink-0">
+            <Icon className="h-5 w-5 text-coral-500" />
+          </div>
+          <div>
+            <h2 className="text-base font-bold text-gray-900">{title}</h2>
+            {description && <p className="text-xs text-gray-500 mt-0.5">{description}</p>}
+          </div>
+        </div>
+      </div>
+      <div className="px-6 py-5">
+        {children}
+      </div>
+    </div>
+  );
+}
+
 export default function SettingsPage() {
   const [company, setCompany] = useState<Company | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [notifEmail, setNotifEmail] = useState(true);
   const [notifWA, setNotifWA] = useState(false);
+  const [notifBirthday, setNotifBirthday] = useState(true);
   const { toast } = useToast();
 
   const {
@@ -81,130 +107,192 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-6 max-w-2xl">
+      {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-bold">Ayarlar</h1>
-        <p className="text-muted-foreground text-sm mt-1">
+        <h1 className="text-2xl font-bold text-gray-900">Ayarlar</h1>
+        <p className="text-sm text-gray-500 mt-1">
           Şirket profili ve bildirim tercihlerinizi yönetin.
         </p>
       </div>
 
-      {/* Company profile */}
-      <Card className="border border-border">
-        <CardHeader className="pb-4">
-          <CardTitle className="text-base font-semibold flex items-center gap-2">
-            <Building2 className="h-5 w-5 text-muted-foreground" />
-            Şirket Profili
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Şirket Adı</Label>
-              <Input id="name" {...register("name")} />
-              {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
+      {/* Company Profile */}
+      <SectionCard
+        icon={Building2}
+        title="Şirket Profili"
+        description="Temel şirket bilgilerini güncelleyin."
+      >
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="name" className="text-sm font-medium text-gray-700">Şirket Adı</Label>
+            <Input
+              id="name"
+              {...register("name")}
+              className="rounded-xl border-gray-200 focus:border-coral-300"
+              disabled={isLoading}
+            />
+            {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium text-gray-700">Sektör</Label>
+              <Select
+                defaultValue={company?.sector ?? ""}
+                onValueChange={(v) => setValue("sector", v)}
+              >
+                <SelectTrigger className="rounded-xl border-gray-200" disabled={isLoading}>
+                  <SelectValue placeholder="Seçin" />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl">
+                  {SECTOR_OPTIONS.map((s) => (
+                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Sektör</Label>
-                <Select
-                  defaultValue={company?.sector ?? ""}
-                  onValueChange={(v) => setValue("sector", v)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seçin" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {SECTOR_OPTIONS.map((s) => (
-                      <SelectItem key={s} value={s}>{s}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label>Çalışan Sayısı</Label>
-                <Select
-                  defaultValue={company?.company_size_range ?? ""}
-                  onValueChange={(v) => setValue("company_size_range", v)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seçin" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(COMPANY_SIZE_LABELS).map(([k, v]) => (
-                      <SelectItem key={k} value={k}>{v}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium text-gray-700">Çalışan Sayısı</Label>
+              <Select
+                defaultValue={company?.company_size_range ?? ""}
+                onValueChange={(v) => setValue("company_size_range", v)}
+              >
+                <SelectTrigger className="rounded-xl border-gray-200" disabled={isLoading}>
+                  <SelectValue placeholder="Seçin" />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl">
+                  {Object.entries(COMPANY_SIZE_LABELS).map(([k, v]) => (
+                    <SelectItem key={k} value={k}>{v}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
+          </div>
 
-            <Separator />
+          <Separator className="bg-gray-100" />
 
-            <div className="space-y-2">
-              <Label htmlFor="primary_contact_name">Yetkili Ad Soyad</Label>
-              <Input id="primary_contact_name" {...register("primary_contact_name")} />
-              {errors.primary_contact_name && <p className="text-xs text-destructive">{errors.primary_contact_name.message}</p>}
-            </div>
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Yetkili Bilgileri</p>
 
-            <div className="space-y-2">
-              <Label htmlFor="primary_contact_phone">Yetkili Telefon</Label>
-              <Input id="primary_contact_phone" type="tel" {...register("primary_contact_phone")} />
-              {errors.primary_contact_phone && <p className="text-xs text-destructive">{errors.primary_contact_phone.message}</p>}
-            </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="primary_contact_name" className="text-sm font-medium text-gray-700">Ad Soyad</Label>
+            <Input
+              id="primary_contact_name"
+              {...register("primary_contact_name")}
+              className="rounded-xl border-gray-200 focus:border-coral-300"
+              disabled={isLoading}
+            />
+            {errors.primary_contact_name && <p className="text-xs text-red-500">{errors.primary_contact_name.message}</p>}
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="billing_address">Fatura Adresi</Label>
-              <Input id="billing_address" {...register("billing_address")} />
-              {errors.billing_address && <p className="text-xs text-destructive">{errors.billing_address.message}</p>}
-            </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="primary_contact_phone" className="text-sm font-medium text-gray-700">Telefon</Label>
+            <Input
+              id="primary_contact_phone"
+              type="tel"
+              {...register("primary_contact_phone")}
+              className="rounded-xl border-gray-200 focus:border-coral-300"
+              disabled={isLoading}
+            />
+            {errors.primary_contact_phone && <p className="text-xs text-red-500">{errors.primary_contact_phone.message}</p>}
+          </div>
 
-            <Button type="submit" disabled={isSubmitting || !isDirty}>
-              {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Kaydet
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+          <div className="space-y-1.5">
+            <Label htmlFor="billing_address" className="text-sm font-medium text-gray-700">Fatura Adresi</Label>
+            <Input
+              id="billing_address"
+              {...register("billing_address")}
+              className="rounded-xl border-gray-200 focus:border-coral-300"
+              disabled={isLoading}
+            />
+            {errors.billing_address && <p className="text-xs text-red-500">{errors.billing_address.message}</p>}
+          </div>
+
+          <Button
+            type="submit"
+            disabled={isSubmitting || !isDirty || isLoading}
+            className="rounded-xl bg-coral-500 hover:bg-coral-600 text-white"
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Kaydediliyor...
+              </>
+            ) : (
+              <>
+                <Save className="mr-2 h-4 w-4" />
+                Kaydet
+              </>
+            )}
+          </Button>
+        </form>
+      </SectionCard>
 
       {/* Notifications */}
-      <Card className="border border-border">
-        <CardHeader className="pb-4">
-          <CardTitle className="text-base font-semibold flex items-center gap-2">
-            <Bell className="h-5 w-5 text-muted-foreground" />
-            Bildirim Tercihleri
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium">E-posta Bildirimleri</p>
-              <p className="text-xs text-muted-foreground">Sipariş durumu ve doğum günü hatırlatıcıları</p>
+      <SectionCard
+        icon={Bell}
+        title="Bildirim Tercihleri"
+        description="Hangi bildirimleri almak istediğinizi seçin."
+      >
+        <div className="space-y-1">
+          {/* Email Notifications */}
+          <div className="flex items-center justify-between py-4">
+            <div className="flex items-center gap-3">
+              <div className="h-9 w-9 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
+                <Mail className="h-4 w-4 text-blue-500" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-800">E-posta Bildirimleri</p>
+                <p className="text-xs text-gray-400">Sipariş durumu ve hatırlatıcılar</p>
+              </div>
             </div>
             <Switch checked={notifEmail} onCheckedChange={setNotifEmail} />
           </div>
-          <Separator />
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium">WhatsApp Bildirimleri</p>
-              <p className="text-xs text-muted-foreground">Sipariş güncellemeleri için anlık mesajlar</p>
+
+          <Separator className="bg-gray-50" />
+
+          {/* WhatsApp */}
+          <div className="flex items-center justify-between py-4">
+            <div className="flex items-center gap-3">
+              <div className="h-9 w-9 rounded-xl bg-green-50 flex items-center justify-center shrink-0">
+                <MessageCircle className="h-4 w-4 text-green-500" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-800">WhatsApp Bildirimleri</p>
+                <p className="text-xs text-gray-400">Sipariş güncellemeleri için anlık mesajlar</p>
+              </div>
             </div>
             <Switch checked={notifWA} onCheckedChange={setNotifWA} />
           </div>
-          <Separator />
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium">Doğum Günü Hatırlatıcısı</p>
-              <p className="text-xs text-muted-foreground">Doğum günü 3 gün önce e-posta bildirimi</p>
+
+          <Separator className="bg-gray-50" />
+
+          {/* Birthday reminders */}
+          <div className="flex items-center justify-between py-4">
+            <div className="flex items-center gap-3">
+              <div className="h-9 w-9 rounded-xl bg-coral-50 flex items-center justify-center shrink-0">
+                <Clock className="h-4 w-4 text-coral-500" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-800">Doğum Günü Hatırlatıcısı</p>
+                <p className="text-xs text-gray-400">Doğum günü 3 gün önce bildirim</p>
+              </div>
             </div>
-            <Switch defaultChecked />
+            <Switch checked={notifBirthday} onCheckedChange={setNotifBirthday} />
           </div>
 
-          <Button variant="outline" size="sm">
-            Bildirimleri Kaydet
-          </Button>
-        </CardContent>
-      </Card>
+          <Separator className="bg-gray-50" />
+
+          <div className="pt-3">
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-xl border-gray-200 text-gray-700 hover:bg-gray-50"
+            >
+              <Save className="mr-2 h-3.5 w-3.5" />
+              Bildirimleri Kaydet
+            </Button>
+          </div>
+        </div>
+      </SectionCard>
     </div>
   );
 }

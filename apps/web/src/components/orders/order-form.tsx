@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Loader2 } from "lucide-react";
+import { Loader2, User, MapPin, Cake, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -36,6 +36,20 @@ type FormData = z.infer<typeof schema>;
 
 interface OrderFormProps {
   onSubmit: (data: Partial<FormData>) => Promise<void>;
+}
+
+function SectionCard({ icon: Icon, title, children }: { icon: React.ElementType; title: string; children: React.ReactNode }) {
+  return (
+    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
+      <div className="flex items-center gap-2.5">
+        <div className="h-8 w-8 rounded-xl bg-coral-50 flex items-center justify-center">
+          <Icon className="h-4 w-4 text-coral-500" />
+        </div>
+        <h2 className="text-base font-bold text-gray-900">{title}</h2>
+      </div>
+      {children}
+    </div>
+  );
 }
 
 export function OrderForm({ onSubmit }: OrderFormProps) {
@@ -82,70 +96,91 @@ export function OrderForm({ onSubmit }: OrderFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
-      <div className="bg-white rounded-xl border border-border p-5 space-y-4">
-        <h2 className="font-semibold">Alıcı Bilgileri</h2>
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
+      {/* Recipient Info */}
+      <SectionCard icon={User} title="Alıcı Bilgileri">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="recipient_name">Alıcı Adı Soyadı *</Label>
-            <Input id="recipient_name" placeholder="Ad Soyad" {...register("recipient_name")} />
-            {errors.recipient_name && <p className="text-xs text-destructive">{errors.recipient_name.message}</p>}
+          <div className="space-y-1.5">
+            <Label htmlFor="recipient_name" className="text-sm font-medium text-gray-700">Alıcı Adı Soyadı *</Label>
+            <Input
+              id="recipient_name"
+              placeholder="Ad Soyad"
+              {...register("recipient_name")}
+              className="rounded-xl border-gray-200 focus:border-coral-300"
+            />
+            {errors.recipient_name && <p className="text-xs text-red-500">{errors.recipient_name.message}</p>}
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="recipient_phone">Telefon</Label>
-            <Input id="recipient_phone" type="tel" placeholder="05XX XXX XX XX" {...register("recipient_phone")} />
+          <div className="space-y-1.5">
+            <Label htmlFor="recipient_phone" className="text-sm font-medium text-gray-700">Telefon</Label>
+            <Input
+              id="recipient_phone"
+              type="tel"
+              placeholder="05XX XXX XX XX"
+              {...register("recipient_phone")}
+              className="rounded-xl border-gray-200 focus:border-coral-300"
+            />
           </div>
         </div>
-      </div>
+      </SectionCard>
 
-      <div className="bg-white rounded-xl border border-border p-5 space-y-4">
-        <h2 className="font-semibold">Teslimat Bilgileri</h2>
+      {/* Delivery Info */}
+      <SectionCard icon={MapPin} title="Teslimat Bilgileri">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="delivery_date">Teslimat Tarihi *</Label>
-            <Input id="delivery_date" type="date" {...register("delivery_date")} />
-            {errors.delivery_date && <p className="text-xs text-destructive">{errors.delivery_date.message}</p>}
+          <div className="space-y-1.5">
+            <Label htmlFor="delivery_date" className="text-sm font-medium text-gray-700">Teslimat Tarihi *</Label>
+            <Input
+              id="delivery_date"
+              type="date"
+              {...register("delivery_date")}
+              className="rounded-xl border-gray-200 focus:border-coral-300"
+            />
+            {errors.delivery_date && <p className="text-xs text-red-500">{errors.delivery_date.message}</p>}
           </div>
-          <div className="space-y-2">
-            <Label>Teslimat İlçesi *</Label>
+          <div className="space-y-1.5">
+            <Label className="text-sm font-medium text-gray-700">Teslimat İlçesi *</Label>
             <Select onValueChange={(v) => setValue("delivery_district", v)}>
-              <SelectTrigger>
+              <SelectTrigger className="rounded-xl border-gray-200">
                 <SelectValue placeholder="İlçe seçin" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="rounded-xl">
                 {Object.entries(DISTRICT_LABELS).map(([k, v]) => (
                   <SelectItem key={k} value={k}>{v}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
-            {errors.delivery_district && <p className="text-xs text-destructive">{errors.delivery_district.message}</p>}
+            {errors.delivery_district && <p className="text-xs text-red-500">{errors.delivery_district.message}</p>}
           </div>
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="delivery_address">Teslimat Adresi *</Label>
-          <Input id="delivery_address" placeholder="Mahalle, sokak, bina no, daire no" {...register("delivery_address")} />
-          {errors.delivery_address && <p className="text-xs text-destructive">{errors.delivery_address.message}</p>}
+        <div className="space-y-1.5">
+          <Label htmlFor="delivery_address" className="text-sm font-medium text-gray-700">Teslimat Adresi *</Label>
+          <Input
+            id="delivery_address"
+            placeholder="Mahalle, sokak, bina no, daire no"
+            {...register("delivery_address")}
+            className="rounded-xl border-gray-200 focus:border-coral-300"
+          />
+          {errors.delivery_address && <p className="text-xs text-red-500">{errors.delivery_address.message}</p>}
         </div>
-        <div className="space-y-2">
-          <Label>Teslimat Saati</Label>
+        <div className="space-y-1.5">
+          <Label className="text-sm font-medium text-gray-700">Teslimat Saati</Label>
           <Select
             defaultValue="no_preference"
             onValueChange={(v) => setValue("delivery_window", v as FormData["delivery_window"])}
           >
-            <SelectTrigger>
+            <SelectTrigger className="rounded-xl border-gray-200">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="morning">Sabah (09:00 - 13:00)</SelectItem>
-              <SelectItem value="afternoon">Öğleden Sonra (13:00 - 18:00)</SelectItem>
-              <SelectItem value="no_preference">Fark Etmez</SelectItem>
+            <SelectContent className="rounded-xl">
+              <SelectItem value="morning">🌅 Sabah (09:00 - 13:00)</SelectItem>
+              <SelectItem value="afternoon">☀️ Öğleden Sonra (13:00 - 18:00)</SelectItem>
+              <SelectItem value="no_preference">🕐 Fark Etmez</SelectItem>
             </SelectContent>
           </Select>
         </div>
-      </div>
+      </SectionCard>
 
-      <div className="bg-white rounded-xl border border-border p-5 space-y-4">
-        <h2 className="font-semibold">Pasta Seçimi</h2>
+      {/* Cake Selection */}
+      <SectionCard icon={Cake} title="Pasta Seçimi">
         <CakeSelector
           cakeTypes={cakeTypes}
           selectedTypeId={selectedTypeId}
@@ -153,27 +188,39 @@ export function OrderForm({ onSubmit }: OrderFormProps) {
           onTypeChange={handleTypeChange}
           onSizeChange={handleSizeChange}
         />
-        {errors.cake_type_id && <p className="text-xs text-destructive">{errors.cake_type_id.message}</p>}
-      </div>
+        {errors.cake_type_id && <p className="text-xs text-red-500">{errors.cake_type_id.message}</p>}
+      </SectionCard>
 
-      <div className="bg-white rounded-xl border border-border p-5 space-y-4">
-        <h2 className="font-semibold">Pasta Mesajı</h2>
-        <div className="space-y-2">
-          <Label htmlFor="custom_text">Pasta Üzerine Yazılacak Mesaj</Label>
+      {/* Custom Message */}
+      <SectionCard icon={MessageSquare} title="Pasta Mesajı">
+        <div className="space-y-1.5">
+          <Label htmlFor="custom_text" className="text-sm font-medium text-gray-700">Pasta Üzerine Yazılacak Mesaj</Label>
           <Textarea
             id="custom_text"
-            placeholder="İyi ki doğdun Ayşe!"
+            placeholder="İyi ki doğdun Ayşe! 🎂"
             maxLength={100}
             rows={2}
             {...register("custom_text")}
+            className="rounded-xl border-gray-200 focus:border-coral-300 resize-none"
           />
-          <p className="text-xs text-muted-foreground">Maksimum 100 karakter.</p>
+          <p className="text-xs text-gray-400">Maksimum 100 karakter.</p>
         </div>
-      </div>
+      </SectionCard>
 
-      <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
-        {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-        Sipariş Ver
+      <Button
+        type="submit"
+        className="w-full rounded-xl bg-coral-500 hover:bg-coral-600 text-white h-12 text-base font-semibold"
+        size="lg"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? (
+          <>
+            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+            Sipariş Oluşturuluyor...
+          </>
+        ) : (
+          "Sipariş Ver"
+        )}
       </Button>
     </form>
   );

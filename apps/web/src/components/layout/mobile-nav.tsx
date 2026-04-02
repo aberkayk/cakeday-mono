@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { X, Cake, LayoutDashboard, Users, ShoppingBag, ListChecks, CreditCard, Settings } from "lucide-react";
+import { X, LayoutDashboard, Users, ShoppingBag, ListChecks, CreditCard, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
@@ -39,19 +39,34 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
 
   return (
     <div className="fixed inset-0 z-50 lg:hidden">
-      <div className="fixed inset-0 bg-black/50" onClick={onClose} />
-      <div className="fixed inset-y-0 left-0 flex flex-col w-72 bg-white shadow-xl">
-        <div className="flex items-center justify-between px-6 py-5 border-b border-border">
-          <div className="flex items-center gap-2">
-            <Cake className="h-7 w-7 text-primary" />
-            <span className="text-xl font-bold">CakeDay</span>
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 bg-dark-900/40 backdrop-blur-sm"
+        onClick={onClose}
+      />
+
+      {/* Drawer */}
+      <div className="fixed inset-y-0 left-0 flex flex-col w-72 bg-white shadow-2xl">
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-coral-500 text-white shadow-sm">
+              <span className="text-lg leading-none">🎂</span>
+            </div>
+            <span className="text-xl font-bold text-dark-900 tracking-tight">CakeDay</span>
           </div>
-          <Button variant="ghost" size="icon" onClick={onClose}>
-            <X className="h-5 w-5" />
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 rounded-lg text-gray-400 hover:text-gray-600"
+            onClick={onClose}
+          >
+            <X className="h-4 w-4" />
           </Button>
         </div>
 
-        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+        {/* Nav items */}
+        <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive =
@@ -64,13 +79,18 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
                 href={item.href}
                 onClick={onClose}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors",
+                  "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150",
                   isActive
-                    ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    ? "bg-coral-50 text-coral-600 border-l-[3px] border-coral-500 pl-[9px]"
+                    : "text-gray-500 hover:bg-gray-50 hover:text-gray-800"
                 )}
               >
-                <Icon className="h-4 w-4 shrink-0" />
+                <Icon
+                  className={cn(
+                    "h-4 w-4 shrink-0",
+                    isActive ? "text-coral-500" : "text-gray-400"
+                  )}
+                />
                 {item.label}
               </Link>
             );

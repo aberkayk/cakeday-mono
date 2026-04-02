@@ -3,7 +3,6 @@
 import { useState, useRef, useCallback } from "react";
 import { Upload, FileText, X, AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
@@ -121,32 +120,48 @@ export function CsvImport() {
 
   if (result) {
     return (
-      <Card>
-        <CardContent className="pt-8 pb-8 text-center space-y-4">
-          <CheckCircle2 className="mx-auto h-16 w-16 text-green-500" />
-          <h2 className="text-xl font-bold">İçe Aktarım Tamamlandı</h2>
-          <div className="flex justify-center gap-6">
-            <div>
-              <p className="text-3xl font-bold text-green-600">{result.imported}</p>
-              <p className="text-sm text-muted-foreground">Eklendi</p>
-            </div>
-            <div>
-              <p className="text-3xl font-bold text-orange-600">{result.skipped}</p>
-              <p className="text-sm text-muted-foreground">Atlandı</p>
-            </div>
+      <div className="py-8 text-center space-y-6">
+        <div className="flex flex-col items-center">
+          <div className="h-20 w-20 rounded-full bg-green-50 flex items-center justify-center mb-4">
+            <CheckCircle2 className="h-10 w-10 text-green-500" />
           </div>
-          {result.errors.length > 0 && (
-            <div className="text-left rounded-md bg-destructive/10 p-3 space-y-1">
-              {result.errors.map((e, i) => (
-                <p key={i} className="text-xs text-destructive">{e}</p>
-              ))}
+          <h2 className="text-xl font-bold text-gray-900 mb-1">🎉 İçe Aktarım Tamamlandı!</h2>
+          <p className="text-sm text-gray-500">Çalışanlar başarıyla sisteme eklendi.</p>
+        </div>
+
+        <div className="flex justify-center gap-8">
+          <div className="text-center">
+            <p className="text-4xl font-bold text-green-600">{result.imported}</p>
+            <p className="text-sm text-gray-500 mt-1">Başarıyla Eklendi</p>
+          </div>
+          {result.skipped > 0 && (
+            <div className="text-center">
+              <p className="text-4xl font-bold text-orange-500">{result.skipped}</p>
+              <p className="text-sm text-gray-500 mt-1">Atlandı</p>
             </div>
           )}
-          <Button onClick={reset} variant="outline">
-            Yeni Yükleme Yap
-          </Button>
-        </CardContent>
-      </Card>
+        </div>
+
+        {result.errors.length > 0 && (
+          <div className="text-left rounded-xl bg-red-50 border border-red-100 p-4 space-y-1 max-w-md mx-auto">
+            <div className="flex items-center gap-2 mb-2">
+              <AlertCircle className="h-4 w-4 text-red-500" />
+              <p className="text-sm font-semibold text-red-700">Hatalar</p>
+            </div>
+            {result.errors.map((e, i) => (
+              <p key={i} className="text-xs text-red-600">{e}</p>
+            ))}
+          </div>
+        )}
+
+        <Button
+          onClick={reset}
+          variant="outline"
+          className="rounded-xl border-gray-200 text-gray-700"
+        >
+          Yeni Yükleme Yap
+        </Button>
+      </div>
     );
   }
 
@@ -155,9 +170,11 @@ export function CsvImport() {
       {/* Drop zone */}
       <div
         className={cn(
-          "border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-colors",
-          isDragging ? "border-primary bg-primary/5" : "border-border hover:border-primary/50",
-          file && "border-green-400 bg-green-50"
+          "border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all",
+          isDragging
+            ? "border-coral-400 bg-coral-50"
+            : "border-gray-200 hover:border-coral-300 hover:bg-coral-50/30",
+          file && "border-green-400 bg-green-50/30"
         )}
         onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
         onDragLeave={() => setIsDragging(false)}
@@ -172,29 +189,33 @@ export function CsvImport() {
           onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
         />
         {file ? (
-          <div className="flex items-center justify-center gap-3">
-            <FileText className="h-8 w-8 text-green-600" />
+          <div className="flex items-center justify-center gap-4">
+            <div className="h-12 w-12 rounded-xl bg-green-100 flex items-center justify-center shrink-0">
+              <FileText className="h-6 w-6 text-green-600" />
+            </div>
             <div className="text-left">
-              <p className="font-medium text-sm">{file.name}</p>
-              <p className="text-xs text-muted-foreground">
-                {preview.length} çalışan hazır
+              <p className="font-semibold text-gray-900">{file.name}</p>
+              <p className="text-sm text-gray-500">
+                {preview.length} çalışan tespit edildi
               </p>
             </div>
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 ml-2"
+              className="h-8 w-8 ml-2 rounded-xl hover:bg-gray-100"
               onClick={(e) => { e.stopPropagation(); reset(); }}
             >
-              <X className="h-4 w-4" />
+              <X className="h-4 w-4 text-gray-500" />
             </Button>
           </div>
         ) : (
           <>
-            <Upload className="mx-auto h-12 w-12 text-muted-foreground/40 mb-3" />
-            <p className="text-sm font-medium">CSV dosyanızı buraya sürükleyin</p>
-            <p className="text-xs text-muted-foreground mt-1">veya tıklayarak seçin</p>
-            <p className="text-xs text-muted-foreground mt-3">
+            <div className="h-16 w-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
+              <Upload className="h-8 w-8 text-gray-400" />
+            </div>
+            <p className="text-base font-semibold text-gray-700 mb-1">CSV dosyanızı buraya sürükleyin</p>
+            <p className="text-sm text-gray-400">veya <span className="text-coral-600 font-medium">tıklayarak seçin</span></p>
+            <p className="text-xs text-gray-400 mt-4 bg-gray-50 rounded-xl px-4 py-2 inline-block">
               Desteklenen sütunlar: first_name, last_name, date_of_birth, department, work_email, district
             </p>
           </>
@@ -203,50 +224,54 @@ export function CsvImport() {
 
       {/* Parse errors */}
       {parseErrors.length > 0 && (
-        <div className="rounded-md bg-destructive/10 border border-destructive/20 p-4 space-y-1">
+        <div className="rounded-xl bg-red-50 border border-red-100 p-4 space-y-1">
           <div className="flex items-center gap-2 mb-2">
-            <AlertCircle className="h-4 w-4 text-destructive" />
-            <p className="text-sm font-medium text-destructive">Hatalı Satırlar</p>
+            <AlertCircle className="h-4 w-4 text-red-500" />
+            <p className="text-sm font-semibold text-red-700">Hatalı Satırlar</p>
           </div>
           {parseErrors.map((e, i) => (
-            <p key={i} className="text-xs text-destructive">{e}</p>
+            <p key={i} className="text-xs text-red-600">{e}</p>
           ))}
         </div>
       )}
 
       {/* Preview table */}
       {preview.length > 0 && (
-        <div className="space-y-3">
+        <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="font-medium text-sm">
-              Önizleme ({preview.length} çalışan)
-            </h3>
-            <Badge variant="secondary">{preview.length} satır</Badge>
+            <div>
+              <h3 className="font-semibold text-gray-900">Önizleme</h3>
+              <p className="text-xs text-gray-500 mt-0.5">İlk 10 satır gösteriliyor</p>
+            </div>
+            <Badge className="bg-green-50 text-green-700 border-0 font-semibold">
+              {preview.length} çalışan
+            </Badge>
           </div>
-          <div className="rounded-lg border border-border overflow-hidden">
+
+          <div className="rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
             <Table>
               <TableHeader>
-                <TableRow className="bg-muted/30">
-                  <TableHead>Ad</TableHead>
-                  <TableHead>Soyad</TableHead>
-                  <TableHead>Doğum Tarihi</TableHead>
-                  <TableHead>Departman</TableHead>
-                  <TableHead>E-posta</TableHead>
+                <TableRow className="bg-gray-50/80 hover:bg-gray-50/80">
+                  <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Ad</TableHead>
+                  <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Soyad</TableHead>
+                  <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Doğum Tarihi</TableHead>
+                  <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Departman</TableHead>
+                  <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">E-posta</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {preview.slice(0, 10).map((row, i) => (
-                  <TableRow key={i}>
-                    <TableCell className="text-sm">{row.first_name}</TableCell>
-                    <TableCell className="text-sm">{row.last_name}</TableCell>
-                    <TableCell className="text-sm">{row.date_of_birth}</TableCell>
-                    <TableCell className="text-sm text-muted-foreground">{row.department ?? "—"}</TableCell>
-                    <TableCell className="text-sm text-muted-foreground">{row.work_email ?? "—"}</TableCell>
+                  <TableRow key={i} className="border-gray-50">
+                    <TableCell className="text-sm font-medium text-gray-900">{row.first_name}</TableCell>
+                    <TableCell className="text-sm text-gray-700">{row.last_name}</TableCell>
+                    <TableCell className="text-sm text-gray-600">{row.date_of_birth}</TableCell>
+                    <TableCell className="text-sm text-gray-500">{row.department ?? "—"}</TableCell>
+                    <TableCell className="text-sm text-gray-500">{row.work_email ?? "—"}</TableCell>
                   </TableRow>
                 ))}
                 {preview.length > 10 && (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center text-xs text-muted-foreground py-2">
+                    <TableCell colSpan={5} className="text-center text-xs text-gray-400 py-3 bg-gray-50/50">
                       ve {preview.length - 10} çalışan daha...
                     </TableCell>
                   </TableRow>
@@ -258,7 +283,8 @@ export function CsvImport() {
           <Button
             onClick={handleImport}
             disabled={isUploading || preview.length === 0}
-            className="w-full"
+            className="w-full rounded-xl bg-coral-500 hover:bg-coral-600 text-white h-11"
+            size="lg"
           >
             {isUploading ? (
               <>

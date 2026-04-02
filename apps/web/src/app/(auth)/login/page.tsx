@@ -5,16 +5,16 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2, Mail, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/use-auth";
 
 const schema = z.object({
   email: z.string().email("Geçerli bir e-posta adresi girin."),
   password: z.string().min(1, "Şifre gerekli."),
+  rememberMe: z.boolean().optional(),
 });
 type FormData = z.infer<typeof schema>;
 
@@ -41,79 +41,134 @@ export default function LoginPage() {
   };
 
   return (
-    <Card className="shadow-lg">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl">Giriş Yap</CardTitle>
-        <CardDescription>Hesabınıza erişmek için giriş yapın.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {serverError && (
-            <div className="rounded-md bg-destructive/10 border border-destructive/20 px-4 py-3 text-sm text-destructive">
-              {serverError}
-            </div>
-          )}
+    <div className="space-y-8">
+      {/* Heading */}
+      <div className="space-y-1.5">
+        <h1 className="text-3xl font-extrabold text-[#1a1a2e] tracking-tight">
+          Hoş Geldiniz 👋
+        </h1>
+        <p className="text-gray-500 text-base">Hesabınıza giriş yapın</p>
+      </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="email">E-posta</Label>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        {/* Server error */}
+        {serverError && (
+          <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700 flex items-start gap-2.5">
+            <svg className="w-4 h-4 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+            {serverError}
+          </div>
+        )}
+
+        {/* Email */}
+        <div className="space-y-1.5">
+          <Label htmlFor="email" className="text-sm font-medium text-[#1a1a2e]">
+            E-posta
+          </Label>
+          <div className="relative">
+            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-gray-400 h-[18px] w-[18px]" />
             <Input
               id="email"
               type="email"
               placeholder="ornek@sirket.com"
               autoComplete="email"
+              className="pl-10 h-12 rounded-xl border-gray-200 bg-gray-50 focus:bg-white text-[#1a1a2e] placeholder:text-gray-400 focus-visible:ring-[#F97316] focus-visible:ring-offset-0"
               {...register("email")}
             />
-            {errors.email && (
-              <p className="text-xs text-destructive">{errors.email.message}</p>
-            )}
           </div>
+          {errors.email && (
+            <p className="text-xs text-red-600">{errors.email.message}</p>
+          )}
+        </div>
 
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="password">Şifre</Label>
-              <Link
-                href="/forgot-password"
-                className="text-xs text-primary hover:underline"
-              >
-                Şifremi Unuttum
-              </Link>
-            </div>
-            <div className="relative">
-              <Input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                placeholder="••••••••"
-                autoComplete="current-password"
-                {...register("password")}
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="absolute right-1 top-1 h-8 w-8 text-muted-foreground"
-                onClick={() => setShowPassword((v) => !v)}
-              >
-                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </Button>
-            </div>
-            {errors.password && (
-              <p className="text-xs text-destructive">{errors.password.message}</p>
-            )}
+        {/* Password */}
+        <div className="space-y-1.5">
+          <Label htmlFor="password" className="text-sm font-medium text-[#1a1a2e]">
+            Şifre
+          </Label>
+          <div className="relative">
+            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 h-[18px] w-[18px]" />
+            <Input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="••••••••"
+              autoComplete="current-password"
+              className="pl-10 pr-11 h-12 rounded-xl border-gray-200 bg-gray-50 focus:bg-white text-[#1a1a2e] placeholder:text-gray-400 focus-visible:ring-[#F97316] focus-visible:ring-offset-0"
+              {...register("password")}
+            />
+            <button
+              type="button"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+              onClick={() => setShowPassword((v) => !v)}
+              tabIndex={-1}
+              aria-label={showPassword ? "Şifreyi gizle" : "Şifreyi göster"}
+            >
+              {showPassword ? <EyeOff className="h-4.5 w-4.5 h-[18px] w-[18px]" /> : <Eye className="h-[18px] w-[18px]" />}
+            </button>
           </div>
+          {errors.password && (
+            <p className="text-xs text-red-600">{errors.password.message}</p>
+          )}
+        </div>
 
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Giriş Yap
-          </Button>
+        {/* Remember me + forgot password row */}
+        <div className="flex items-center justify-between">
+          <label className="flex items-center gap-2.5 cursor-pointer group">
+            <input
+              type="checkbox"
+              className="w-4 h-4 rounded border-gray-300 accent-[#F97316] cursor-pointer"
+              {...register("rememberMe")}
+            />
+            <span className="text-sm text-gray-600 group-hover:text-[#1a1a2e] transition-colors">
+              Beni hatırla
+            </span>
+          </label>
+          <Link
+            href="/forgot-password"
+            className="text-sm text-[#F97316] hover:text-[#ea580c] font-medium transition-colors"
+          >
+            Şifremi Unuttum
+          </Link>
+        </div>
 
-          <p className="text-center text-sm text-muted-foreground">
-            Hesabınız yok mu?{" "}
-            <Link href="/register" className="text-primary hover:underline font-medium">
-              Şirketi Kaydedin
-            </Link>
-          </p>
-        </form>
-      </CardContent>
-    </Card>
+        {/* Submit */}
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full h-12 bg-[#F97316] hover:bg-[#ea580c] text-white font-semibold rounded-xl text-base shadow-sm shadow-orange-200 transition-all hover:shadow-md hover:shadow-orange-200 disabled:opacity-60"
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Giriş yapılıyor...
+            </>
+          ) : (
+            "Giriş Yap"
+          )}
+        </Button>
+      </form>
+
+      {/* Divider */}
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-gray-200" />
+        </div>
+        <div className="relative flex justify-center">
+          <span className="bg-white px-4 text-sm text-gray-400">veya</span>
+        </div>
+      </div>
+
+      {/* Register link */}
+      <p className="text-center text-sm text-gray-500">
+        Hesabınız yok mu?{" "}
+        <Link
+          href="/register"
+          className="text-[#F97316] hover:text-[#ea580c] font-semibold transition-colors"
+        >
+          Ücretsiz Kayıt Olun
+        </Link>
+      </p>
+    </div>
   );
 }

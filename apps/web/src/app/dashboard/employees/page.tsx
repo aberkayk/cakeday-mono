@@ -12,7 +12,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, AlertTriangle } from "lucide-react";
 import { useEmployees } from "@/hooks/use-employees";
 import type { Employee } from "@cakeday/shared";
 
@@ -93,12 +93,22 @@ export default function EmployeesPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Çalışanlar</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          Şirketinizdeki tüm çalışanları yönetin.
-        </p>
+    <div className="space-y-6 max-w-7xl">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold text-gray-900">Çalışanlar</h1>
+            {!isLoading && (
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-coral-50 text-coral-700">
+                {totalCount} kişi
+              </span>
+            )}
+          </div>
+          <p className="text-sm text-gray-500 mt-1">
+            Şirketinizdeki tüm çalışanları yönetin.
+          </p>
+        </div>
       </div>
 
       <EmployeeTable
@@ -124,19 +134,30 @@ export default function EmployeesPage() {
         employee={editTarget}
       />
 
+      {/* Delete Confirmation Dialog */}
       <Dialog open={!!deleteTarget} onOpenChange={() => setDeleteTarget(null)}>
-        <DialogContent className="max-w-sm">
+        <DialogContent className="max-w-sm rounded-2xl">
           <DialogHeader>
-            <DialogTitle>Çalışanı Sil</DialogTitle>
+            <div className="flex items-center gap-3 mb-1">
+              <div className="h-10 w-10 rounded-full bg-red-50 flex items-center justify-center shrink-0">
+                <AlertTriangle className="h-5 w-5 text-red-500" />
+              </div>
+              <DialogTitle className="text-base">Çalışanı Sil</DialogTitle>
+            </div>
           </DialogHeader>
-          <p className="text-sm text-muted-foreground">
-            <strong>{deleteTarget?.first_name} {deleteTarget?.last_name}</strong> adlı çalışanı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.
+          <p className="text-sm text-gray-600">
+            <strong className="text-gray-900">{deleteTarget?.first_name} {deleteTarget?.last_name}</strong> adlı çalışanı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.
           </p>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteTarget(null)}>
+          <DialogFooter className="gap-2 mt-2">
+            <Button variant="outline" onClick={() => setDeleteTarget(null)} className="flex-1 rounded-xl">
               İptal
             </Button>
-            <Button variant="destructive" onClick={handleDeleteConfirm} disabled={isDeleting}>
+            <Button
+              variant="destructive"
+              onClick={handleDeleteConfirm}
+              disabled={isDeleting}
+              className="flex-1 rounded-xl"
+            >
               {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Sil
             </Button>

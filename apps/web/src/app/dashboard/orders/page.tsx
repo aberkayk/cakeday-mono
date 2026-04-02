@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { Plus, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { OrderList } from "@/components/orders/order-list";
 import { useOrders } from "@/hooks/use-orders";
 import { useToast } from "@/hooks/use-toast";
@@ -15,14 +14,13 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Button as Btn } from "@/components/ui/button";
 import type { Order } from "@cakeday/shared";
 
 const TABS = [
-  { value: "upcoming", label: "Yaklaşan", statuses: ["draft", "pending_approval", "confirmed"] },
-  { value: "active", label: "Aktif", statuses: ["assigned", "accepted", "preparing", "out_for_delivery"] },
-  { value: "completed", label: "Tamamlanan", statuses: ["delivered"] },
-  { value: "cancelled", label: "İptal", statuses: ["cancelled", "rejected", "failed"] },
+  { value: "upcoming", label: "Yaklaşan", statuses: ["draft", "pending_approval", "confirmed"], color: "bg-blue-50 text-blue-700" },
+  { value: "active", label: "Aktif", statuses: ["assigned", "accepted", "preparing", "out_for_delivery"], color: "bg-coral-50 text-coral-700" },
+  { value: "completed", label: "Tamamlanan", statuses: ["delivered"], color: "bg-green-50 text-green-700" },
+  { value: "cancelled", label: "İptal", statuses: ["cancelled", "rejected", "failed"], color: "bg-gray-100 text-gray-600" },
 ];
 
 export default function OrdersPage() {
@@ -54,16 +52,24 @@ export default function OrdersPage() {
   const filteredOrders = (statuses: string[]) =>
     orders.filter((o) => statuses.includes(o.status));
 
+  const activeTabConfig = TABS.find((t) => t.value === activeTab)!;
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 max-w-7xl">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Siparişler</h1>
-          <p className="text-muted-foreground text-sm mt-1">
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold text-gray-900">Siparişler</h1>
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-coral-50 text-coral-700">
+              {orders.length} toplam
+            </span>
+          </div>
+          <p className="text-sm text-gray-500 mt-1">
             Tüm sipariş geçmişini ve durumlarını görüntüleyin.
           </p>
         </div>
-        <Button asChild>
+        <Button asChild className="rounded-xl bg-coral-500 hover:bg-coral-600 text-white shrink-0">
           <Link href="/dashboard/orders/new">
             <Plus className="mr-2 h-4 w-4" />
             Yeni Sipariş
@@ -71,49 +77,72 @@ export default function OrdersPage() {
         </Button>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
-          {TABS.map((tab) => (
-            <TabsTrigger key={tab.value} value={tab.value}>
-              {tab.label}
-              <span className="ml-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-muted px-1.5 text-xs font-medium">
-                {filteredOrders(tab.statuses).length}
-              </span>
-            </TabsTrigger>
-          ))}
-        </TabsList>
+      {/* Custom Tab Nav */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="flex items-center gap-1 p-1.5 border-b border-gray-100 bg-gray-50/50">
+          {TABS.map((tab) => {
+            const count = filteredOrders(tab.statuses).length;
+            const isActive = activeTab === tab.value;
+            return (
+              <button
+                key={tab.value}
+                onClick={() => setActiveTab(tab.value)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                  isActive
+                    ? "bg-white text-gray-900 shadow-sm"
+                    : "text-gray-500 hover:text-gray-700 hover:bg-white/60"
+                }`}
+              >
+                {tab.label}
+                <span className={`inline-flex items-center justify-center h-5 min-w-5 px-1.5 rounded-full text-xs font-bold ${
+                  isActive ? tab.color : "bg-gray-100 text-gray-500"
+                }`}>
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
 
-        {TABS.map((tab) => (
-          <TabsContent key={tab.value} value={tab.value} className="mt-4">
-            <OrderList
-              orders={filteredOrders(tab.statuses)}
-              isLoading={isLoading}
-              onCancel={tab.value === "upcoming" ? setCancelTarget : undefined}
-              emptyMessage={
-                tab.value === "upcoming"
-                  ? "Yaklaşan sipariş yok."
-                  : tab.value === "active"
-                  ? "Aktif sipariş yok."
-                  : tab.value === "completed"
-                  ? "Tamamlanan sipariş yok."
-                  : "İptal edilen sipariş yok."
-              }
-            />
-          </TabsContent>
-        ))}
-      </Tabs>
+        <div className="p-5">
+          <OrderList
+            orders={filteredOrders(activeTabConfig.statuses)}
+            isLoading={isLoading}
+            onCancel={activeTab === "upcoming" ? setCancelTarget : undefined}
+            emptyMessage={
+              activeTab === "upcoming"
+                ? "Yaklaşan sipariş yok."
+                : activeTab === "active"
+                ? "Aktif sipariş yok."
+                : activeTab === "completed"
+                ? "Tamamlanan sipariş yok."
+                : "İptal edilen sipariş yok."
+            }
+          />
+        </div>
+      </div>
 
+      {/* Cancel Dialog */}
       <Dialog open={!!cancelTarget} onOpenChange={() => setCancelTarget(null)}>
-        <DialogContent className="max-w-sm">
+        <DialogContent className="max-w-sm rounded-2xl">
           <DialogHeader>
-            <DialogTitle>Siparişi İptal Et</DialogTitle>
+            <div className="flex items-center gap-3 mb-1">
+              <div className="h-10 w-10 rounded-full bg-red-50 flex items-center justify-center shrink-0">
+                <ShoppingBag className="h-5 w-5 text-red-500" />
+              </div>
+              <DialogTitle className="text-base font-bold text-gray-900">Siparişi İptal Et</DialogTitle>
+            </div>
           </DialogHeader>
-          <p className="text-sm text-muted-foreground">
-            <strong>{cancelTarget?.recipient_name}</strong> için verilen siparişi iptal etmek istediğinizden emin misiniz?
+          <p className="text-sm text-gray-600">
+            <strong className="text-gray-900">{cancelTarget?.recipient_name}</strong> için verilen siparişi iptal etmek istediğinizden emin misiniz?
           </p>
-          <DialogFooter>
-            <Btn variant="outline" onClick={() => setCancelTarget(null)}>Vazgeç</Btn>
-            <Btn variant="destructive" onClick={handleCancelConfirm}>İptal Et</Btn>
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setCancelTarget(null)} className="flex-1 rounded-xl border-gray-200">
+              Vazgeç
+            </Button>
+            <Button variant="destructive" onClick={handleCancelConfirm} className="flex-1 rounded-xl">
+              İptal Et
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

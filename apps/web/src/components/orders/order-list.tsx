@@ -17,7 +17,7 @@ export function OrderList({ orders, isLoading = false, onCancel, emptyMessage }:
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {[...Array(6)].map((_, i) => (
-          <Skeleton key={i} className="h-44 rounded-xl" />
+          <Skeleton key={i} className="h-52 rounded-2xl" />
         ))}
       </div>
     );
@@ -26,8 +26,11 @@ export function OrderList({ orders, isLoading = false, onCancel, emptyMessage }:
   if (orders.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
-        <ShoppingBag className="h-16 w-16 text-muted-foreground/30 mb-3" />
-        <p className="text-muted-foreground text-sm">
+        <div className="h-16 w-16 rounded-2xl bg-gray-50 flex items-center justify-center mb-4">
+          <ShoppingBag className="h-8 w-8 text-gray-300" />
+        </div>
+        <p className="text-sm font-semibold text-gray-600 mb-1">Sipariş bulunamadı</p>
+        <p className="text-xs text-gray-400">
           {emptyMessage ?? "Bu kategoride sipariş yok."}
         </p>
       </div>

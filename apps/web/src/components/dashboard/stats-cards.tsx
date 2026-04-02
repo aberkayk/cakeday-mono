@@ -1,7 +1,6 @@
 "use client";
 
 import { Users, ShoppingBag, Cake, TrendingUp } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface StatsCardsProps {
@@ -24,33 +23,37 @@ export function StatsCards({
       title: "Toplam Çalışan",
       value: totalEmployees,
       icon: Users,
-      description: "Aktif çalışan sayısı",
-      color: "text-blue-600",
-      bg: "bg-blue-50",
+      description: "Kayıtlı çalışan",
+      iconBg: "bg-blue-50",
+      iconColor: "text-blue-500",
+      valueBg: "bg-blue-50/60",
     },
     {
       title: "Yaklaşan Doğum Günleri",
       value: upcomingBirthdays,
       icon: Cake,
       description: "Sonraki 30 günde",
-      color: "text-pink-600",
-      bg: "bg-pink-50",
+      iconBg: "bg-pink-50",
+      iconColor: "text-pink-500",
+      valueBg: "bg-pink-50/60",
     },
     {
       title: "Aktif Siparişler",
       value: activeOrders,
       icon: ShoppingBag,
-      description: "Devam eden siparişler",
-      color: "text-orange-600",
-      bg: "bg-orange-50",
+      description: "Devam eden",
+      iconBg: "bg-coral-50",
+      iconColor: "text-coral-500",
+      valueBg: "bg-coral-50/60",
     },
     {
       title: "Bu Ay Siparişler",
       value: ordersThisMonth,
       icon: TrendingUp,
-      description: "Bu ayki toplam sipariş",
-      color: "text-green-600",
-      bg: "bg-green-50",
+      description: "Toplam sipariş",
+      iconBg: "bg-green-50",
+      iconColor: "text-green-500",
+      valueBg: "bg-green-50/60",
     },
   ];
 
@@ -58,15 +61,14 @@ export function StatsCards({
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[...Array(4)].map((_, i) => (
-          <Card key={i}>
-            <CardHeader className="pb-2">
+          <div key={i} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+            <div className="flex items-center justify-between mb-4">
               <Skeleton className="h-4 w-32" />
-            </CardHeader>
-            <CardContent>
-              <Skeleton className="h-8 w-16 mb-1" />
-              <Skeleton className="h-3 w-24" />
-            </CardContent>
-          </Card>
+              <Skeleton className="h-10 w-10 rounded-xl" />
+            </div>
+            <Skeleton className="h-9 w-16 mb-1" />
+            <Skeleton className="h-3 w-24" />
+          </div>
         ))}
       </div>
     );
@@ -77,20 +79,18 @@ export function StatsCards({
       {cards.map((card) => {
         const Icon = card.icon;
         return (
-          <Card key={card.title} className="border border-border">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                {card.title}
-              </CardTitle>
-              <div className={`rounded-lg p-2 ${card.bg}`}>
-                <Icon className={`h-4 w-4 ${card.color}`} />
+          <div key={card.title} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between mb-4">
+              <p className="text-sm font-medium text-gray-500">{card.title}</p>
+              <div className={`h-10 w-10 rounded-xl ${card.iconBg} flex items-center justify-center`}>
+                <Icon className={`h-5 w-5 ${card.iconColor}`} />
               </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold">{card.value.toLocaleString("tr-TR")}</p>
-              <p className="text-xs text-muted-foreground mt-1">{card.description}</p>
-            </CardContent>
-          </Card>
+            </div>
+            <p className="text-3xl font-bold text-gray-900 mb-1">
+              {card.value.toLocaleString("tr-TR")}
+            </p>
+            <p className="text-xs text-gray-400">{card.description}</p>
+          </div>
         );
       })}
     </div>

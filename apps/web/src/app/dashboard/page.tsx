@@ -1,22 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
-import { Plus, ArrowRight } from "lucide-react";
+import { Plus, ArrowRight, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { StatsCards } from "@/components/dashboard/stats-cards";
 import { UpcomingBirthdays } from "@/components/dashboard/upcoming-birthdays";
 import { useEmployees } from "@/hooks/use-employees";
 import { useOrders } from "@/hooks/use-orders";
+import { useAuth } from "@/hooks/use-auth";
 import { formatDate, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS, formatCurrency } from "@/lib/utils";
 import type { Order } from "@cakeday/shared";
 
 export default function DashboardPage() {
   const { employees, totalCount: totalEmployees, fetchEmployees, isLoading: empLoading } = useEmployees({ pageSize: 100 });
   const { orders, fetchOrders, isLoading: ordersLoading } = useOrders();
+  const { user } = useAuth();
+
+  const displayName = user?.user_metadata?.full_name ?? user?.email ?? "Kullanıcı";
+  const firstName = displayName.split(" ")[0];
 
   useEffect(() => {
     fetchEmployees();
@@ -27,91 +31,149 @@ export default function DashboardPage() {
     ["confirmed", "assigned", "accepted", "preparing", "out_for_delivery"].includes(o.status)
   ).length;
 
+  const upcomingCount = employees.filter((e) => {
+    if (!e.date_of_birth) return false;
+    const today = new Date();
+    const dob = new Date(e.date_of_birth);
+    let next = new Date(today.getFullYear(), dob.getMonth(), dob.getDate());
+    if (next <= today) next = new Date(today.getFullYear() + 1, dob.getMonth(), dob.getDate());
+    const diff = Math.ceil((next.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+    return diff <= 30;
+  }).length;
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Genel Bakış</h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Hoş geldiniz! İşte güncel durum özetiniz.
+    <div className="space-y-8 max-w-7xl">
+      {/* Welcome Banner */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-coral-500 to-orange-400 p-7 text-white shadow-sm">
+        <div className="relative z-10">
+          <p className="text-white/80 text-sm font-medium mb-1">Hoş geldiniz 👋</p>
+          <h1 className="text-2xl font-bold mb-1">Merhaba, {firstName}!</h1>
+          <p className="text-white/80 text-sm">
+            İşte güncel durum özetiniz. Bugün {upcomingCount > 0 ? `${upcomingCount} yaklaşan doğum günü var.` : "yaklaşan doğum günü yok."}
           </p>
         </div>
-        <Button asChild>
+        <div className="absolute right-6 top-1/2 -translate-y-1/2 text-7xl opacity-20 select-none">🎂</div>
+        <Button
+          asChild
+          className="mt-5 bg-white text-coral-600 hover:bg-white/90 font-semibold shadow-sm"
+          size="sm"
+        >
           <Link href="/dashboard/orders/new">
             <Plus className="mr-2 h-4 w-4" />
-            Yeni Sipariş
+            Yeni Sipariş Oluştur
           </Link>
         </Button>
       </div>
 
+      {/* Stats */}
       <StatsCards
         totalEmployees={totalEmployees}
-        upcomingBirthdays={employees.filter(() => true).length}
+        upcomingBirthdays={upcomingCount}
         activeOrders={activeOrders}
         ordersThisMonth={orders.length}
         isLoading={empLoading}
       />
 
+      {/* Two-column section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-1">
+        {/* Upcoming Birthdays — left 2/3 */}
+        <div className="lg:col-span-2">
           <UpcomingBirthdays employees={employees} isLoading={empLoading} />
         </div>
 
-        <div className="lg:col-span-2">
-          <Card className="border border-border">
-            <CardHeader className="flex flex-row items-center justify-between pb-4">
-              <CardTitle className="text-base font-semibold">Son Siparişler</CardTitle>
-              <Button variant="ghost" size="sm" asChild>
-                <Link href="/dashboard/orders">
-                  Tümü
-                  <ArrowRight className="ml-1 h-4 w-4" />
-                </Link>
+        {/* Quick Actions — right 1/3 */}
+        <div className="space-y-3">
+          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider px-1">Hızlı İşlemler</h2>
+          {[
+            { href: "/dashboard/orders/new", label: "Manuel Sipariş Ver", desc: "Çalışan için pasta sipar et", emoji: "🎂" },
+            { href: "/dashboard/employees", label: "Çalışan Ekle", desc: "Yeni çalışan kaydı oluştur", emoji: "👤" },
+            { href: "/dashboard/ordering-rules", label: "Kural Tanımla", desc: "Otomatik sipariş kuralı ekle", emoji: "⚙️" },
+            { href: "/dashboard/employees/import", label: "Toplu Yükleme", desc: "CSV ile çalışan aktar", emoji: "📋" },
+          ].map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="flex items-center gap-3 bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md hover:border-coral-100 transition-all group"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-coral-50 text-xl shrink-0">
+                {item.emoji}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-gray-900 group-hover:text-coral-600 transition-colors">
+                  {item.label}
+                </p>
+                <p className="text-xs text-gray-400">{item.desc}</p>
+              </div>
+              <ArrowRight className="h-4 w-4 text-gray-300 group-hover:text-coral-400 transition-colors shrink-0" />
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* Recent Orders */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-50">
+          <div className="flex items-center gap-2">
+            <ShoppingBag className="h-5 w-5 text-coral-500" />
+            <h2 className="text-base font-semibold text-gray-900">Son Siparişler</h2>
+          </div>
+          <Button variant="ghost" size="sm" asChild className="text-coral-600 hover:text-coral-700 hover:bg-coral-50">
+            <Link href="/dashboard/orders">
+              Tümünü Gör
+              <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+            </Link>
+          </Button>
+        </div>
+
+        <div className="px-6 py-2">
+          {ordersLoading ? (
+            <div className="space-y-3 py-3">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="flex items-center justify-between py-2.5">
+                  <div className="space-y-1.5">
+                    <Skeleton className="h-4 w-40" />
+                    <Skeleton className="h-3 w-28" />
+                  </div>
+                  <Skeleton className="h-6 w-24 rounded-full" />
+                </div>
+              ))}
+            </div>
+          ) : orders.length === 0 ? (
+            <div className="py-12 text-center">
+              <div className="text-4xl mb-3">🛒</div>
+              <p className="text-sm font-medium text-gray-700 mb-1">Henüz sipariş yok</p>
+              <p className="text-xs text-gray-400 mb-4">İlk siparişinizi vermek için aşağıdaki butona tıklayın.</p>
+              <Button asChild size="sm" className="bg-coral-500 hover:bg-coral-600 text-white">
+                <Link href="/dashboard/orders/new">İlk Siparişi Ver</Link>
               </Button>
-            </CardHeader>
-            <CardContent>
-              {ordersLoading ? (
-                <div className="space-y-3">
-                  {[...Array(5)].map((_, i) => (
-                    <div key={i} className="flex items-center justify-between py-2">
-                      <div className="space-y-1">
-                        <Skeleton className="h-4 w-40" />
-                        <Skeleton className="h-3 w-24" />
-                      </div>
-                      <Skeleton className="h-5 w-20" />
+            </div>
+          ) : (
+            <div>
+              {orders.slice(0, 6).map((order: Order) => (
+                <div
+                  key={order.id}
+                  className="flex items-center justify-between py-3.5 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 -mx-6 px-6 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-full bg-coral-50 flex items-center justify-center text-base shrink-0">
+                      🎂
                     </div>
-                  ))}
-                </div>
-              ) : orders.length === 0 ? (
-                <div className="py-8 text-center">
-                  <p className="text-sm text-muted-foreground">Henüz sipariş yok.</p>
-                  <Button asChild className="mt-3" size="sm">
-                    <Link href="/dashboard/orders/new">İlk Siparişi Ver</Link>
-                  </Button>
-                </div>
-              ) : (
-                <div className="space-y-1">
-                  {orders.slice(0, 6).map((order: Order) => (
-                    <div
-                      key={order.id}
-                      className="flex items-center justify-between py-2.5 border-b border-border last:border-0"
-                    >
-                      <div>
-                        <p className="text-sm font-medium">{order.recipient_name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {formatDate(order.delivery_date)} · {formatCurrency(order.order_total_try)}
-                        </p>
-                      </div>
-                      <Badge
-                        className={`text-xs ${ORDER_STATUS_COLORS[order.status] ?? "bg-gray-100 text-gray-800"}`}
-                      >
-                        {ORDER_STATUS_LABELS[order.status] ?? order.status}
-                      </Badge>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900">{order.recipient_name}</p>
+                      <p className="text-xs text-gray-400">
+                        {formatDate(order.delivery_date)} · {formatCurrency(order.order_total_try)}
+                      </p>
                     </div>
-                  ))}
+                  </div>
+                  <Badge
+                    className={`text-xs font-medium border-0 ${ORDER_STATUS_COLORS[order.status] ?? "bg-gray-100 text-gray-800"}`}
+                  >
+                    {ORDER_STATUS_LABELS[order.status] ?? order.status}
+                  </Badge>
                 </div>
-              )}
-            </CardContent>
-          </Card>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

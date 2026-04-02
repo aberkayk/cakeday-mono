@@ -50,7 +50,41 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // CakeDay brand
+        // CakeDay brand — Daymaker-inspired
+        dark: {
+          DEFAULT: "#1a1a2e",
+          50: "#f0f0f5",
+          100: "#d9d9e8",
+          200: "#b3b3d1",
+          300: "#8d8dba",
+          400: "#6767a3",
+          500: "#41418c",
+          600: "#353572",
+          700: "#282858",
+          800: "#1c1c3e",
+          900: "#1a1a2e",
+        },
+        coral: {
+          DEFAULT: "#F97316",
+          50: "#fff7ed",
+          100: "#ffedd5",
+          200: "#fed7aa",
+          300: "#fdba74",
+          400: "#fb923c",
+          500: "#f97316",
+          600: "#ea580c",
+          700: "#c2410c",
+          800: "#9a3412",
+          900: "#7c2d12",
+        },
+        cream: {
+          DEFAULT: "#FFF8F0",
+          50: "#fffdf9",
+          100: "#fff8f0",
+          200: "#fef0dc",
+          300: "#fde6c4",
+        },
+        // Legacy cake colors kept for backward compat
         cake: {
           50: "#fff1f6",
           100: "#ffe4ee",
@@ -78,10 +112,15 @@ const config: Config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "scroll-left": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "scroll-left": "scroll-left 30s linear infinite",
       },
       fontFamily: {
         sans: ["var(--font-inter)", "sans-serif"],
