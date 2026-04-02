@@ -121,7 +121,7 @@ export function EmployeeTable({
               CSV Yükle
             </Link>
           </Button>
-          <Button onClick={onAdd} className="rounded-xl gradient-primary text-white shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)]">
+          <Button onClick={onAdd} className="rounded-xl gradient-primary text-white shadow-primary">
             <Plus className="mr-2 h-4 w-4" />
             Çalışan Ekle
           </Button>
@@ -173,7 +173,7 @@ export function EmployeeTable({
                       {search ? `"${search}" için eşleşme yok.` : "İlk çalışanınızı ekleyerek başlayın."}
                     </p>
                     {!search && (
-                      <Button size="sm" onClick={onAdd} className="rounded-xl gradient-primary text-white shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)]">
+                      <Button size="sm" onClick={onAdd} className="rounded-xl gradient-primary text-white shadow-primary">
                         <Plus className="mr-2 h-4 w-4" />
                         İlk Çalışanı Ekle
                       </Button>

@@ -204,7 +204,7 @@ export function RuleForm({ open, onClose, onSubmit, rule }: RuleFormProps) {
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 rounded-xl gradient-primary text-white shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)]"
+              className="flex-1 rounded-xl gradient-primary text-white shadow-primary"
             >
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isEdit ? "Güncelle" : "Oluştur"}

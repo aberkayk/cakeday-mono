@@ -56,7 +56,7 @@ export default function BillingPage() {
       </div>
 
       {/* Current Plan Card */}
-      <div className="relative overflow-hidden rounded-2xl bg-[#1a1c1c] p-6 text-white shadow-sm">
+      <div className="relative overflow-hidden rounded-2xl bg-on-surface p-6 text-white shadow-sm">
         <div className="relative z-10">
           <div className="flex items-start justify-between gap-4">
             <div>

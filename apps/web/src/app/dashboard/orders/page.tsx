@@ -69,7 +69,7 @@ export default function OrdersPage() {
             Tüm sipariş geçmişini ve durumlarını görüntüleyin.
           </p>
         </div>
-        <Button asChild className="rounded-xl gradient-primary text-white shrink-0 shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)]">
+        <Button asChild className="rounded-xl gradient-primary text-white shrink-0 shadow-primary">
           <Link href="/dashboard/orders/new">
             <Plus className="mr-2 h-4 w-4" />
             Yeni Sipariş

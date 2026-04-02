@@ -147,7 +147,7 @@ export default function BakerySettingsPage() {
           <Button
             type="submit"
             disabled={isSubmitting || !isDirty}
-            className="rounded-xl gradient-primary text-white shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)]"
+            className="rounded-xl gradient-primary text-white shadow-primary"
           >
             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Kaydet

@@ -9,7 +9,7 @@ const navItems = [
   { label: "Özellikler", href: "#features" },
   { label: "Ücretlendirme", href: "#pricing" },
   { label: "SSS", href: "#faq" },
-  { label: "İletişim", href: "#contact" },
+  // { label: "İletişim", href: "#contact" },
 ];
 
 export function NavBar() {
@@ -33,7 +33,7 @@ export function NavBar() {
       {
         rootMargin: "-20% 0px -60% 0px",
         threshold: [0, 0.25, 0.5, 0.75, 1],
-      }
+      },
     );
 
     sectionIds.forEach((id) => {
@@ -46,7 +46,7 @@ export function NavBar() {
 
   return (
     <header className="sticky top-0 z-50 flex flex-col items-center pt-3 px-4">
-      <div className="bg-[#3E2723] rounded-xl px-3 py-4 flex items-center gap-8 shadow-lg">
+      <div className="bg-nav-dark rounded-xl px-3 py-4 flex items-center gap-8 shadow-lg">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 px-3 py-1.5">
           <Cake className="h-5 w-5 text-white" strokeWidth={2} />
@@ -107,7 +107,7 @@ export function NavBar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden mt-2 bg-[#3E2723] rounded-2xl px-4 py-3 space-y-1 w-full max-w-3xl shadow-lg">
+        <div className="md:hidden mt-2 bg-nav-dark rounded-2xl px-4 py-3 space-y-1 w-full max-w-3xl shadow-lg">
           {navItems.map((item) => {
             const isActive = activeSection === item.href;
             return (

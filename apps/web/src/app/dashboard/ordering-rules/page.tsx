@@ -92,7 +92,7 @@ export default function OrderingRulesPage() {
         </div>
         <Button
           onClick={() => { setEditTarget(null); setFormOpen(true); }}
-          className="rounded-xl gradient-primary text-white shrink-0 shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)]"
+          className="rounded-xl gradient-primary text-white shrink-0 shadow-primary"
         >
           <Plus className="mr-2 h-4 w-4" />
           Yeni Kural
@@ -116,7 +116,7 @@ export default function OrderingRulesPage() {
           </p>
           <Button
             onClick={() => { setEditTarget(null); setFormOpen(true); }}
-            className="rounded-xl gradient-primary text-white shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)]"
+            className="rounded-xl gradient-primary text-white shadow-primary"
           >
             <Plus className="mr-2 h-4 w-4" />
             İlk Kuralı Oluştur

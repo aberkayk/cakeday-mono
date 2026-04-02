@@ -94,7 +94,7 @@ export default function BakeryPricingPage() {
         </div>
         <Button
           onClick={() => { setDialogOpen(true); setSubmitted(false); }}
-          className="rounded-xl gradient-primary text-white shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)]"
+          className="rounded-xl gradient-primary text-white shadow-primary"
         >
           <Plus className="mr-2 h-4 w-4" />
           Fiyat Değişikliği Talep Et
@@ -162,7 +162,7 @@ export default function BakeryPricingPage() {
               <p className="text-sm text-on-surface-variant">Admin inceledikten sonra size bildirim gönderilecek.</p>
               <Button
                 onClick={() => setDialogOpen(false)}
-                className="rounded-xl gradient-primary text-white shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)]"
+                className="rounded-xl gradient-primary text-white shadow-primary"
               >
                 Kapat
               </Button>
@@ -237,7 +237,7 @@ export default function BakeryPricingPage() {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="rounded-xl gradient-primary text-white shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)]"
+                  className="rounded-xl gradient-primary text-white shadow-primary"
                 >
                   {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Talep Gönder

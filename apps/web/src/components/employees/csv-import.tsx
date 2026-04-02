@@ -283,7 +283,7 @@ export function CsvImport() {
           <Button
             onClick={handleImport}
             disabled={isUploading || preview.length === 0}
-            className="w-full rounded-xl gradient-primary text-white shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)] h-11"
+            className="w-full rounded-xl gradient-primary text-white shadow-primary h-11"
             size="lg"
           >
             {isUploading ? (

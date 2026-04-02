@@ -44,7 +44,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8 max-w-7xl">
       {/* Welcome Banner */}
-      <div className="relative overflow-hidden rounded-2xl gradient-primary p-7 text-white shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)]">
+      <div className="relative overflow-hidden rounded-2xl gradient-primary p-7 text-white shadow-primary">
         <div className="relative z-10">
           <p className="text-white/80 text-sm font-medium mb-1">Hoş geldiniz 👋</p>
           <h1 className="text-2xl font-bold mb-1 font-headline">Merhaba, {firstName}!</h1>
@@ -143,7 +143,7 @@ export default function DashboardPage() {
               <div className="text-4xl mb-3">🛒</div>
               <p className="text-sm font-medium text-on-surface mb-1">Henüz sipariş yok</p>
               <p className="text-xs text-on-surface-variant mb-4">İlk siparişinizi vermek için aşağıdaki butona tıklayın.</p>
-              <Button asChild size="sm" className="gradient-primary text-white shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)]">
+              <Button asChild size="sm" className="gradient-primary text-white shadow-primary">
                 <Link href="/dashboard/orders/new">İlk Siparişi Ver</Link>
               </Button>
             </div>

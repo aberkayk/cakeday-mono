@@ -136,7 +136,7 @@ export default function LoginPage() {
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full h-12 gradient-primary text-white font-semibold rounded-xl text-base shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)] transition-all hover:opacity-90 disabled:opacity-60"
+          className="w-full h-12 gradient-primary text-white font-semibold rounded-xl text-base shadow-primary transition-all hover:opacity-90 disabled:opacity-60"
         >
           {isSubmitting ? (
             <>

@@ -62,10 +62,7 @@ export function HeroSection() {
           <div className="hidden lg:flex items-center justify-center relative">
             {/* Decorative blur circle */}
             <div
-              className="absolute w-72 h-72 rounded-full opacity-20 blur-3xl"
-              style={{
-                background: "linear-gradient(135deg, #f97316, #b4136d)",
-              }}
+              className="absolute w-72 h-72 rounded-full opacity-20 blur-3xl bg-gradient-to-br from-primary-container to-secondary"
             />
 
             <div className="relative glass-card border border-outline-variant rounded-3xl p-6 w-full max-w-sm shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
@@ -87,7 +84,7 @@ export function HeroSection() {
                     status: "Teslim Edildi",
                     statusColor: "text-green-700 bg-green-100",
                     initials: "CY",
-                    color: "#9d4300",
+                    color: "bg-primary",
                   },
                   {
                     name: "Zeynep Kaya",
@@ -96,7 +93,7 @@ export function HeroSection() {
                     status: "Hazırlanıyor",
                     statusColor: "text-amber-700 bg-amber-100",
                     initials: "ZK",
-                    color: "#b4136d",
+                    color: "bg-secondary",
                   },
                   {
                     name: "Mert Demir",
@@ -105,7 +102,7 @@ export function HeroSection() {
                     status: "Planlandı",
                     statusColor: "text-blue-700 bg-blue-100",
                     initials: "MD",
-                    color: "#855300",
+                    color: "bg-tertiary",
                   },
                 ].map((emp) => (
                   <div
@@ -113,8 +110,7 @@ export function HeroSection() {
                     className="flex items-center gap-3 bg-white rounded-2xl p-3 shadow-sm"
                   >
                     <div
-                      className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
-                      style={{ backgroundColor: emp.color }}
+                      className={`w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0 ${emp.color}`}
                     >
                       {emp.initials}
                     </div>

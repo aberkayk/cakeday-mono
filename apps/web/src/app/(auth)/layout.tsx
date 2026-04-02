@@ -7,7 +7,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="
         relative flex-shrink-0
         h-[100px] md:h-auto md:w-[420px] lg:w-[480px]
-        bg-[#1a1c1c] flex flex-col
+        bg-on-surface flex flex-col
         overflow-hidden
       ">
         {/* Logo */}

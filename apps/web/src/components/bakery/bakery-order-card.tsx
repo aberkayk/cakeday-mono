@@ -96,7 +96,7 @@ export function BakeryOrderCard({ order, onAccept, onReject, onDeliver }: Bakery
             {canAccept && onAccept && (
               <Button
                 size="sm"
-                className="flex-1 h-8 text-xs rounded-xl gradient-primary text-white shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)]"
+                className="flex-1 h-8 text-xs rounded-xl gradient-primary text-white shadow-primary"
                 onClick={handleAccept}
                 disabled={isSubmitting}
               >

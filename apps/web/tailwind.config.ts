@@ -66,6 +66,7 @@ const config: Config = {
         'on-surface': { DEFAULT: '#1a1c1c', variant: '#584237' },
         outline: { DEFAULT: '#8c7164', variant: '#e0c0b1' },
         inverse: { surface: '#2f3130', 'on-surface': '#f1f1f0', primary: '#ffb690' },
+        'nav-dark': '#3E2723',
       },
       borderRadius: {
         lg: "var(--radius)",

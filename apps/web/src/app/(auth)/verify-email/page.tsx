@@ -79,7 +79,7 @@ export default function VerifyEmailPage() {
         </div>
         <Button
           asChild
-          className="w-full h-12 gradient-primary text-white font-semibold rounded-xl shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)]"
+          className="w-full h-12 gradient-primary text-white font-semibold rounded-xl shadow-primary"
         >
           <Link href="/dashboard">Panele Git</Link>
         </Button>
@@ -158,7 +158,7 @@ export default function VerifyEmailPage() {
       <div className="flex flex-col gap-3">
         <Button
           asChild
-          className="w-full h-12 gradient-primary text-white font-semibold rounded-xl shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)]"
+          className="w-full h-12 gradient-primary text-white font-semibold rounded-xl shadow-primary"
         >
           <Link href="/login">Giriş Yap</Link>
         </Button>

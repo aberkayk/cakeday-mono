@@ -209,7 +209,7 @@ export function OrderForm({ onSubmit }: OrderFormProps) {
 
       <Button
         type="submit"
-        className="w-full rounded-xl gradient-primary text-white shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)] h-12 text-base font-semibold"
+        className="w-full rounded-xl gradient-primary text-white shadow-primary h-12 text-base font-semibold"
         size="lg"
         disabled={isSubmitting}
       >

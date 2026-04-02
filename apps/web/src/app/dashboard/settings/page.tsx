@@ -209,7 +209,7 @@ export default function SettingsPage() {
           <Button
             type="submit"
             disabled={isSubmitting || !isDirty || isLoading}
-            className="rounded-xl gradient-primary text-white shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)]"
+            className="rounded-xl gradient-primary text-white shadow-primary"
           >
             {isSubmitting ? (
               <>
