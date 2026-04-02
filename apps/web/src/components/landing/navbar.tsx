@@ -46,11 +46,11 @@ export function NavBar() {
 
   return (
     <header className="sticky bg-transparent top-0 z-50 flex flex-col items-center pt-3 px-4 ">
-      <div className="bg-nav-dark rounded-xl px-3 py-4 flex items-center gap-8 shadow-lg w-full max-w-4xl">
+      <div className="bg-background-secondary/80 backdrop-blur-md rounded-xl px-3 py-4 flex items-center gap-8 shadow-ambient w-full max-w-4xl">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 px-3 py-1.5">
-          <Cake className="h-5 w-5 text-white" strokeWidth={2} />
-          <span className="font-headline font-bold text-base text-white italic">
+          <Cake className="h-5 w-5 text-primary" strokeWidth={2} />
+          <span className="font-headline font-bold text-base text-foreground italic">
             CakeDay
           </span>
         </Link>
@@ -65,8 +65,8 @@ export function NavBar() {
                 href={item.href}
                 className={`text-sm font-medium transition-all px-3 py-1.5 rounded-full ${
                   isActive
-                    ? "bg-white/20 text-white"
-                    : "text-white/60 hover:text-white hover:bg-white/10"
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-foreground/5"
                 }`}
               >
                 {item.label}
@@ -79,13 +79,13 @@ export function NavBar() {
         <div className="hidden md:flex items-center gap-2">
           <Link
             href="/login"
-            className="text-sm font-medium text-white/80 hover:text-white transition-colors px-3 py-1.5"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5"
           >
             Giriş Yap
           </Link>
           <Link
             href="/register"
-            className="bg-tertiary-container text-on-tertiary-container text-sm font-bold px-5 py-2 rounded-full hover:brightness-110 transition-all"
+            className="bg-primary text-primary-foreground text-sm font-bold px-5 py-2 rounded-full hover:shadow-ambient transition-all"
           >
             Kutlamaya Başla
           </Link>
@@ -93,7 +93,7 @@ export function NavBar() {
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden p-2 text-white/80 ml-auto"
+          className="md:hidden p-2 text-foreground ml-auto"
           onClick={() => setMobileOpen((v) => !v)}
           aria-label="Menü"
         >
@@ -107,7 +107,7 @@ export function NavBar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden mt-2 bg-nav-dark rounded-2xl px-4 py-3 space-y-1 w-full max-w-3xl shadow-lg">
+        <div className="md:hidden mt-2 bg-background-secondary rounded-2xl px-4 py-3 space-y-1 w-full max-w-3xl shadow-ambient">
           {navItems.map((item) => {
             const isActive = activeSection === item.href;
             return (
@@ -116,8 +116,8 @@ export function NavBar() {
                 href={item.href}
                 className={`block text-sm font-medium py-2 px-3 rounded-lg ${
                   isActive
-                    ? "bg-white/20 text-white"
-                    : "text-white/80 hover:text-white hover:bg-white/10"
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-foreground/5"
                 }`}
                 onClick={() => setMobileOpen(false)}
               >
@@ -125,16 +125,16 @@ export function NavBar() {
               </a>
             );
           })}
-          <div className="pt-2 flex flex-col gap-2 border-t border-white/10 mt-2">
+          <div className="pt-2 flex flex-col gap-2 border-t border-foreground/5 mt-2">
             <Link
               href="/login"
-              className="block text-center text-sm font-medium text-white/80 py-2"
+              className="block text-center text-sm font-medium text-muted-foreground py-2"
             >
               Giriş Yap
             </Link>
             <Link
               href="/register"
-              className="block text-center bg-tertiary-container text-on-tertiary-container text-sm font-bold rounded-full py-2.5"
+              className="block text-center bg-primary text-primary-foreground text-sm font-bold rounded-full py-2.5"
             >
               Kutlamaya Başla
             </Link>

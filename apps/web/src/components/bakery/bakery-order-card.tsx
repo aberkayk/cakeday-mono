@@ -55,18 +55,18 @@ export function BakeryOrderCard({ order, onAccept, onReject, onDeliver }: Bakery
 
   return (
     <>
-      <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow p-5">
+      <div className="bg-background rounded-2xl border border-border-soft shadow-sm hover:shadow-md transition-shadow p-5">
         <div className="flex items-start justify-between gap-3 mb-3">
           <div>
-            <p className="font-semibold text-sm text-on-surface">{order.recipient_name}</p>
-            <p className="text-xs text-on-surface-variant font-mono">#{order.id.slice(0, 8)}</p>
+            <p className="font-semibold text-sm text-foreground">{order.recipient_name}</p>
+            <p className="text-xs text-muted font-mono">#{order.id.slice(0, 8)}</p>
           </div>
-          <Badge className={`text-xs shrink-0 ${ORDER_STATUS_COLORS[order.status] ?? "bg-surface-container text-on-surface-variant"}`}>
+          <Badge className={`text-xs shrink-0 ${ORDER_STATUS_COLORS[order.status] ?? "bg-background-secondary text-muted"}`}>
             {ORDER_STATUS_LABELS[order.status] ?? order.status}
           </Badge>
         </div>
 
-        <div className="space-y-1.5 text-xs text-on-surface-variant mb-3">
+        <div className="space-y-1.5 text-xs text-muted mb-3">
           <div className="flex items-center gap-2">
             <Calendar className="h-3.5 w-3.5 shrink-0" />
             <span>{formatDate(order.delivery_date)}</span>
@@ -82,13 +82,13 @@ export function BakeryOrderCard({ order, onAccept, onReject, onDeliver }: Bakery
         </div>
 
         {order.custom_text && (
-          <p className="mb-3 text-xs italic text-on-surface-variant border-l-2 border-primary/30 pl-2">
+          <p className="mb-3 text-xs italic text-muted border-l-2 border-primary/30 pl-2">
             "{order.custom_text}"
           </p>
         )}
 
-        <div className="flex items-center justify-between pt-3 border-t border-outline-variant/30">
-          <p className="font-semibold text-sm text-on-surface">{formatCurrency(order.base_price_try)}</p>
+        <div className="flex items-center justify-between pt-3 border-t border-border-soft/30">
+          <p className="font-semibold text-sm text-foreground">{formatCurrency(order.base_price_try)}</p>
         </div>
 
         {(canAccept || canReject || canDeliver) && (
@@ -134,26 +134,26 @@ export function BakeryOrderCard({ order, onAccept, onReject, onDeliver }: Bakery
       <Dialog open={rejectOpen} onOpenChange={setRejectOpen}>
         <DialogContent className="max-w-sm rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="font-headline text-on-surface">Siparişi Reddet</DialogTitle>
+            <DialogTitle className="font-headline text-foreground">Siparişi Reddet</DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
-            <p className="text-sm text-on-surface-variant">
-              <strong className="text-on-surface">{order.recipient_name}</strong> siparişini reddetmek üzeresiniz.
+            <p className="text-sm text-muted">
+              <strong className="text-foreground">{order.recipient_name}</strong> siparişini reddetmek üzeresiniz.
             </p>
             <div className="space-y-2">
-              <Label htmlFor="reason" className="text-on-surface">Red Nedeni</Label>
+              <Label htmlFor="reason" className="text-foreground">Red Nedeni</Label>
               <Textarea
                 id="reason"
                 placeholder="Neden reddediyorsunuz?"
                 value={rejectReason}
                 onChange={(e) => setRejectReason(e.target.value)}
                 rows={3}
-                className="rounded-xl border-outline-variant focus:border-primary resize-none"
+                className="rounded-xl border-border-soft focus:border-primary resize-none"
               />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setRejectOpen(false)} className="rounded-xl border-outline-variant">İptal</Button>
+            <Button variant="outline" onClick={() => setRejectOpen(false)} className="rounded-xl border-border-soft">İptal</Button>
             <Button
               variant="destructive"
               onClick={handleRejectConfirm}

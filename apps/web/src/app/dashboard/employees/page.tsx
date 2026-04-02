@@ -98,14 +98,14 @@ export default function EmployeesPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-on-surface font-headline">Çalışanlar</h1>
+            <h1 className="text-2xl font-bold text-foreground font-headline">Çalışanlar</h1>
             {!isLoading && (
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-fixed text-primary-dark">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/20 text-primary">
                 {totalCount} kişi
               </span>
             )}
           </div>
-          <p className="text-sm text-on-surface-variant mt-1">
+          <p className="text-sm text-muted mt-1">
             Şirketinizdeki tüm çalışanları yönetin.
           </p>
         </div>
@@ -145,11 +145,11 @@ export default function EmployeesPage() {
               <DialogTitle className="text-base">Çalışanı Sil</DialogTitle>
             </div>
           </DialogHeader>
-          <p className="text-sm text-on-surface-variant">
-            <strong className="text-on-surface">{deleteTarget?.first_name} {deleteTarget?.last_name}</strong> adlı çalışanı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.
+          <p className="text-sm text-muted">
+            <strong className="text-foreground">{deleteTarget?.first_name} {deleteTarget?.last_name}</strong> adlı çalışanı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.
           </p>
           <DialogFooter className="gap-2 mt-2">
-            <Button variant="outline" onClick={() => setDeleteTarget(null)} className="flex-1 rounded-xl border-outline-variant">
+            <Button variant="outline" onClick={() => setDeleteTarget(null)} className="flex-1 rounded-xl border-border-soft">
               İptal
             </Button>
             <Button

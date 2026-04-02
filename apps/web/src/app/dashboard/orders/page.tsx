@@ -18,9 +18,9 @@ import type { Order } from "@cakeday/shared";
 
 const TABS = [
   { value: "upcoming", label: "Yaklaşan", statuses: ["draft", "pending_approval", "confirmed"], color: "bg-blue-50 text-blue-700" },
-  { value: "active", label: "Aktif", statuses: ["assigned", "accepted", "preparing", "out_for_delivery"], color: "bg-primary-fixed text-primary-dark" },
+  { value: "active", label: "Aktif", statuses: ["assigned", "accepted", "preparing", "out_for_delivery"], color: "bg-primary/20 text-primary" },
   { value: "completed", label: "Tamamlanan", statuses: ["delivered"], color: "bg-green-50 text-green-700" },
-  { value: "cancelled", label: "İptal", statuses: ["cancelled", "rejected", "failed"], color: "bg-surface-container text-on-surface-variant" },
+  { value: "cancelled", label: "İptal", statuses: ["cancelled", "rejected", "failed"], color: "bg-background-secondary text-muted" },
 ];
 
 export default function OrdersPage() {
@@ -60,12 +60,12 @@ export default function OrdersPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-on-surface font-headline">Siparişler</h1>
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-fixed text-primary-dark">
+            <h1 className="text-2xl font-bold text-foreground font-headline">Siparişler</h1>
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/20 text-primary">
               {orders.length} toplam
             </span>
           </div>
-          <p className="text-sm text-on-surface-variant mt-1">
+          <p className="text-sm text-muted mt-1">
             Tüm sipariş geçmişini ve durumlarını görüntüleyin.
           </p>
         </div>
@@ -78,8 +78,8 @@ export default function OrdersPage() {
       </div>
 
       {/* Custom Tab Nav */}
-      <div className="bg-surface-lowest rounded-2xl shadow-sm border border-outline-variant/30 overflow-hidden">
-        <div className="flex items-center gap-1 p-1.5 border-b border-outline-variant/20 bg-surface-container-low/50">
+      <div className="bg-background rounded-2xl shadow-sm border border-border-soft/30 overflow-hidden">
+        <div className="flex items-center gap-1 p-1.5 border-b border-border-soft/20 bg-background-secondary/50">
           {TABS.map((tab) => {
             const count = filteredOrders(tab.statuses).length;
             const isActive = activeTab === tab.value;
@@ -89,13 +89,13 @@ export default function OrdersPage() {
                 onClick={() => setActiveTab(tab.value)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                   isActive
-                    ? "bg-surface-lowest text-on-surface shadow-sm"
-                    : "text-on-surface-variant hover:text-on-surface hover:bg-surface-lowest/60"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted hover:text-foreground hover:bg-background/60"
                 }`}
               >
                 {tab.label}
                 <span className={`inline-flex items-center justify-center h-5 min-w-5 px-1.5 rounded-full text-xs font-bold ${
-                  isActive ? tab.color : "bg-surface-container text-on-surface-variant"
+                  isActive ? tab.color : "bg-background-secondary text-muted"
                 }`}>
                   {count}
                 </span>
@@ -130,14 +130,14 @@ export default function OrdersPage() {
               <div className="h-10 w-10 rounded-full bg-red-50 flex items-center justify-center shrink-0">
                 <ShoppingBag className="h-5 w-5 text-red-500" />
               </div>
-              <DialogTitle className="text-base font-bold text-on-surface">Siparişi İptal Et</DialogTitle>
+              <DialogTitle className="text-base font-bold text-foreground">Siparişi İptal Et</DialogTitle>
             </div>
           </DialogHeader>
-          <p className="text-sm text-on-surface-variant">
-            <strong className="text-on-surface">{cancelTarget?.recipient_name}</strong> için verilen siparişi iptal etmek istediğinizden emin misiniz?
+          <p className="text-sm text-muted">
+            <strong className="text-foreground">{cancelTarget?.recipient_name}</strong> için verilen siparişi iptal etmek istediğinizden emin misiniz?
           </p>
           <DialogFooter className="gap-2">
-            <Button variant="outline" onClick={() => setCancelTarget(null)} className="flex-1 rounded-xl border-outline-variant">
+            <Button variant="outline" onClick={() => setCancelTarget(null)} className="flex-1 rounded-xl border-border-soft">
               Vazgeç
             </Button>
             <Button variant="destructive" onClick={handleCancelConfirm} className="flex-1 rounded-xl">

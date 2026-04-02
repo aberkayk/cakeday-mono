@@ -28,13 +28,13 @@ function SectionCard({ icon: Icon, title, children }: {
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm overflow-hidden">
-      <div className="px-6 py-5 border-b border-outline-variant/50">
+    <div className="bg-background rounded-2xl border border-border-soft shadow-sm overflow-hidden">
+      <div className="px-6 py-5 border-b border-border-soft/50">
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-xl bg-primary-fixed flex items-center justify-center shrink-0">
+          <div className="h-9 w-9 rounded-xl bg-primary/20 flex items-center justify-center shrink-0">
             <Icon className="h-5 w-5 text-primary" />
           </div>
-          <h2 className="text-base font-bold font-headline text-on-surface">{title}</h2>
+          <h2 className="text-base font-bold font-headline text-foreground">{title}</h2>
         </div>
       </div>
       <div className="px-6 py-5">
@@ -71,51 +71,51 @@ export default function BakerySettingsPage() {
   return (
     <div className="space-y-6 max-w-2xl">
       <div>
-        <h1 className="text-2xl font-bold font-headline text-on-surface">Ayarlar</h1>
-        <p className="text-on-surface-variant text-sm mt-1">Pastane profili ve bildirim tercihlerinizi yönetin.</p>
+        <h1 className="text-2xl font-bold font-headline text-foreground">Ayarlar</h1>
+        <p className="text-muted text-sm mt-1">Pastane profili ve bildirim tercihlerinizi yönetin.</p>
       </div>
 
       <SectionCard icon={Store} title="Pastane Profili">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name" className="text-sm font-medium text-on-surface">Pastane Adı</Label>
+            <Label htmlFor="name" className="text-sm font-medium text-foreground">Pastane Adı</Label>
             <Input
               id="name"
               {...register("name")}
-              className="rounded-xl border-outline-variant focus:border-primary"
+              className="rounded-xl border-border-soft focus:border-primary"
             />
             {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description" className="text-sm font-medium text-on-surface">Açıklama</Label>
+            <Label htmlFor="description" className="text-sm font-medium text-foreground">Açıklama</Label>
             <Textarea
               id="description"
               placeholder="Pastane hakkında kısa bilgi..."
               rows={2}
-              className="rounded-xl border-outline-variant focus:border-primary resize-none"
+              className="rounded-xl border-border-soft focus:border-primary resize-none"
               {...register("description")}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="address" className="text-sm font-medium text-on-surface">Adres</Label>
+            <Label htmlFor="address" className="text-sm font-medium text-foreground">Adres</Label>
             <Input
               id="address"
               placeholder="Tam adres"
-              className="rounded-xl border-outline-variant focus:border-primary"
+              className="rounded-xl border-border-soft focus:border-primary"
               {...register("address")}
             />
             {errors.address && <p className="text-xs text-red-500">{errors.address.message}</p>}
           </div>
 
-          <Separator className="bg-outline-variant/50" />
+          <Separator className="bg-border-soft/50" />
 
           <div className="space-y-2">
-            <Label htmlFor="contact_name" className="text-sm font-medium text-on-surface">İletişim Kişisi</Label>
+            <Label htmlFor="contact_name" className="text-sm font-medium text-foreground">İletişim Kişisi</Label>
             <Input
               id="contact_name"
-              className="rounded-xl border-outline-variant focus:border-primary"
+              className="rounded-xl border-border-soft focus:border-primary"
               {...register("contact_name")}
             />
             {errors.contact_name && <p className="text-xs text-red-500">{errors.contact_name.message}</p>}
@@ -123,21 +123,21 @@ export default function BakerySettingsPage() {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="contact_email" className="text-sm font-medium text-on-surface">E-posta</Label>
+              <Label htmlFor="contact_email" className="text-sm font-medium text-foreground">E-posta</Label>
               <Input
                 id="contact_email"
                 type="email"
-                className="rounded-xl border-outline-variant focus:border-primary"
+                className="rounded-xl border-border-soft focus:border-primary"
                 {...register("contact_email")}
               />
               {errors.contact_email && <p className="text-xs text-red-500">{errors.contact_email.message}</p>}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="contact_phone" className="text-sm font-medium text-on-surface">Telefon</Label>
+              <Label htmlFor="contact_phone" className="text-sm font-medium text-foreground">Telefon</Label>
               <Input
                 id="contact_phone"
                 type="tel"
-                className="rounded-xl border-outline-variant focus:border-primary"
+                className="rounded-xl border-border-soft focus:border-primary"
                 {...register("contact_phone")}
               />
               {errors.contact_phone && <p className="text-xs text-red-500">{errors.contact_phone.message}</p>}
@@ -159,31 +159,31 @@ export default function BakerySettingsPage() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-on-surface">Yeni Sipariş Bildirimleri</p>
-              <p className="text-xs text-on-surface-variant">Yeni sipariş atandığında bildirim al</p>
+              <p className="text-sm font-medium text-foreground">Yeni Sipariş Bildirimleri</p>
+              <p className="text-xs text-muted">Yeni sipariş atandığında bildirim al</p>
             </div>
             <Switch defaultChecked />
           </div>
-          <Separator className="bg-outline-variant/30" />
+          <Separator className="bg-border-soft/30" />
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-on-surface">E-posta Bildirimleri</p>
-              <p className="text-xs text-on-surface-variant">Günlük sipariş özeti e-postası</p>
+              <p className="text-sm font-medium text-foreground">E-posta Bildirimleri</p>
+              <p className="text-xs text-muted">Günlük sipariş özeti e-postası</p>
             </div>
             <Switch defaultChecked />
           </div>
-          <Separator className="bg-outline-variant/30" />
+          <Separator className="bg-border-soft/30" />
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-on-surface">WhatsApp Bildirimleri</p>
-              <p className="text-xs text-on-surface-variant">Acil sipariş güncellemeleri için WhatsApp</p>
+              <p className="text-sm font-medium text-foreground">WhatsApp Bildirimleri</p>
+              <p className="text-xs text-muted">Acil sipariş güncellemeleri için WhatsApp</p>
             </div>
             <Switch />
           </div>
           <Button
             variant="outline"
             size="sm"
-            className="rounded-xl border-outline-variant text-on-surface hover:bg-surface-container-low"
+            className="rounded-xl border-border-soft text-foreground hover:bg-background-secondary"
           >
             Tercihleri Kaydet
           </Button>

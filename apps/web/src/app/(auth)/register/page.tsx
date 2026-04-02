@@ -86,7 +86,7 @@ const COMPANY_SIZE_OPTIONS = [
 /* ─── Input wrapper with icon ─── */
 function FieldIcon({ children }: { children: React.ReactNode }) {
   return (
-    <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">
+    <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted pointer-events-none">
       {children}
     </div>
   );
@@ -94,7 +94,7 @@ function FieldIcon({ children }: { children: React.ReactNode }) {
 
 /* ─── Reusable input classes ─── */
 const inputCls =
-  "h-11 rounded-xl border-outline-variant bg-surface-container-low focus:bg-surface-lowest text-on-surface placeholder:text-on-surface-variant focus-visible:ring-primary focus-visible:ring-offset-0";
+  "h-11 rounded-xl border-border-soft bg-background-secondary focus:bg-background text-foreground placeholder:text-muted focus-visible:ring-primary focus-visible:ring-offset-0";
 const inputWithIconCls = `pl-10 ${inputCls}`;
 
 export default function RegisterPage() {
@@ -146,8 +146,8 @@ export default function RegisterPage() {
           <CheckCircle2 className="h-10 w-10 text-green-600" />
         </div>
         <div className="space-y-2">
-          <h2 className="text-2xl font-extrabold text-on-surface font-headline">Kayıt Başarılı! 🎉</h2>
-          <p className="text-on-surface-variant max-w-xs mx-auto leading-relaxed">
+          <h2 className="text-2xl font-extrabold text-foreground font-headline">Kayıt Başarılı! 🎉</h2>
+          <p className="text-muted max-w-xs mx-auto leading-relaxed">
             E-posta adresinize doğrulama bağlantısı gönderdik. Hesabınızı aktif etmek için e-postanızdaki bağlantıya tıklayın.
           </p>
         </div>
@@ -165,10 +165,10 @@ export default function RegisterPage() {
     <div className="space-y-7">
       {/* Heading */}
       <div className="space-y-1.5">
-        <h1 className="text-3xl font-extrabold text-on-surface tracking-tight font-headline">
+        <h1 className="text-3xl font-extrabold text-foreground tracking-tight font-headline">
           Şirketinizi Kaydedin 🎉
         </h1>
-        <p className="text-on-surface-variant text-base">1 dakikada başlayın</p>
+        <p className="text-muted text-base">1 dakikada başlayın</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -184,7 +184,7 @@ export default function RegisterPage() {
 
         {/* ── Section: Şirket Adı ── */}
         <div className="space-y-1.5">
-          <Label htmlFor="companyName" className="text-sm font-medium text-on-surface">
+          <Label htmlFor="companyName" className="text-sm font-medium text-foreground">
             Şirket Adı <span className="text-primary">*</span>
           </Label>
           <div className="relative">
@@ -201,7 +201,7 @@ export default function RegisterPage() {
 
         {/* ── Section: Yetkili ── */}
         <div className="space-y-1.5">
-          <Label htmlFor="contactName" className="text-sm font-medium text-on-surface">
+          <Label htmlFor="contactName" className="text-sm font-medium text-foreground">
             Yetkili Ad Soyad <span className="text-primary">*</span>
           </Label>
           <div className="relative">
@@ -218,7 +218,7 @@ export default function RegisterPage() {
 
         {/* ── Section: Email ── */}
         <div className="space-y-1.5">
-          <Label htmlFor="email" className="text-sm font-medium text-on-surface">
+          <Label htmlFor="email" className="text-sm font-medium text-foreground">
             İş E-postası <span className="text-primary">*</span>
           </Label>
           <div className="relative">
@@ -237,18 +237,18 @@ export default function RegisterPage() {
 
         {/* ── Section: Phone ── */}
         <div className="space-y-1.5">
-          <Label htmlFor="phone" className="text-sm font-medium text-on-surface">
+          <Label htmlFor="phone" className="text-sm font-medium text-foreground">
             Telefon <span className="text-primary">*</span>
           </Label>
           <div className="flex">
-            <div className="flex items-center px-3.5 h-11 rounded-l-xl border border-r-0 border-outline-variant bg-surface-container text-sm text-on-surface-variant font-medium select-none flex-shrink-0">
+            <div className="flex items-center px-3.5 h-11 rounded-l-xl border border-r-0 border-border-soft bg-background-secondary text-sm text-muted font-medium select-none flex-shrink-0">
               +90
             </div>
             <Input
               id="phone"
               type="tel"
               placeholder="5XX XXX XX XX"
-              className="h-11 rounded-l-none rounded-r-xl border-outline-variant bg-surface-container-low focus:bg-surface-lowest text-on-surface placeholder:text-on-surface-variant focus-visible:ring-primary focus-visible:ring-offset-0 flex-1"
+              className="h-11 rounded-l-none rounded-r-xl border-border-soft bg-background-secondary focus:bg-background text-foreground placeholder:text-muted focus-visible:ring-primary focus-visible:ring-offset-0 flex-1"
               {...register("phone")}
             />
           </div>
@@ -257,7 +257,7 @@ export default function RegisterPage() {
 
         {/* ── Section: Password ── */}
         <div className="space-y-1.5">
-          <Label htmlFor="password" className="text-sm font-medium text-on-surface">
+          <Label htmlFor="password" className="text-sm font-medium text-foreground">
             Şifre <span className="text-primary">*</span>
           </Label>
           <div className="relative">
@@ -271,7 +271,7 @@ export default function RegisterPage() {
             />
             <button
               type="button"
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted hover:text-foreground transition-colors"
               onClick={() => setShowPassword((v) => !v)}
               tabIndex={-1}
               aria-label={showPassword ? "Şifreyi gizle" : "Şifreyi göster"}
@@ -287,7 +287,7 @@ export default function RegisterPage() {
                   <div
                     key={i}
                     className={`h-1 flex-1 rounded-full transition-colors ${
-                      i <= strength.score ? strength.color : "bg-surface-container"
+                      i <= strength.score ? strength.color : "bg-background-secondary"
                     }`}
                   />
                 ))}
@@ -307,7 +307,7 @@ export default function RegisterPage() {
 
         {/* ── Section: Password Confirm ── */}
         <div className="space-y-1.5">
-          <Label htmlFor="passwordConfirm" className="text-sm font-medium text-on-surface">
+          <Label htmlFor="passwordConfirm" className="text-sm font-medium text-foreground">
             Şifre Tekrar <span className="text-primary">*</span>
           </Label>
           <div className="relative">
@@ -324,28 +324,28 @@ export default function RegisterPage() {
         </div>
 
         {/* ── Collapsible: Ek Bilgiler ── */}
-        <div className="rounded-xl border border-outline-variant overflow-hidden">
+        <div className="rounded-xl border border-border-soft overflow-hidden">
           <button
             type="button"
             onClick={() => setShowOptional((v) => !v)}
-            className="w-full flex items-center justify-between px-4 py-3.5 bg-surface-container-low hover:bg-surface-container transition-colors text-left"
+            className="w-full flex items-center justify-between px-4 py-3.5 bg-background-secondary hover:bg-background-secondary transition-colors text-left"
           >
-            <span className="text-sm font-semibold text-on-surface">
+            <span className="text-sm font-semibold text-foreground">
               Ek Bilgiler{" "}
-              <span className="text-on-surface-variant font-normal">(Opsiyonel)</span>
+              <span className="text-muted font-normal">(Opsiyonel)</span>
             </span>
             {showOptional ? (
-              <ChevronUp className="h-4 w-4 text-on-surface-variant" />
+              <ChevronUp className="h-4 w-4 text-muted" />
             ) : (
-              <ChevronDown className="h-4 w-4 text-on-surface-variant" />
+              <ChevronDown className="h-4 w-4 text-muted" />
             )}
           </button>
 
           {showOptional && (
-            <div className="px-4 pb-4 pt-3 space-y-4 border-t border-outline-variant bg-surface-lowest">
+            <div className="px-4 pb-4 pt-3 space-y-4 border-t border-border-soft bg-background">
               {/* VKN */}
               <div className="space-y-1.5">
-                <Label htmlFor="vkn" className="text-sm font-medium text-on-surface">
+                <Label htmlFor="vkn" className="text-sm font-medium text-foreground">
                   Vergi Kimlik No (VKN)
                 </Label>
                 <Input
@@ -360,7 +360,7 @@ export default function RegisterPage() {
 
               {/* Fatura Adresi */}
               <div className="space-y-1.5">
-                <Label htmlFor="billingAddress" className="text-sm font-medium text-on-surface">
+                <Label htmlFor="billingAddress" className="text-sm font-medium text-foreground">
                   Fatura Adresi
                 </Label>
                 <Input
@@ -375,7 +375,7 @@ export default function RegisterPage() {
               {/* Sektör + İlçe */}
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <Label className="text-sm font-medium text-on-surface">Sektör</Label>
+                  <Label className="text-sm font-medium text-foreground">Sektör</Label>
                   <Select onValueChange={(v) => setValue("sector", v)}>
                     <SelectTrigger className={`${inputCls} px-3`}>
                       <SelectValue placeholder="Seçin" />
@@ -389,7 +389,7 @@ export default function RegisterPage() {
                   {errors.sector && <p className="text-xs text-red-600">{errors.sector.message}</p>}
                 </div>
                 <div className="space-y-1.5">
-                  <Label className="text-sm font-medium text-on-surface">İlçe</Label>
+                  <Label className="text-sm font-medium text-foreground">İlçe</Label>
                   <Select onValueChange={(v) => setValue("district", v)}>
                     <SelectTrigger className={`${inputCls} px-3`}>
                       <SelectValue placeholder="Seçin" />
@@ -406,7 +406,7 @@ export default function RegisterPage() {
 
               {/* Şirket Büyüklüğü — radio pills */}
               <div className="space-y-2">
-                <Label className="text-sm font-medium text-on-surface">Şirket Büyüklüğü</Label>
+                <Label className="text-sm font-medium text-foreground">Şirket Büyüklüğü</Label>
                 <div className="flex gap-2 flex-wrap">
                   {COMPANY_SIZE_OPTIONS.map((opt) => (
                     <label key={opt.value} className="cursor-pointer">
@@ -417,8 +417,8 @@ export default function RegisterPage() {
                         {...register("companySize")}
                       />
                       <span className="
-                        block px-4 py-1.5 rounded-full text-sm font-medium border border-outline-variant
-                        bg-surface-container-low text-on-surface-variant
+                        block px-4 py-1.5 rounded-full text-sm font-medium border border-border-soft
+                        bg-background-secondary text-muted
                         peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary
                         hover:border-primary/40 transition-all cursor-pointer
                       ">
@@ -432,7 +432,7 @@ export default function RegisterPage() {
 
               {/* Unvan */}
               <div className="space-y-1.5">
-                <Label htmlFor="contactTitle" className="text-sm font-medium text-on-surface">
+                <Label htmlFor="contactTitle" className="text-sm font-medium text-foreground">
                   Unvan
                 </Label>
                 <Input
@@ -450,11 +450,11 @@ export default function RegisterPage() {
         <label className="flex items-start gap-3 cursor-pointer group">
           <input
             type="checkbox"
-            className="w-4 h-4 mt-0.5 rounded border-outline-variant accent-primary cursor-pointer flex-shrink-0"
+            className="w-4 h-4 mt-0.5 rounded border-border-soft accent-primary cursor-pointer flex-shrink-0"
             {...register("terms")}
           />
-          <span className="text-sm text-on-surface-variant leading-relaxed group-hover:text-on-surface transition-colors">
-            <Link href="/terms" className="text-primary hover:text-primary-dark font-medium underline">
+          <span className="text-sm text-muted leading-relaxed group-hover:text-foreground transition-colors">
+            <Link href="/terms" className="text-primary hover:text-primary font-medium underline">
               Kullanım koşullarını
             </Link>{" "}
             kabul ediyorum
@@ -478,11 +478,11 @@ export default function RegisterPage() {
           )}
         </Button>
 
-        <p className="text-center text-sm text-on-surface-variant">
+        <p className="text-center text-sm text-muted">
           Zaten hesabınız var mı?{" "}
           <Link
             href="/login"
-            className="text-primary hover:text-primary-dark font-semibold transition-colors"
+            className="text-primary hover:text-primary font-semibold transition-colors"
           >
             Giriş Yapın
           </Link>

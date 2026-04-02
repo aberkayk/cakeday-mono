@@ -24,9 +24,9 @@ export function StatsCards({
       value: totalEmployees,
       icon: Users,
       description: "Kayıtlı çalışan",
-      iconBg: "bg-surface-container-low",
-      iconColor: "text-on-surface-variant",
-      valueBg: "bg-surface-container-low",
+      iconBg: "bg-background-secondary",
+      iconColor: "text-muted",
+      valueBg: "bg-background-secondary",
     },
     {
       title: "Yaklaşan Doğum Günleri",
@@ -42,9 +42,9 @@ export function StatsCards({
       value: activeOrders,
       icon: ShoppingBag,
       description: "Devam eden",
-      iconBg: "bg-primary-fixed",
+      iconBg: "bg-primary/20",
       iconColor: "text-primary",
-      valueBg: "bg-primary-fixed/60",
+      valueBg: "bg-primary/60",
     },
     {
       title: "Bu Ay Siparişler",
@@ -61,7 +61,7 @@ export function StatsCards({
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant">
+          <div key={i} className="bg-background rounded-2xl p-6 shadow-sm border border-border-soft">
             <div className="flex items-center justify-between mb-4">
               <Skeleton className="h-4 w-32" />
               <Skeleton className="h-10 w-10 rounded-xl" />
@@ -79,17 +79,17 @@ export function StatsCards({
       {cards.map((card) => {
         const Icon = card.icon;
         return (
-          <div key={card.title} className="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant hover:shadow-md transition-shadow">
+          <div key={card.title} className="bg-background rounded-2xl p-6 shadow-sm border border-border-soft hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between mb-4">
-              <p className="text-sm font-medium text-on-surface-variant">{card.title}</p>
+              <p className="text-sm font-medium text-muted">{card.title}</p>
               <div className={`h-10 w-10 rounded-xl ${card.iconBg} flex items-center justify-center`}>
                 <Icon className={`h-5 w-5 ${card.iconColor}`} />
               </div>
             </div>
-            <p className="text-3xl font-bold font-headline text-on-surface mb-1">
+            <p className="text-3xl font-bold font-headline text-foreground mb-1">
               {card.value.toLocaleString("tr-TR")}
             </p>
-            <p className="text-xs text-on-surface-variant">{card.description}</p>
+            <p className="text-xs text-muted">{card.description}</p>
           </div>
         );
       })}

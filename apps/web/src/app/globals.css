@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -6,96 +6,118 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 35% 14%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 35% 14%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 35% 14%;
-    --primary: 24 95% 53%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 33 100% 97%;
-    --secondary-foreground: 240 35% 14%;
-    --muted: 33 60% 97%;
-    --muted-foreground: 215 16% 47%;
-    --accent: 33 100% 96%;
-    --accent-foreground: 240 35% 14%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 24 95% 53%;
-    --radius: 0.75rem;
+    /* The Digital Pâtisserie - Light Mode (Warm Cream) */
+    --background: 12 100% 98.4%; /* #FFF8F6 */
+    --background-secondary: 7 100% 96.5%; /* #FFF0EE */
+    --foreground: 8 38.2% 22.2%; /* #2B1613 - Espresso */
+
+    --card: 7 100% 96.5%; /* #FFF0EE */
+    --card-foreground: 8 38.2% 12.2%;
+
+    --popover: 12 100% 98.4%;
+    --popover-foreground: 8 38.2% 12.2%;
+
+    --primary: 23 100% 31%; /* #9E3D00 - Burnt Orange */
+    --primary-foreground: 12 100% 98.4%;
+
+    --secondary: 10 100% 91.2%; /* #FFDAD2 - Accents/Chips */
+    --secondary-foreground: 8 38.2% 12.2%;
+
+    --muted: 12 18.8% 38.6%; /* #755750 - Cocoa */
+    --muted-foreground: 12 18.8% 38.6%;
+
+    --accent: 10 100% 91.2%; /* #FFDAD2 */
+    --accent-foreground: 8 38.2% 12.2%;
+
+    /* "No-Line" Mandate: Set border to a subtle shift of the background */
+    --border: 7 100% 94%;
+    --input: 7 100% 94%;
+    --ring: 23 100% 31%;
+
+    --radius: 1rem; /* 16px (radius-lg) */
   }
 
   .dark {
-    --background: 240 35% 9%;
-    --foreground: 0 0% 98%;
-    --card: 240 35% 11%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 35% 11%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 24 95% 53%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 240 20% 18%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 20% 18%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 240 20% 18%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 20% 18%;
-    --input: 240 20% 18%;
-    --ring: 24 95% 53%;
+    /* The Digital Pâtisserie - Dark Mode (Deep Espresso) */
+    --background: 8 41.2% 7.6%; /* #1A0D0B */
+    --background-secondary: 8 38.2% 12.2%; /* #2B1613 */
+    --foreground: 12 100% 98.4%; /* #FFF8F6 - Creamy text */
+
+    --card: 8 38.2% 12.2%; /* #2B1613 - Tonal Layering */
+    --card-foreground: 12 100% 98.4%;
+
+    --popover: 8 41.2% 7.6%;
+    --popover-foreground: 12 100% 98.4%;
+
+    --primary: 24 100% 38.8%; /* #C64F00 - Vibrant Ember */
+    --primary-foreground: 12 100% 98.4%;
+
+    --secondary: 9 36.3% 22.2%; /* #4D2A24 - Deep terracotta */
+    --secondary-foreground: 12 100% 98.4%;
+
+    --muted: 12 17% 56.1%; /* #A0857E - Soft Taupe */
+    --muted-foreground: 12 17% 56.1%;
+
+    --accent: 9 36.3% 22.2%;
+    --accent-foreground: 12 100% 98.4%;
+
+    /* Tonal layering: Borders match the subsurface for a seamless look */
+    --border: 8 38.2% 15%;
+    --input: 8 38.2% 15%;
+    --ring: 24 100% 38.8%;
   }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-transparent; /* Mandate: No 1px solid borders for sectioning */
   }
 
   html {
     scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    @apply bg-surface text-on-surface;
-    font-feature-settings:
-      "rlig" 1,
-      "calt" 1;
+    @apply bg-background text-foreground transition-colors duration-500;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    line-height: 1.6; /* Editorial breathable body text */
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-semibold tracking-[-0.02em]; /* Tight luxury feel */
   }
 
   ::selection {
-    @apply bg-primary-fixed text-primary;
+    @apply bg-primary/10 text-primary;
   }
 }
 
-/* Logo carousel infinite scroll */
 @layer utilities {
-  .carousel-track {
-    display: flex;
-    gap: 3rem;
-    animation: scroll-left 30s linear infinite;
-    width: max-content;
+  .ambient-shadow {
+    box-shadow: 0 10px 30px rgba(43, 22, 19, 0.04);
   }
 
-  .carousel-track:hover {
-    animation-play-state: paused;
+  .tonal-card {
+    @apply bg-background-secondary rounded-lg px-6 py-8 md:px-8 md:py-10;
   }
 
   .glass-card {
-    background: rgba(255, 255, 255, 0.8);
+    background: color-mix(in srgb, var(--background) 80%, transparent);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
 
-  .gradient-primary {
-    @apply bg-gradient-to-br from-primary to-primary-container;
-  }
-
-  .shadow-primary {
-    box-shadow: 0 10px 20px -5px color-mix(in srgb, theme("colors.primary.DEFAULT") 30%, transparent);
+  .carousel-track {
+    display: flex;
+    gap: 3rem;
+    animation: scroll-left 40s linear infinite;
+    width: max-content;
   }
 }

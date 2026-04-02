@@ -55,8 +55,8 @@ export default function VerifyEmailPage() {
           <Loader2 className="h-9 w-9 text-primary animate-spin" />
         </div>
         <div className="space-y-2">
-          <h2 className="text-2xl font-extrabold text-on-surface font-headline">Doğrulanıyor...</h2>
-          <p className="text-on-surface-variant">E-posta adresiniz doğrulanıyor, lütfen bekleyin.</p>
+          <h2 className="text-2xl font-extrabold text-foreground font-headline">Doğrulanıyor...</h2>
+          <p className="text-muted">E-posta adresiniz doğrulanıyor, lütfen bekleyin.</p>
         </div>
       </div>
     );
@@ -72,8 +72,8 @@ export default function VerifyEmailPage() {
           </svg>
         </div>
         <div className="space-y-2">
-          <h2 className="text-2xl font-extrabold text-on-surface font-headline">E-posta Doğrulandı! 🎉</h2>
-          <p className="text-on-surface-variant max-w-xs mx-auto leading-relaxed">
+          <h2 className="text-2xl font-extrabold text-foreground font-headline">E-posta Doğrulandı! 🎉</h2>
+          <p className="text-muted max-w-xs mx-auto leading-relaxed">
             Hesabınız aktif edildi. Birkaç saniye içinde panele yönlendiriliyorsunuz...
           </p>
         </div>
@@ -97,19 +97,19 @@ export default function VerifyEmailPage() {
             ✉️
           </div>
           <div className="space-y-1.5">
-            <h1 className="text-3xl font-extrabold text-on-surface tracking-tight font-headline">
+            <h1 className="text-3xl font-extrabold text-foreground tracking-tight font-headline">
               E-postanızı Doğrulayın ✉️
             </h1>
-            <p className="text-on-surface-variant text-base leading-relaxed">
+            <p className="text-muted text-base leading-relaxed">
               Kayıt sırasında girdiğiniz e-posta adresine bir doğrulama bağlantısı gönderdik.
               Gelen kutunuzu (ve spam klasörünü) kontrol edin.
             </p>
           </div>
         </div>
 
-        <div className="rounded-xl border border-outline-variant bg-surface-container-low px-5 py-4 space-y-1">
-          <p className="text-sm font-semibold text-on-surface">E-posta gelmediyse:</p>
-          <ul className="text-sm text-on-surface-variant space-y-1 list-disc list-inside">
+        <div className="rounded-xl border border-border-soft bg-background-secondary px-5 py-4 space-y-1">
+          <p className="text-sm font-semibold text-foreground">E-posta gelmediyse:</p>
+          <ul className="text-sm text-muted space-y-1 list-disc list-inside">
             <li>Spam / Önemsiz klasörünü kontrol edin</li>
             <li>E-posta adresinizin doğru olduğundan emin olun</li>
             <li>Birkaç dakika bekleyin</li>
@@ -122,7 +122,7 @@ export default function VerifyEmailPage() {
           onClick={handleResend}
           disabled={resendCooldown > 0}
           variant="outline"
-          className="w-full h-12 rounded-xl border-outline-variant text-on-surface font-semibold hover:bg-surface-container-low disabled:opacity-60"
+          className="w-full h-12 rounded-xl border-border-soft text-foreground font-semibold hover:bg-background-secondary disabled:opacity-60"
         >
           {resendCooldown > 0
             ? `Tekrar Gönder (${resendCooldown}s)`
@@ -131,7 +131,7 @@ export default function VerifyEmailPage() {
 
         <Link
           href="/login"
-          className="flex items-center justify-center gap-2 text-sm text-on-surface-variant hover:text-on-surface transition-colors w-full py-2"
+          className="flex items-center justify-center gap-2 text-sm text-muted hover:text-foreground transition-colors w-full py-2"
         >
           <ArrowLeft className="h-4 w-4" />
           Giriş Sayfasına Dön
@@ -151,8 +151,8 @@ export default function VerifyEmailPage() {
       </div>
 
       <div className="space-y-2">
-        <h2 className="text-2xl font-extrabold text-on-surface font-headline">Doğrulama Başarısız</h2>
-        <p className="text-on-surface-variant max-w-xs mx-auto leading-relaxed">{errorMessage}</p>
+        <h2 className="text-2xl font-extrabold text-foreground font-headline">Doğrulama Başarısız</h2>
+        <p className="text-muted max-w-xs mx-auto leading-relaxed">{errorMessage}</p>
       </div>
 
       <div className="flex flex-col gap-3">
@@ -165,7 +165,7 @@ export default function VerifyEmailPage() {
         <Button
           asChild
           variant="outline"
-          className="w-full h-12 rounded-xl border-outline-variant text-on-surface font-semibold hover:bg-surface-container-low"
+          className="w-full h-12 rounded-xl border-border-soft text-foreground font-semibold hover:bg-background-secondary"
         >
           <Link href="/register">Yeniden Kayıt Ol</Link>
         </Button>
@@ -173,7 +173,7 @@ export default function VerifyEmailPage() {
 
       <Link
         href="/login"
-        className="flex items-center justify-center gap-2 text-sm text-on-surface-variant hover:text-on-surface transition-colors"
+        className="flex items-center justify-center gap-2 text-sm text-muted hover:text-foreground transition-colors"
       >
         <ArrowLeft className="h-4 w-4" />
         Ana Sayfaya Dön

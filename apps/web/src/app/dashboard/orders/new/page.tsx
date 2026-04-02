@@ -36,15 +36,15 @@ export default function NewOrderPage() {
           variant="ghost"
           size="icon"
           asChild
-          className="h-9 w-9 rounded-xl border border-outline-variant bg-surface-lowest shadow-sm hover:bg-surface-container-low"
+          className="h-9 w-9 rounded-xl border border-border-soft bg-background shadow-sm hover:bg-background-secondary"
         >
           <Link href="/dashboard/orders">
-            <ArrowLeft className="h-4 w-4 text-on-surface-variant" />
+            <ArrowLeft className="h-4 w-4 text-muted" />
           </Link>
         </Button>
         <div>
-          <h1 className="text-2xl font-bold text-on-surface font-headline">Yeni Sipariş</h1>
-          <p className="text-sm text-on-surface-variant mt-0.5">
+          <h1 className="text-2xl font-bold text-foreground font-headline">Yeni Sipariş</h1>
+          <p className="text-sm text-muted mt-0.5">
             Manuel pasta siparişi oluşturun.
           </p>
         </div>

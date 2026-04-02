@@ -2,13 +2,13 @@ import Link from "next/link";
 
 export function PricingSection() {
   return (
-    <section id="pricing" className="bg-surface-container-high py-24">
+    <section id="pricing" className="bg-background-secondary py-24">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="font-headline text-4xl md:text-5xl font-extrabold text-on-surface mb-4">
+          <h2 className="font-headline text-4xl md:text-5xl font-extrabold text-foreground mb-4">
             Nasıl Çalışır?
           </h2>
-          <p className="text-lg text-on-surface-variant max-w-2xl mx-auto">
+          <p className="text-lg text-muted max-w-2xl mx-auto">
             Üyelik ücreti yoktur. Kaydolun, çalışanlarınızı ekleyin,
             siparişlerinizi planlayın. Ay sonunda sadece sipariş ettiğiniz
             pastalar için fatura kesilir.
@@ -38,13 +38,13 @@ export function PricingSection() {
           ].map((item) => (
             <div
               key={item.title}
-              className="bg-surface-container-lowest rounded-2xl border border-primary p-8 text-center"
+              className="bg-background rounded-2xl border border-primary/10 p-8 text-center shadow-ambient"
             >
               <div className="text-4xl mb-4">{item.icon}</div>
-              <h3 className="font-headline font-bold text-on-surface text-lg mb-3">
+              <h3 className="font-headline font-bold text-foreground text-lg mb-3">
                 {item.title}
               </h3>
-              <p className="text-sm text-on-surface-variant leading-relaxed">
+              <p className="text-sm text-muted leading-relaxed">
                 {item.description}
               </p>
             </div>
@@ -54,7 +54,7 @@ export function PricingSection() {
         <div className="text-center mt-12">
           <Link
             href="/register"
-            className="inline-block gradient-primary text-white font-semibold px-10 py-3.5 rounded-xl shadow-lg hover:opacity-90 transition-opacity text-base"
+            className="inline-block bg-primary text-primary-foreground font-semibold px-10 py-3.5 rounded-xl shadow-ambient hover:opacity-90 transition-all text-base"
           >
             Hemen Başla
           </Link>

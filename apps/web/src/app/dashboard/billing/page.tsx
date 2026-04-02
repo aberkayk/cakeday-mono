@@ -30,7 +30,7 @@ const PAYMENT_STATUS_COLORS: Record<string, string> = {
   succeeded: "bg-green-50 text-green-700",
   failed: "bg-red-50 text-red-700",
   refunded: "bg-blue-50 text-blue-700",
-  void: "bg-surface-container text-on-surface-variant",
+  void: "bg-background-secondary text-muted",
 };
 
 export default function BillingPage() {
@@ -49,14 +49,14 @@ export default function BillingPage() {
     <div className="space-y-6 max-w-5xl">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-bold text-on-surface font-headline">Faturalama</h1>
-        <p className="text-sm text-on-surface-variant mt-1">
+        <h1 className="text-2xl font-bold text-foreground font-headline">Faturalama</h1>
+        <p className="text-sm text-muted mt-1">
           Ödeme yöntemleri ve fatura geçmişinizi yönetin.
         </p>
       </div>
 
       {/* Current Plan Card */}
-      <div className="relative overflow-hidden rounded-2xl bg-on-surface p-6 text-white shadow-sm">
+      <div className="relative overflow-hidden rounded-2xl bg-foreground p-6 text-white shadow-sm">
         <div className="relative z-10">
           <div className="flex items-start justify-between gap-4">
             <div>
@@ -98,12 +98,12 @@ export default function BillingPage() {
       </div>
 
       {/* Payment Method */}
-      <div className="bg-surface-lowest rounded-2xl border border-outline-variant/30 shadow-sm p-6">
+      <div className="bg-background rounded-2xl border border-border-soft/30 shadow-sm p-6">
         <div className="flex items-center gap-2.5 mb-5">
           <div className="h-8 w-8 rounded-xl bg-blue-50 flex items-center justify-center">
             <CreditCard className="h-4 w-4 text-blue-500" />
           </div>
-          <h2 className="text-base font-bold text-on-surface">Ödeme Yöntemi</h2>
+          <h2 className="text-base font-bold text-foreground">Ödeme Yöntemi</h2>
         </div>
 
         <div className="flex items-center justify-between">
@@ -112,14 +112,14 @@ export default function BillingPage() {
               <span className="text-white text-sm font-bold tracking-wider">VISA</span>
             </div>
             <div>
-              <p className="text-sm font-semibold text-on-surface">•••• •••• •••• 4242</p>
-              <p className="text-xs text-on-surface-variant">Son kullanma: 12/27</p>
+              <p className="text-sm font-semibold text-foreground">•••• •••• •••• 4242</p>
+              <p className="text-xs text-muted">Son kullanma: 12/27</p>
             </div>
           </div>
           <Button
             variant="outline"
             size="sm"
-            className="rounded-xl border-outline-variant text-on-surface hover:bg-surface-container-low"
+            className="rounded-xl border-border-soft text-foreground hover:bg-background-secondary"
           >
             Kartı Güncelle
           </Button>
@@ -127,23 +127,23 @@ export default function BillingPage() {
       </div>
 
       {/* Invoice History */}
-      <div className="bg-surface-lowest rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden">
-        <div className="flex items-center gap-2.5 px-6 py-5 border-b border-outline-variant/20">
-          <div className="h-8 w-8 rounded-xl bg-surface-container-low flex items-center justify-center">
-            <FileText className="h-4 w-4 text-on-surface-variant" />
+      <div className="bg-background rounded-2xl border border-border-soft/30 shadow-sm overflow-hidden">
+        <div className="flex items-center gap-2.5 px-6 py-5 border-b border-border-soft/20">
+          <div className="h-8 w-8 rounded-xl bg-background-secondary flex items-center justify-center">
+            <FileText className="h-4 w-4 text-muted" />
           </div>
-          <h2 className="text-base font-bold text-on-surface">Fatura Geçmişi</h2>
+          <h2 className="text-base font-bold text-foreground">Fatura Geçmişi</h2>
         </div>
 
         <Table>
           <TableHeader>
-            <TableRow className="bg-surface-container-low/80 hover:bg-surface-container-low/80">
-              <TableHead className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Fatura No</TableHead>
-              <TableHead className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Dönem</TableHead>
-              <TableHead className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Tutar</TableHead>
-              <TableHead className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Durum</TableHead>
-              <TableHead className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Son Ödeme</TableHead>
-              <TableHead className="text-right text-xs font-semibold text-on-surface-variant uppercase tracking-wider">İndir</TableHead>
+            <TableRow className="bg-background-secondary/80 hover:bg-background-secondary/80">
+              <TableHead className="text-xs font-semibold text-muted uppercase tracking-wider">Fatura No</TableHead>
+              <TableHead className="text-xs font-semibold text-muted uppercase tracking-wider">Dönem</TableHead>
+              <TableHead className="text-xs font-semibold text-muted uppercase tracking-wider">Tutar</TableHead>
+              <TableHead className="text-xs font-semibold text-muted uppercase tracking-wider">Durum</TableHead>
+              <TableHead className="text-xs font-semibold text-muted uppercase tracking-wider">Son Ödeme</TableHead>
+              <TableHead className="text-right text-xs font-semibold text-muted uppercase tracking-wider">İndir</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -159,22 +159,22 @@ export default function BillingPage() {
               <TableRow>
                 <TableCell colSpan={6} className="py-16 text-center">
                   <div className="flex flex-col items-center">
-                    <div className="h-14 w-14 rounded-2xl bg-surface-container-low flex items-center justify-center mb-3">
-                      <FileText className="h-7 w-7 text-outline" />
+                    <div className="h-14 w-14 rounded-2xl bg-background-secondary flex items-center justify-center mb-3">
+                      <FileText className="h-7 w-7 text-border" />
                     </div>
-                    <p className="text-sm font-semibold text-on-surface mb-1">Henüz fatura yok</p>
-                    <p className="text-xs text-on-surface-variant">Ödeme geçmişiniz burada görünecek.</p>
+                    <p className="text-sm font-semibold text-foreground mb-1">Henüz fatura yok</p>
+                    <p className="text-xs text-muted">Ödeme geçmişiniz burada görünecek.</p>
                   </div>
                 </TableCell>
               </TableRow>
             ) : (
               invoices.map((invoice) => (
-                <TableRow key={invoice.id} className="hover:bg-surface-container-low/60 border-outline-variant/20">
-                  <TableCell className="font-mono text-sm text-on-surface">{invoice.invoice_number}</TableCell>
-                  <TableCell className="text-sm text-on-surface-variant">
+                <TableRow key={invoice.id} className="hover:bg-background-secondary/60 border-border-soft/20">
+                  <TableCell className="font-mono text-sm text-foreground">{invoice.invoice_number}</TableCell>
+                  <TableCell className="text-sm text-muted">
                     {formatDate(invoice.period_start)} — {formatDate(invoice.period_end)}
                   </TableCell>
-                  <TableCell className="text-sm font-bold text-on-surface">
+                  <TableCell className="text-sm font-bold text-foreground">
                     {formatCurrency(invoice.total_try)}
                   </TableCell>
                   <TableCell>
@@ -182,7 +182,7 @@ export default function BillingPage() {
                       {PAYMENT_STATUS_LABELS[invoice.status] ?? invoice.status}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-sm text-on-surface-variant">
+                  <TableCell className="text-sm text-muted">
                     {invoice.due_date ? formatDate(invoice.due_date) : "—"}
                   </TableCell>
                   <TableCell className="text-right">
@@ -190,7 +190,7 @@ export default function BillingPage() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8 rounded-xl hover:bg-surface-container-low text-on-surface-variant hover:text-on-surface"
+                        className="h-8 w-8 rounded-xl hover:bg-background-secondary text-muted hover:text-foreground"
                         asChild
                       >
                         <a href={invoice.pdf_url} target="_blank" rel="noopener noreferrer">
@@ -198,7 +198,7 @@ export default function BillingPage() {
                         </a>
                       </Button>
                     ) : (
-                      <span className="text-xs text-on-surface-variant">—</span>
+                      <span className="text-xs text-muted">—</span>
                     )}
                   </TableCell>
                 </TableRow>

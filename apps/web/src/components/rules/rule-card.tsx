@@ -13,7 +13,7 @@ const RULE_TYPE_CONFIG: Record<string, { label: string; color: string; borderCol
     color: "text-primary",
     borderColor: "border-l-primary",
     icon: Cake,
-    badgeBg: "bg-primary-fixed text-on-primary-fixed-variant",
+    badgeBg: "bg-primary/20 text-primary",
   },
   round_birthdays: {
     label: "Yuvarlak Doğum Günleri",
@@ -41,16 +41,16 @@ interface RuleCardProps {
 export function RuleCard({ rule, onEdit, onDelete, onToggle }: RuleCardProps) {
   const config = RULE_TYPE_CONFIG[rule.rule_type] ?? {
     label: rule.rule_type,
-    color: "text-on-surface-variant",
-    borderColor: "border-l-outline",
+    color: "text-muted",
+    borderColor: "border-l-border",
     icon: Cake,
-    badgeBg: "bg-surface-container text-on-surface-variant",
+    badgeBg: "bg-background-secondary text-muted",
   };
   const Icon = config.icon;
 
   return (
     <div
-      className={`bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant border-l-4 ${config.borderColor} transition-all ${
+      className={`bg-background rounded-2xl shadow-sm border border-border-soft border-l-4 ${config.borderColor} transition-all ${
         rule.is_active ? "" : "opacity-60"
       } hover:shadow-md`}
     >
@@ -59,12 +59,12 @@ export function RuleCard({ rule, onEdit, onDelete, onToggle }: RuleCardProps) {
         <div className="flex items-start justify-between gap-3 mb-4">
           <div className="flex items-start gap-3 flex-1 min-w-0">
             <div className={`h-10 w-10 rounded-xl flex items-center justify-center shrink-0 ${
-              rule.is_active ? "bg-surface-container-low" : "bg-surface-container"
+              rule.is_active ? "bg-background-secondary" : "bg-background-secondary"
             }`}>
               <Icon className={`h-5 w-5 ${config.color}`} />
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-bold text-on-surface truncate">{rule.name}</p>
+              <p className="text-sm font-bold text-foreground truncate">{rule.name}</p>
               <span className={`inline-flex items-center mt-1 px-2 py-0.5 rounded-full text-xs font-medium ${config.badgeBg}`}>
                 {config.label}
               </span>
@@ -79,39 +79,39 @@ export function RuleCard({ rule, onEdit, onDelete, onToggle }: RuleCardProps) {
         {/* Details */}
         <div className="space-y-2.5 mb-4">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-on-surface-variant">Pasta Boyutu</span>
-            <span className="font-semibold text-on-surface">
+            <span className="text-muted">Pasta Boyutu</span>
+            <span className="font-semibold text-foreground">
               {CAKE_SIZE_LABELS[rule.default_cake_size] ?? rule.default_cake_size}
             </span>
           </div>
 
           {rule.rule_type === "round_birthdays" && rule.milestone_ages && (
             <div className="flex items-center justify-between text-xs">
-              <span className="text-on-surface-variant">Yuvarlak Yaşlar</span>
-              <span className="font-semibold text-on-surface">{rule.milestone_ages.join(", ")}</span>
+              <span className="text-muted">Yuvarlak Yaşlar</span>
+              <span className="font-semibold text-foreground">{rule.milestone_ages.join(", ")}</span>
             </div>
           )}
 
           {rule.rule_type === "work_anniversary" && rule.anniversary_years && (
             <div className="flex items-center justify-between text-xs">
-              <span className="text-on-surface-variant">Yıldönümü Yılları</span>
-              <span className="font-semibold text-on-surface">{rule.anniversary_years.join(", ")}</span>
+              <span className="text-muted">Yıldönümü Yılları</span>
+              <span className="font-semibold text-foreground">{rule.anniversary_years.join(", ")}</span>
             </div>
           )}
         </div>
 
         {rule.custom_text_template && (
-          <div className="mb-4 bg-surface-container-low rounded-xl px-3 py-2.5 border-l-2 border-outline-variant">
-            <p className="text-xs font-medium text-on-surface-variant mb-0.5">Mesaj Şablonu</p>
-            <p className="text-xs italic text-on-surface-variant">"{rule.custom_text_template}"</p>
+          <div className="mb-4 bg-background-secondary rounded-xl px-3 py-2.5 border-l-2 border-border-soft">
+            <p className="text-xs font-medium text-muted mb-0.5">Mesaj Şablonu</p>
+            <p className="text-xs italic text-muted">"{rule.custom_text_template}"</p>
           </div>
         )}
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-3 border-t border-outline-variant/30">
+        <div className="flex items-center justify-between pt-3 border-t border-border-soft/30">
           <div className="flex items-center gap-1.5">
-            <span className={`h-2 w-2 rounded-full ${rule.is_active ? "bg-tertiary" : "bg-on-surface-variant/30"}`} />
-            <span className={`text-xs font-medium ${rule.is_active ? "text-tertiary" : "text-on-surface-variant/60"}`}>
+            <span className={`h-2 w-2 rounded-full ${rule.is_active ? "bg-tertiary" : "bg-muted/30"}`} />
+            <span className={`text-xs font-medium ${rule.is_active ? "text-tertiary" : "text-muted/60"}`}>
               {rule.is_active ? "Aktif" : "Pasif"}
             </span>
           </div>
@@ -119,7 +119,7 @@ export function RuleCard({ rule, onEdit, onDelete, onToggle }: RuleCardProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 rounded-xl hover:bg-surface-container-low text-on-surface-variant hover:text-on-surface"
+              className="h-8 w-8 rounded-xl hover:bg-background-secondary text-muted hover:text-foreground"
               onClick={() => onEdit(rule)}
             >
               <Pencil className="h-3.5 w-3.5" />
@@ -127,7 +127,7 @@ export function RuleCard({ rule, onEdit, onDelete, onToggle }: RuleCardProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 rounded-xl hover:bg-red-50 text-on-surface-variant/60 hover:text-red-500"
+              className="h-8 w-8 rounded-xl hover:bg-red-50 text-muted/60 hover:text-red-500"
               onClick={() => onDelete(rule)}
             >
               <Trash2 className="h-3.5 w-3.5" />

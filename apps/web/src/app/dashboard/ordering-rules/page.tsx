@@ -79,14 +79,14 @@ export default function OrderingRulesPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-on-surface font-headline">Sipariş Kuralları</h1>
+            <h1 className="text-2xl font-bold text-foreground font-headline">Sipariş Kuralları</h1>
             {!isLoading && rules.length > 0 && (
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-fixed text-primary-dark">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/20 text-primary">
                 {rules.length} kural
               </span>
             )}
           </div>
-          <p className="text-sm text-on-surface-variant mt-1">
+          <p className="text-sm text-muted mt-1">
             Otomatik pasta siparişleri için kurallar tanımlayın.
           </p>
         </div>
@@ -106,12 +106,12 @@ export default function OrderingRulesPage() {
           ))}
         </div>
       ) : rules.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 text-center bg-surface-lowest rounded-2xl border border-outline-variant/30 shadow-sm">
-          <div className="h-20 w-20 rounded-2xl bg-primary-fixed flex items-center justify-center mb-5">
+        <div className="flex flex-col items-center justify-center py-24 text-center bg-background rounded-2xl border border-border-soft/30 shadow-sm">
+          <div className="h-20 w-20 rounded-2xl bg-primary/20 flex items-center justify-center mb-5">
             <ListChecks className="h-10 w-10 text-primary" />
           </div>
-          <h3 className="text-lg font-bold text-on-surface mb-2">Henüz kural tanımlanmadı</h3>
-          <p className="text-sm text-on-surface-variant max-w-sm mb-6 leading-relaxed">
+          <h3 className="text-lg font-bold text-foreground mb-2">Henüz kural tanımlanmadı</h3>
+          <p className="text-sm text-muted max-w-sm mb-6 leading-relaxed">
             Çalışan doğum günlerinde otomatik pasta sipariş verilmesi için kural tanımlayın. Kurallar sayesinde hiçbir doğum gününü kaçırmayın.
           </p>
           <Button
@@ -125,9 +125,9 @@ export default function OrderingRulesPage() {
       ) : (
         <>
           {/* Info banner */}
-          <div className="flex items-center gap-3 bg-primary-fixed rounded-xl p-4 border border-primary/20">
+          <div className="flex items-center gap-3 bg-primary/20 rounded-xl p-4 border border-primary/20">
             <Sparkles className="h-5 w-5 text-primary shrink-0" />
-            <p className="text-sm text-primary-dark">
+            <p className="text-sm text-primary">
               <strong>{rules.filter(r => r.is_active).length} aktif kural</strong> otomatik sipariş sürecinizi yönetiyor.
             </p>
           </div>
@@ -156,13 +156,13 @@ export default function OrderingRulesPage() {
       <Dialog open={!!deleteTarget} onOpenChange={() => setDeleteTarget(null)}>
         <DialogContent className="max-w-sm rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="text-base font-bold text-on-surface">Kuralı Sil</DialogTitle>
+            <DialogTitle className="text-base font-bold text-foreground">Kuralı Sil</DialogTitle>
           </DialogHeader>
-          <p className="text-sm text-on-surface-variant">
-            <strong className="text-on-surface">{deleteTarget?.name}</strong> kuralını silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.
+          <p className="text-sm text-muted">
+            <strong className="text-foreground">{deleteTarget?.name}</strong> kuralını silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.
           </p>
           <DialogFooter className="gap-2">
-            <Button variant="outline" onClick={() => setDeleteTarget(null)} className="flex-1 rounded-xl border-outline-variant">
+            <Button variant="outline" onClick={() => setDeleteTarget(null)} className="flex-1 rounded-xl border-border-soft">
               İptal
             </Button>
             <Button variant="destructive" onClick={handleDeleteConfirm} className="flex-1 rounded-xl">

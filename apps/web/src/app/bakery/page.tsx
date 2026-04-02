@@ -26,32 +26,32 @@ export default function BakeryDashboardPage() {
   });
 
   const stats = [
-    { label: "Yeni Siparişler", value: newOrders.length, icon: ShoppingBag, color: "text-on-surface-variant", bg: "bg-surface-container-low" },
+    { label: "Yeni Siparişler", value: newOrders.length, icon: ShoppingBag, color: "text-muted", bg: "bg-background-secondary" },
     { label: "Hazırlanan", value: acceptedOrders.length, icon: Clock, color: "text-tertiary", bg: "bg-tertiary-container/20" },
     { label: "Bugün Teslimat", value: todayDeliveries.length, icon: Truck, color: "text-secondary", bg: "bg-secondary-container/20" },
-    { label: "Toplam Sipariş", value: orders.length, icon: CheckCircle, color: "text-primary", bg: "bg-primary-fixed" },
+    { label: "Toplam Sipariş", value: orders.length, icon: CheckCircle, color: "text-primary", bg: "bg-primary/20" },
   ];
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold font-headline text-on-surface">Pastane Paneli</h1>
-        <p className="text-on-surface-variant text-sm mt-1">Bugünün siparişleri ve özet bilgiler.</p>
+        <h1 className="text-2xl font-bold font-headline text-foreground">Pastane Paneli</h1>
+        <p className="text-muted text-sm mt-1">Bugünün siparişleri ve özet bilgiler.</p>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (
-            <div key={stat.label} className="bg-surface-container-lowest rounded-2xl p-5 shadow-sm border border-outline-variant">
+            <div key={stat.label} className="bg-background rounded-2xl p-5 shadow-sm border border-border-soft">
               <div className="flex items-center justify-between mb-3">
-                <p className="text-xs font-medium text-on-surface-variant">{stat.label}</p>
+                <p className="text-xs font-medium text-muted">{stat.label}</p>
                 <div className={`rounded-lg p-2 ${stat.bg}`}>
                   <Icon className={`h-4 w-4 ${stat.color}`} />
                 </div>
               </div>
               {isLoading ? <Skeleton className="h-8 w-12" /> : (
-                <p className="text-3xl font-bold font-headline text-on-surface">{stat.value}</p>
+                <p className="text-3xl font-bold font-headline text-foreground">{stat.value}</p>
               )}
             </div>
           );
@@ -59,10 +59,10 @@ export default function BakeryDashboardPage() {
       </div>
 
       {/* Today's deliveries */}
-      <div className="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant">
-        <div className="flex items-center justify-between px-6 py-5 border-b border-outline-variant/50">
-          <h2 className="text-base font-semibold font-headline text-on-surface">Bugünün Teslimatları</h2>
-          <Button variant="ghost" size="sm" asChild className="text-primary hover:text-primary hover:bg-primary-fixed/50">
+      <div className="bg-background rounded-2xl shadow-sm border border-border-soft">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-border-soft/50">
+          <h2 className="text-base font-semibold font-headline text-foreground">Bugünün Teslimatları</h2>
+          <Button variant="ghost" size="sm" asChild className="text-primary hover:text-primary hover:bg-primary/50">
             <Link href="/bakery/orders">
               Tümü <ArrowRight className="ml-1 h-4 w-4" />
             </Link>
@@ -82,19 +82,19 @@ export default function BakeryDashboardPage() {
               ))}
             </div>
           ) : todayDeliveries.length === 0 ? (
-            <p className="text-center text-sm text-on-surface-variant py-8">
+            <p className="text-center text-sm text-muted py-8">
               Bugün teslimat yok.
             </p>
           ) : (
             <div className="space-y-1">
               {todayDeliveries.map((order: Order) => (
-                <div key={order.id} className="flex items-center justify-between py-2.5 border-b border-outline-variant/30 last:border-0">
+                <div key={order.id} className="flex items-center justify-between py-2.5 border-b border-border-soft/30 last:border-0">
                   <div>
-                    <p className="text-sm font-medium text-on-surface">{order.recipient_name}</p>
-                    <p className="text-xs text-on-surface-variant truncate max-w-xs">{order.delivery_address}</p>
+                    <p className="text-sm font-medium text-foreground">{order.recipient_name}</p>
+                    <p className="text-xs text-muted truncate max-w-xs">{order.delivery_address}</p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-semibold text-on-surface">{formatCurrency(order.base_price_try)}</p>
+                    <p className="text-sm font-semibold text-foreground">{formatCurrency(order.base_price_try)}</p>
                     <Badge className={`text-xs ${ORDER_STATUS_COLORS[order.status] ?? ""}`}>
                       {ORDER_STATUS_LABELS[order.status] ?? order.status}
                     </Badge>

@@ -25,14 +25,14 @@ function getDaysUntilBirthday(dateOfBirth: string): number {
 }
 
 const AVATAR_COLORS = [
-  "bg-primary-fixed text-on-primary-fixed-variant",
-  "bg-surface-container-high text-on-surface",
-  "bg-tertiary-container/40 text-tertiary",
-  "bg-surface-container text-on-surface-variant",
-  "bg-secondary-container/30 text-secondary",
-  "bg-primary-fixed text-on-primary-fixed-variant",
-  "bg-surface-container-high text-on-surface",
-  "bg-tertiary-container/40 text-tertiary",
+  "bg-primary/20 text-primary",
+  "bg-accent/20 text-accent-foreground",
+  "bg-background-secondary text-foreground",
+  "bg-primary/10 text-primary",
+  "bg-accent/40 text-accent-foreground",
+  "bg-primary/5 text-primary",
+  "bg-background-secondary/80 text-muted-foreground",
+  "bg-accent text-accent-foreground",
 ];
 
 export function UpcomingBirthdays({ employees, isLoading = false }: UpcomingBirthdaysProps) {
@@ -43,16 +43,16 @@ export function UpcomingBirthdays({ employees, isLoading = false }: UpcomingBirt
     .slice(0, 8);
 
   return (
-    <div className="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant">
-      <div className="flex items-center justify-between px-6 py-5 border-b border-outline-variant/50">
+    <div className="bg-background rounded-2xl shadow-sm border border-border-soft">
+      <div className="flex items-center justify-between px-6 py-5 border-b border-border-soft/50">
         <div className="flex items-center gap-2">
           <Cake className="h-5 w-5 text-primary" />
-          <h2 className="text-base font-semibold font-headline text-on-surface">Yaklaşan Doğum Günleri</h2>
-          <span className="ml-1 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-primary-fixed text-on-primary-fixed-variant">
+          <h2 className="text-base font-semibold font-headline text-foreground">Yaklaşan Doğum Günleri</h2>
+          <span className="ml-1 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-primary/20 text-primary">
             30 gün
           </span>
         </div>
-        <Button variant="ghost" size="sm" asChild className="text-primary hover:text-primary hover:bg-primary-fixed/50">
+        <Button variant="ghost" size="sm" asChild className="text-primary hover:text-primary hover:bg-primary/50">
           <Link href="/dashboard/employees">
             Tümü
             <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
@@ -77,8 +77,8 @@ export function UpcomingBirthdays({ employees, isLoading = false }: UpcomingBirt
         ) : upcoming.length === 0 ? (
           <div className="py-12 text-center">
             <Gift className="mx-auto h-12 w-12 text-surface-container-highest mb-3" />
-            <p className="text-sm font-medium text-on-surface-variant mb-1">Yaklaşan doğum günü yok</p>
-            <p className="text-xs text-on-surface-variant/70">Önümüzdeki 30 günde doğum günü bulunmuyor.</p>
+            <p className="text-sm font-medium text-muted mb-1">Yaklaşan doğum günü yok</p>
+            <p className="text-xs text-muted/70">Önümüzdeki 30 günde doğum günü bulunmuyor.</p>
           </div>
         ) : (
           <div>
@@ -91,7 +91,7 @@ export function UpcomingBirthdays({ employees, isLoading = false }: UpcomingBirt
               return (
                 <div
                   key={employee.id}
-                  className="flex items-center gap-3 py-3 border-b border-outline-variant/30 last:border-0 hover:bg-surface-container-low/50 -mx-6 px-6 transition-colors"
+                  className="flex items-center gap-3 py-3 border-b border-border-soft/30 last:border-0 hover:bg-background-secondary/50 -mx-6 px-6 transition-colors"
                 >
                   <div className="relative">
                     <Avatar className="h-10 w-10 shrink-0">
@@ -107,10 +107,10 @@ export function UpcomingBirthdays({ employees, isLoading = false }: UpcomingBirt
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-on-surface truncate">
+                    <p className="text-sm font-semibold text-foreground truncate">
                       {employee.first_name} {employee.last_name}
                     </p>
-                    <p className="text-xs text-on-surface-variant truncate">
+                    <p className="text-xs text-muted truncate">
                       {employee.department ?? "Departman yok"} · {formatBirthday(employee.date_of_birth)}
                     </p>
                   </div>
@@ -118,12 +118,12 @@ export function UpcomingBirthdays({ employees, isLoading = false }: UpcomingBirt
                   <span
                     className={`shrink-0 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${
                       isToday
-                        ? "bg-primary-fixed text-on-primary-fixed-variant"
+                        ? "bg-primary/20 text-primary"
                         : isTomorrow
-                        ? "bg-tertiary-container/40 text-tertiary"
+                        ? "bg-accent text-accent-foreground"
                         : isUrgent
-                        ? "bg-tertiary-container/20 text-on-tertiary-container"
-                        : "bg-surface-container text-on-surface-variant"
+                        ? "bg-accent/40 text-accent-foreground"
+                        : "bg-background-secondary text-muted-foreground"
                     }`}
                   >
                     {isToday ? "Bugün! 🎉" : isTomorrow ? "Yarın" : `${employee.daysUntil} gün`}

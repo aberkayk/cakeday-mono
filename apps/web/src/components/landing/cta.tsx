@@ -4,7 +4,7 @@ export function CTASection() {
   return (
     <section className="py-16 px-6">
       <div className="max-w-5xl mx-auto">
-        <div className="gradient-primary rounded-2xl p-12 md:p-16 text-white text-center relative overflow-hidden">
+        <div className="gradient-primary rounded-2xl p-12 md:p-16 text-foreground text-center relative overflow-hidden">
           {/* Decorative blur circles */}
           <div className="absolute -top-16 -left-16 w-48 h-48 rounded-full bg-white/10 blur-2xl" />
           <div className="absolute -bottom-16 -right-16 w-64 h-64 rounded-full bg-white/10 blur-3xl" />

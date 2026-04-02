@@ -7,7 +7,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="
         relative flex-shrink-0
         h-[100px] md:h-auto md:w-[420px] lg:w-[480px]
-        bg-on-surface flex flex-col
+        bg-foreground flex flex-col
         overflow-hidden
       ">
         {/* Logo */}
@@ -79,13 +79,13 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       </div>
 
       {/* ── Right Panel (white, scrollable) ── */}
-      <div className="flex-1 bg-surface-lowest flex flex-col">
+      <div className="flex-1 bg-background flex flex-col">
         <div className="flex-1 flex items-start md:items-center justify-center px-6 py-10 md:py-16 overflow-y-auto">
           <div className="w-full max-w-md">
             {children}
           </div>
         </div>
-        <footer className="py-4 text-center text-xs text-on-surface-variant border-t border-outline-variant/30">
+        <footer className="py-4 text-center text-xs text-muted border-t border-border-soft/30">
           © 2026 CakeDay. Tüm hakları saklıdır.
         </footer>
       </div>

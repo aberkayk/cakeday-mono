@@ -122,22 +122,22 @@ export function CsvImport() {
     return (
       <div className="py-8 text-center space-y-6">
         <div className="flex flex-col items-center">
-          <div className="h-20 w-20 rounded-full bg-surface-container-low flex items-center justify-center mb-4">
+          <div className="h-20 w-20 rounded-full bg-background-secondary flex items-center justify-center mb-4">
             <CheckCircle2 className="h-10 w-10 text-tertiary" />
           </div>
-          <h2 className="text-xl font-bold font-headline text-on-surface mb-1">🎉 İçe Aktarım Tamamlandı!</h2>
-          <p className="text-sm text-on-surface-variant">Çalışanlar başarıyla sisteme eklendi.</p>
+          <h2 className="text-xl font-bold font-headline text-foreground mb-1">🎉 İçe Aktarım Tamamlandı!</h2>
+          <p className="text-sm text-muted">Çalışanlar başarıyla sisteme eklendi.</p>
         </div>
 
         <div className="flex justify-center gap-8">
           <div className="text-center">
             <p className="text-4xl font-bold text-tertiary">{result.imported}</p>
-            <p className="text-sm text-on-surface-variant mt-1">Başarıyla Eklendi</p>
+            <p className="text-sm text-muted mt-1">Başarıyla Eklendi</p>
           </div>
           {result.skipped > 0 && (
             <div className="text-center">
               <p className="text-4xl font-bold text-primary">{result.skipped}</p>
-              <p className="text-sm text-on-surface-variant mt-1">Atlandı</p>
+              <p className="text-sm text-muted mt-1">Atlandı</p>
             </div>
           )}
         </div>
@@ -157,7 +157,7 @@ export function CsvImport() {
         <Button
           onClick={reset}
           variant="outline"
-          className="rounded-xl border-outline-variant text-on-surface"
+          className="rounded-xl border-border-soft text-foreground"
         >
           Yeni Yükleme Yap
         </Button>
@@ -172,9 +172,9 @@ export function CsvImport() {
         className={cn(
           "border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all",
           isDragging
-            ? "border-primary bg-primary-fixed/40"
-            : "border-outline-variant hover:border-primary/50 hover:bg-primary-fixed/20",
-          file && "border-tertiary bg-surface-container-low/50"
+            ? "border-primary bg-primary/40"
+            : "border-border-soft hover:border-primary/50 hover:bg-primary/20",
+          file && "border-tertiary bg-background-secondary/50"
         )}
         onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
         onDragLeave={() => setIsDragging(false)}
@@ -190,32 +190,32 @@ export function CsvImport() {
         />
         {file ? (
           <div className="flex items-center justify-center gap-4">
-            <div className="h-12 w-12 rounded-xl bg-surface-container flex items-center justify-center shrink-0">
+            <div className="h-12 w-12 rounded-xl bg-background-secondary flex items-center justify-center shrink-0">
               <FileText className="h-6 w-6 text-tertiary" />
             </div>
             <div className="text-left">
-              <p className="font-semibold text-on-surface">{file.name}</p>
-              <p className="text-sm text-on-surface-variant">
+              <p className="font-semibold text-foreground">{file.name}</p>
+              <p className="text-sm text-muted">
                 {preview.length} çalışan tespit edildi
               </p>
             </div>
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 ml-2 rounded-xl hover:bg-surface-container-low"
+              className="h-8 w-8 ml-2 rounded-xl hover:bg-background-secondary"
               onClick={(e) => { e.stopPropagation(); reset(); }}
             >
-              <X className="h-4 w-4 text-on-surface-variant" />
+              <X className="h-4 w-4 text-muted" />
             </Button>
           </div>
         ) : (
           <>
-            <div className="h-16 w-16 rounded-2xl bg-surface-container-low flex items-center justify-center mx-auto mb-4">
-              <Upload className="h-8 w-8 text-on-surface-variant" />
+            <div className="h-16 w-16 rounded-2xl bg-background-secondary flex items-center justify-center mx-auto mb-4">
+              <Upload className="h-8 w-8 text-muted" />
             </div>
-            <p className="text-base font-semibold text-on-surface mb-1">CSV dosyanızı buraya sürükleyin</p>
-            <p className="text-sm text-on-surface-variant">veya <span className="text-primary font-medium">tıklayarak seçin</span></p>
-            <p className="text-xs text-on-surface-variant mt-4 bg-surface-container-low rounded-xl px-4 py-2 inline-block">
+            <p className="text-base font-semibold text-foreground mb-1">CSV dosyanızı buraya sürükleyin</p>
+            <p className="text-sm text-muted">veya <span className="text-primary font-medium">tıklayarak seçin</span></p>
+            <p className="text-xs text-muted mt-4 bg-background-secondary rounded-xl px-4 py-2 inline-block">
               Desteklenen sütunlar: first_name, last_name, date_of_birth, department, work_email, district
             </p>
           </>
@@ -240,38 +240,38 @@ export function CsvImport() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-semibold text-on-surface">Önizleme</h3>
-              <p className="text-xs text-on-surface-variant mt-0.5">İlk 10 satır gösteriliyor</p>
+              <h3 className="font-semibold text-foreground">Önizleme</h3>
+              <p className="text-xs text-muted mt-0.5">İlk 10 satır gösteriliyor</p>
             </div>
-            <Badge className="bg-surface-container text-on-surface-variant border-0 font-semibold">
+            <Badge className="bg-background-secondary text-muted border-0 font-semibold">
               {preview.length} çalışan
             </Badge>
           </div>
 
-          <div className="rounded-2xl border border-outline-variant overflow-hidden shadow-sm">
+          <div className="rounded-2xl border border-border-soft overflow-hidden shadow-sm">
             <Table>
               <TableHeader>
-                <TableRow className="bg-surface-container-low/80 hover:bg-surface-container-low/80">
-                  <TableHead className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Ad</TableHead>
-                  <TableHead className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Soyad</TableHead>
-                  <TableHead className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Doğum Tarihi</TableHead>
-                  <TableHead className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Departman</TableHead>
-                  <TableHead className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">E-posta</TableHead>
+                <TableRow className="bg-background-secondary/80 hover:bg-background-secondary/80">
+                  <TableHead className="text-xs font-semibold text-muted uppercase tracking-wider">Ad</TableHead>
+                  <TableHead className="text-xs font-semibold text-muted uppercase tracking-wider">Soyad</TableHead>
+                  <TableHead className="text-xs font-semibold text-muted uppercase tracking-wider">Doğum Tarihi</TableHead>
+                  <TableHead className="text-xs font-semibold text-muted uppercase tracking-wider">Departman</TableHead>
+                  <TableHead className="text-xs font-semibold text-muted uppercase tracking-wider">E-posta</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {preview.slice(0, 10).map((row, i) => (
-                  <TableRow key={i} className="border-outline-variant/30">
-                    <TableCell className="text-sm font-medium text-on-surface">{row.first_name}</TableCell>
-                    <TableCell className="text-sm text-on-surface">{row.last_name}</TableCell>
-                    <TableCell className="text-sm text-on-surface-variant">{row.date_of_birth}</TableCell>
-                    <TableCell className="text-sm text-on-surface-variant">{row.department ?? "—"}</TableCell>
-                    <TableCell className="text-sm text-on-surface-variant">{row.work_email ?? "—"}</TableCell>
+                  <TableRow key={i} className="border-border-soft/30">
+                    <TableCell className="text-sm font-medium text-foreground">{row.first_name}</TableCell>
+                    <TableCell className="text-sm text-foreground">{row.last_name}</TableCell>
+                    <TableCell className="text-sm text-muted">{row.date_of_birth}</TableCell>
+                    <TableCell className="text-sm text-muted">{row.department ?? "—"}</TableCell>
+                    <TableCell className="text-sm text-muted">{row.work_email ?? "—"}</TableCell>
                   </TableRow>
                 ))}
                 {preview.length > 10 && (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center text-xs text-on-surface-variant py-3 bg-surface-container-low/50">
+                    <TableCell colSpan={5} className="text-center text-xs text-muted py-3 bg-background-secondary/50">
                       ve {preview.length - 10} çalışan daha...
                     </TableCell>
                   </TableRow>

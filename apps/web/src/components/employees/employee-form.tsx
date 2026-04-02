@@ -107,7 +107,7 @@ export function EmployeeForm({ open, onClose, onSubmit, employee }: EmployeeForm
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl">
         <DialogHeader className="pb-2">
-          <DialogTitle className="text-lg font-bold font-headline text-on-surface">
+          <DialogTitle className="text-lg font-bold font-headline text-foreground">
             {isEdit ? "Çalışanı Düzenle" : "Yeni Çalışan Ekle"}
           </DialogTitle>
         </DialogHeader>
@@ -115,25 +115,25 @@ export function EmployeeForm({ open, onClose, onSubmit, employee }: EmployeeForm
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-5">
           {/* Basic Info Section */}
           <div className="space-y-4">
-            <p className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Kişisel Bilgiler</p>
+            <p className="text-xs font-semibold text-muted uppercase tracking-wider">Kişisel Bilgiler</p>
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label htmlFor="first_name" className="text-sm font-medium text-on-surface">Ad *</Label>
+                <Label htmlFor="first_name" className="text-sm font-medium text-foreground">Ad *</Label>
                 <Input
                   id="first_name"
                   {...register("first_name")}
-                  className="rounded-xl border-outline-variant focus:border-primary"
+                  className="rounded-xl border-border-soft focus:border-primary"
                   placeholder="Ayşe"
                 />
                 {errors.first_name && <p className="text-xs text-red-500">{errors.first_name.message}</p>}
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="last_name" className="text-sm font-medium text-on-surface">Soyad *</Label>
+                <Label htmlFor="last_name" className="text-sm font-medium text-foreground">Soyad *</Label>
                 <Input
                   id="last_name"
                   {...register("last_name")}
-                  className="rounded-xl border-outline-variant focus:border-primary"
+                  className="rounded-xl border-border-soft focus:border-primary"
                   placeholder="Yılmaz"
                 />
                 {errors.last_name && <p className="text-xs text-red-500">{errors.last_name.message}</p>}
@@ -141,33 +141,33 @@ export function EmployeeForm({ open, onClose, onSubmit, employee }: EmployeeForm
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="date_of_birth" className="text-sm font-medium text-on-surface">Doğum Tarihi *</Label>
+              <Label htmlFor="date_of_birth" className="text-sm font-medium text-foreground">Doğum Tarihi *</Label>
               <Input
                 id="date_of_birth"
                 type="date"
                 {...register("date_of_birth")}
-                className="rounded-xl border-outline-variant focus:border-primary"
+                className="rounded-xl border-border-soft focus:border-primary"
               />
               {errors.date_of_birth && <p className="text-xs text-red-500">{errors.date_of_birth.message}</p>}
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label htmlFor="department" className="text-sm font-medium text-on-surface">Departman</Label>
+                <Label htmlFor="department" className="text-sm font-medium text-foreground">Departman</Label>
                 <Input
                   id="department"
                   placeholder="Mühendislik"
                   {...register("department")}
-                  className="rounded-xl border-outline-variant focus:border-primary"
+                  className="rounded-xl border-border-soft focus:border-primary"
                 />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="office_location" className="text-sm font-medium text-on-surface">Ofis Konumu</Label>
+                <Label htmlFor="office_location" className="text-sm font-medium text-foreground">Ofis Konumu</Label>
                 <Input
                   id="office_location"
                   placeholder="İstanbul Merkez"
                   {...register("office_location")}
-                  className="rounded-xl border-outline-variant focus:border-primary"
+                  className="rounded-xl border-border-soft focus:border-primary"
                 />
               </div>
             </div>
@@ -175,28 +175,28 @@ export function EmployeeForm({ open, onClose, onSubmit, employee }: EmployeeForm
 
           {/* Contact Section */}
           <div className="space-y-4 pt-1">
-            <p className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">İletişim Bilgileri</p>
+            <p className="text-xs font-semibold text-muted uppercase tracking-wider">İletişim Bilgileri</p>
 
             <div className="space-y-1.5">
-              <Label htmlFor="work_email" className="text-sm font-medium text-on-surface">İş E-postası</Label>
+              <Label htmlFor="work_email" className="text-sm font-medium text-foreground">İş E-postası</Label>
               <Input
                 id="work_email"
                 type="email"
                 placeholder="ayse@sirket.com"
                 {...register("work_email")}
-                className="rounded-xl border-outline-variant focus:border-primary"
+                className="rounded-xl border-border-soft focus:border-primary"
               />
               {errors.work_email && <p className="text-xs text-red-500">{errors.work_email.message}</p>}
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="personal_email" className="text-sm font-medium text-on-surface">Kişisel E-posta</Label>
+              <Label htmlFor="personal_email" className="text-sm font-medium text-foreground">Kişisel E-posta</Label>
               <Input
                 id="personal_email"
                 type="email"
                 placeholder="kisisel@mail.com"
                 {...register("personal_email")}
-                className="rounded-xl border-outline-variant focus:border-primary"
+                className="rounded-xl border-border-soft focus:border-primary"
               />
               {errors.personal_email && <p className="text-xs text-red-500">{errors.personal_email.message}</p>}
             </div>
@@ -204,25 +204,25 @@ export function EmployeeForm({ open, onClose, onSubmit, employee }: EmployeeForm
 
           {/* Delivery Section */}
           <div className="space-y-4 pt-1">
-            <p className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Teslimat Bilgileri</p>
+            <p className="text-xs font-semibold text-muted uppercase tracking-wider">Teslimat Bilgileri</p>
 
             <div className="space-y-1.5">
-              <Label htmlFor="delivery_address" className="text-sm font-medium text-on-surface">Teslimat Adresi</Label>
+              <Label htmlFor="delivery_address" className="text-sm font-medium text-foreground">Teslimat Adresi</Label>
               <Input
                 id="delivery_address"
                 placeholder="Tam adres"
                 {...register("delivery_address")}
-                className="rounded-xl border-outline-variant focus:border-primary"
+                className="rounded-xl border-border-soft focus:border-primary"
               />
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-on-surface">Teslimat İlçesi</Label>
+              <Label className="text-sm font-medium text-foreground">Teslimat İlçesi</Label>
               <Select
                 defaultValue={employee?.delivery_district ?? ""}
                 onValueChange={(v) => setValue("delivery_district", v)}
               >
-                <SelectTrigger className="rounded-xl border-outline-variant">
+                <SelectTrigger className="rounded-xl border-border-soft">
                   <SelectValue placeholder="İlçe seçin" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
@@ -236,15 +236,15 @@ export function EmployeeForm({ open, onClose, onSubmit, employee }: EmployeeForm
 
           {/* Cake Preferences Section */}
           <div className="space-y-4 pt-1">
-            <p className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Pasta Tercihleri</p>
+            <p className="text-xs font-semibold text-muted uppercase tracking-wider">Pasta Tercihleri</p>
 
             <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-on-surface">Tercih Edilen Pasta Boyutu</Label>
+              <Label className="text-sm font-medium text-foreground">Tercih Edilen Pasta Boyutu</Label>
               <Select
                 defaultValue={employee?.preferred_cake_size ?? ""}
                 onValueChange={(v) => setValue("preferred_cake_size", v)}
               >
-                <SelectTrigger className="rounded-xl border-outline-variant">
+                <SelectTrigger className="rounded-xl border-border-soft">
                   <SelectValue placeholder="Boyut seçin" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
@@ -256,20 +256,20 @@ export function EmployeeForm({ open, onClose, onSubmit, employee }: EmployeeForm
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="custom_message_override" className="text-sm font-medium text-on-surface">Özel Mesaj</Label>
+              <Label htmlFor="custom_message_override" className="text-sm font-medium text-foreground">Özel Mesaj</Label>
               <Textarea
                 id="custom_message_override"
                 placeholder="İyi ki doğdun {{ad}}!"
                 rows={2}
                 {...register("custom_message_override")}
-                className="rounded-xl border-outline-variant focus:border-primary resize-none"
+                className="rounded-xl border-border-soft focus:border-primary resize-none"
               />
             </div>
 
-            <div className="flex items-center justify-between rounded-xl border border-outline-variant bg-surface-container-low/50 p-4">
+            <div className="flex items-center justify-between rounded-xl border border-border-soft bg-background-secondary/50 p-4">
               <div>
-                <p className="text-sm font-semibold text-on-surface">Pasta Gönderimini Atla</p>
-                <p className="text-xs text-on-surface-variant mt-0.5">Bu çalışana pasta gönderilmez.</p>
+                <p className="text-sm font-semibold text-foreground">Pasta Gönderimini Atla</p>
+                <p className="text-xs text-muted mt-0.5">Bu çalışana pasta gönderilmez.</p>
               </div>
               <Switch
                 checked={watch("skip_cake") ?? false}
@@ -279,7 +279,7 @@ export function EmployeeForm({ open, onClose, onSubmit, employee }: EmployeeForm
           </div>
 
           <DialogFooter className="gap-2 pt-2">
-            <Button type="button" variant="outline" onClick={onClose} className="flex-1 rounded-xl border-outline-variant">
+            <Button type="button" variant="outline" onClick={onClose} className="flex-1 rounded-xl border-border-soft">
               İptal
             </Button>
             <Button

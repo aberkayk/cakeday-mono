@@ -89,8 +89,8 @@ export default function BakeryPricingPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold font-headline text-on-surface">Fiyatlandırma</h1>
-          <p className="text-on-surface-variant text-sm mt-1">Mevcut fiyatlar ve fiyat değişiklik talepleri.</p>
+          <h1 className="text-2xl font-bold font-headline text-foreground">Fiyatlandırma</h1>
+          <p className="text-muted text-sm mt-1">Mevcut fiyatlar ve fiyat değişiklik talepleri.</p>
         </div>
         <Button
           onClick={() => { setDialogOpen(true); setSubmitted(false); }}
@@ -102,10 +102,10 @@ export default function BakeryPricingPage() {
       </div>
 
       {/* Current prices */}
-      <div className="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant">
-        <div className="px-6 py-5 border-b border-outline-variant/50">
-          <h2 className="text-base font-semibold font-headline text-on-surface flex items-center gap-2">
-            <Tag className="h-5 w-5 text-on-surface-variant" />
+      <div className="bg-background rounded-2xl shadow-sm border border-border-soft">
+        <div className="px-6 py-5 border-b border-border-soft/50">
+          <h2 className="text-base font-semibold font-headline text-foreground flex items-center gap-2">
+            <Tag className="h-5 w-5 text-muted" />
             Mevcut Fiyatlar
           </h2>
         </div>
@@ -115,27 +115,27 @@ export default function BakeryPricingPage() {
               {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-12 rounded-lg" />)}
             </div>
           ) : cakeTypes.length === 0 ? (
-            <p className="text-sm text-on-surface-variant">Katalog yükleniyor...</p>
+            <p className="text-sm text-muted">Katalog yükleniyor...</p>
           ) : (
             <div className="space-y-4">
               {cakeTypes.map((cake) => (
-                <div key={cake.id} className="rounded-xl border border-outline-variant p-4">
+                <div key={cake.id} className="rounded-xl border border-border-soft p-4">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
                       <span className="text-2xl">🎂</span>
                       <div>
-                        <p className="font-medium text-sm text-on-surface">{cake.name}</p>
+                        <p className="font-medium text-sm text-foreground">{cake.name}</p>
                         {cake.is_gluten_free && (
-                          <Badge className="text-xs mt-0.5 bg-surface-container text-on-surface-variant border-0">Glutensiz</Badge>
+                          <Badge className="text-xs mt-0.5 bg-background-secondary text-muted border-0">Glutensiz</Badge>
                         )}
                       </div>
                     </div>
                   </div>
                   <div className="grid grid-cols-3 gap-3">
                     {(["small", "medium", "large"] as const).map((size) => (
-                      <div key={size} className="text-center rounded-xl bg-surface-container-low p-2">
-                        <p className="text-xs text-on-surface-variant mb-1">{CAKE_SIZE_LABELS[size]}</p>
-                        <p className="font-semibold text-sm text-on-surface">
+                      <div key={size} className="text-center rounded-xl bg-background-secondary p-2">
+                        <p className="text-xs text-muted mb-1">{CAKE_SIZE_LABELS[size]}</p>
+                        <p className="font-semibold text-sm text-foreground">
                           {formatCurrency(MOCK_CURRENT_PRICES[size]?.["default"] ?? 0)}
                         </p>
                       </div>
@@ -152,14 +152,14 @@ export default function BakeryPricingPage() {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-md rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="font-headline text-on-surface">Fiyat Değişikliği Talep Et</DialogTitle>
+            <DialogTitle className="font-headline text-foreground">Fiyat Değişikliği Talep Et</DialogTitle>
           </DialogHeader>
 
           {submitted ? (
             <div className="py-6 text-center space-y-3">
               <CheckCircle2 className="mx-auto h-12 w-12 text-tertiary" />
-              <p className="font-medium text-on-surface">Talebiniz iletildi!</p>
-              <p className="text-sm text-on-surface-variant">Admin inceledikten sonra size bildirim gönderilecek.</p>
+              <p className="font-medium text-foreground">Talebiniz iletildi!</p>
+              <p className="text-sm text-muted">Admin inceledikten sonra size bildirim gönderilecek.</p>
               <Button
                 onClick={() => setDialogOpen(false)}
                 className="rounded-xl gradient-primary text-white shadow-primary"
@@ -170,9 +170,9 @@ export default function BakeryPricingPage() {
           ) : (
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-2">
-                <Label className="text-on-surface">Pasta Türü</Label>
+                <Label className="text-foreground">Pasta Türü</Label>
                 <Select onValueChange={(v) => setValue("cake_type_id", v)}>
-                  <SelectTrigger className="rounded-xl border-outline-variant">
+                  <SelectTrigger className="rounded-xl border-border-soft">
                     <SelectValue placeholder="Pasta seçin" />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl">
@@ -185,9 +185,9 @@ export default function BakeryPricingPage() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-on-surface">Boyut</Label>
+                <Label className="text-foreground">Boyut</Label>
                 <Select defaultValue="medium" onValueChange={(v) => setValue("size", v as "small" | "medium" | "large")}>
-                  <SelectTrigger className="rounded-xl border-outline-variant"><SelectValue /></SelectTrigger>
+                  <SelectTrigger className="rounded-xl border-border-soft"><SelectValue /></SelectTrigger>
                   <SelectContent className="rounded-xl">
                     {Object.entries(CAKE_SIZE_LABELS).map(([k, v]) => (
                       <SelectItem key={k} value={k}>{v}</SelectItem>
@@ -197,43 +197,43 @@ export default function BakeryPricingPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="requested_price_try" className="text-on-surface">Talep Edilen Fiyat (TL)</Label>
+                <Label htmlFor="requested_price_try" className="text-foreground">Talep Edilen Fiyat (TL)</Label>
                 <Input
                   id="requested_price_try"
                   type="number"
                   step="0.01"
                   min="0"
                   placeholder="450.00"
-                  className="rounded-xl border-outline-variant focus:border-primary"
+                  className="rounded-xl border-border-soft focus:border-primary"
                   {...register("requested_price_try", { valueAsNumber: true })}
                 />
                 {errors.requested_price_try && <p className="text-xs text-red-500">{errors.requested_price_try.message}</p>}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="effective_date" className="text-on-surface">Geçerlilik Tarihi</Label>
+                <Label htmlFor="effective_date" className="text-foreground">Geçerlilik Tarihi</Label>
                 <Input
                   id="effective_date"
                   type="date"
-                  className="rounded-xl border-outline-variant focus:border-primary"
+                  className="rounded-xl border-border-soft focus:border-primary"
                   {...register("effective_date")}
                 />
                 {errors.effective_date && <p className="text-xs text-red-500">{errors.effective_date.message}</p>}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="justification" className="text-on-surface">Gerekçe</Label>
+                <Label htmlFor="justification" className="text-foreground">Gerekçe</Label>
                 <Textarea
                   id="justification"
                   placeholder="Fiyat artışının gerekçesini yazın..."
                   rows={3}
-                  className="rounded-xl border-outline-variant focus:border-primary resize-none"
+                  className="rounded-xl border-border-soft focus:border-primary resize-none"
                   {...register("justification")}
                 />
               </div>
 
               <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setDialogOpen(false)} className="rounded-xl border-outline-variant">İptal</Button>
+                <Button type="button" variant="outline" onClick={() => setDialogOpen(false)} className="rounded-xl border-border-soft">İptal</Button>
                 <Button
                   type="submit"
                   disabled={isSubmitting}

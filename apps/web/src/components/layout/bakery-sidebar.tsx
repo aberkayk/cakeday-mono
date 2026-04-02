@@ -16,12 +16,12 @@ export function BakerySidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="flex flex-col w-64 min-h-screen bg-surface-container-lowest border-r border-outline-variant">
-      <div className="flex items-center gap-2 px-6 py-5 border-b border-outline-variant">
+    <aside className="flex flex-col w-64 min-h-screen bg-background border-r border-border-soft">
+      <div className="flex items-center gap-2 px-6 py-5 border-b border-border-soft">
         <Cake className="h-7 w-7 text-primary" />
         <div>
-          <span className="text-lg font-bold font-headline text-on-surface">CakeDay</span>
-          <p className="text-xs text-on-surface-variant">Pastane Portalı</p>
+          <span className="text-lg font-bold font-headline text-foreground">CakeDay</span>
+          <p className="text-xs text-muted">Pastane Portalı</p>
         </div>
       </div>
 
@@ -39,8 +39,8 @@ export function BakerySidebar() {
               className={cn(
                 "flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-colors",
                 isActive
-                  ? "bg-primary-fixed text-primary"
-                  : "text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface"
+                  ? "bg-primary/20 text-primary"
+                  : "text-muted hover:bg-background-secondary hover:text-foreground"
               )}
             >
               <Icon className="h-4 w-4 shrink-0" />
@@ -50,8 +50,8 @@ export function BakerySidebar() {
         })}
       </nav>
 
-      <div className="px-3 py-4 border-t border-outline-variant">
-        <p className="px-3 text-xs text-on-surface-variant">© 2026 CakeDay</p>
+      <div className="px-3 py-4 border-t border-border-soft">
+        <p className="px-3 text-xs text-muted">© 2026 CakeDay</p>
       </div>
     </aside>
   );

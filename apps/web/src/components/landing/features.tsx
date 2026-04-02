@@ -42,14 +42,14 @@ const features = [
 
 export function FeaturesSection() {
   return (
-    <section id="features" className="bg-surface-container-low py-24">
+    <section id="features" className="bg-background-secondary py-24">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
           <div>
-            <h2 className="font-headline text-4xl md:text-5xl font-extrabold text-on-surface mb-4">
+            <h2 className="font-headline text-4xl md:text-5xl font-extrabold text-foreground mb-4">
               Her Şey Tek Platformda
             </h2>
-            <p className="text-lg text-on-surface-variant max-w-xl">
+            <p className="text-lg text-muted max-w-xl">
               Doğum günü yönetiminden faturaya, çalışan mutluluğunu artıracak
               tüm araçlar burada.
             </p>
@@ -73,10 +73,10 @@ export function FeaturesSection() {
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-5 group-hover:bg-primary/20 transition-colors">
                   <Icon className="h-6 w-6 text-primary" />
                 </div>
-                <h3 className="font-headline text-lg font-bold text-on-surface mb-2">
+                <h3 className="font-headline text-lg font-bold text-foreground mb-2">
                   {f.title}
                 </h3>
-                <p className="text-sm text-on-surface-variant leading-relaxed">
+                <p className="text-sm text-muted leading-relaxed">
                   {f.description}
                 </p>
               </div>

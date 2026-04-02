@@ -23,14 +23,14 @@ const steps = [
 
 export function HowItWorksSection() {
   return (
-    <section id="how-it-works" className="bg-surface py-24">
+    <section id="how-it-works" className="bg-background py-24">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="font-headline text-4xl md:text-5xl font-extrabold text-on-surface mb-4 relative inline-block">
+          <h2 className="font-headline text-4xl md:text-5xl font-extrabold text-foreground mb-4 relative inline-block">
             3 Adımda Başlayın
             <span className="absolute -bottom-2 left-0 right-0 h-1.5 rounded-full gradient-primary" />
           </h2>
-          <p className="mt-6 text-lg text-on-surface-variant max-w-xl mx-auto">
+          <p className="mt-6 text-lg text-muted max-w-xl mx-auto">
             Birkaç dakika içinde sistemi kurun ve çalışan doğum günlerini
             unutmayı bırakın.
           </p>
@@ -50,10 +50,10 @@ export function HowItWorksSection() {
                 <div className="text-sm font-bold text-primary mb-1">
                   Adım {i + 1}
                 </div>
-                <h3 className="font-headline text-xl font-bold text-on-surface mb-3">
+                <h3 className="font-headline text-xl font-bold text-foreground mb-3">
                   {step.title}
                 </h3>
-                <p className="text-on-surface-variant text-sm leading-relaxed">
+                <p className="text-muted text-sm leading-relaxed">
                   {step.description}
                 </p>
               </div>
