@@ -153,7 +153,8 @@ export default function RegisterPage() {
         </div>
         <Button
           asChild
-          className="w-full h-12 gradient-primary text-white font-semibold rounded-xl shadow-primary"
+          size="lg"
+          className="w-full"
         >
           <Link href="/login">Giriş Sayfasına Git</Link>
         </Button>
@@ -466,7 +467,8 @@ export default function RegisterPage() {
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full h-12 gradient-primary text-white font-semibold rounded-xl text-base shadow-primary transition-all hover:opacity-90 disabled:opacity-60"
+          size="lg"
+          className="w-full"
         >
           {isSubmitting ? (
             <>

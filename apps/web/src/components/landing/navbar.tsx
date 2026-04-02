@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Cake, Menu, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const navItems = [
   { label: "Nasıl Çalışır", href: "#how-it-works" },
@@ -77,18 +78,12 @@ export function NavBar() {
 
         {/* Right CTA — desktop */}
         <div className="hidden md:flex items-center gap-2">
-          <Link
-            href="/login"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5"
-          >
-            Giriş Yap
-          </Link>
-          <Link
-            href="/register"
-            className="bg-primary text-primary-foreground text-sm font-bold px-5 py-2 rounded-full hover:shadow-ambient transition-all"
-          >
-            Kutlamaya Başla
-          </Link>
+          <Button asChild variant="ghost">
+            <Link href="/login">Giriş Yap</Link>
+          </Button>
+          <Button asChild variant="default">
+            <Link href="/register">Kutlamaya Başla</Link>
+          </Button>
         </div>
 
         {/* Mobile hamburger */}
@@ -132,12 +127,9 @@ export function NavBar() {
             >
               Giriş Yap
             </Link>
-            <Link
-              href="/register"
-              className="block text-center bg-primary text-primary-foreground text-sm font-bold rounded-full py-2.5"
-            >
-              Kutlamaya Başla
-            </Link>
+            <Button asChild variant="default" className="w-full font-bold">
+              <Link href="/register">Kutlamaya Başla</Link>
+            </Button>
           </div>
         </div>
       )}

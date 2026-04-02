@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export function PricingSection() {
   return (
@@ -52,12 +53,9 @@ export function PricingSection() {
         </div>
 
         <div className="text-center mt-12">
-          <Link
-            href="/register"
-            className="inline-block bg-primary text-primary-foreground font-semibold px-10 py-3.5 rounded-xl shadow-ambient hover:opacity-90 transition-all text-base"
-          >
-            Hemen Başla
-          </Link>
+          <Button asChild size="lg" className="font-semibold px-10">
+            <Link href="/register">Hemen Başla</Link>
+          </Button>
         </div>
       </div>
     </section>

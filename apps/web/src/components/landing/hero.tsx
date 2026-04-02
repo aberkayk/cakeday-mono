@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Cake, Play } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function HeroSection() {
   return (
@@ -9,7 +10,7 @@ export function HeroSection() {
           {/* Left */}
           <div>
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 rounded-full bg-secondary-fixed px-4 py-1.5 text-sm font-medium text-on-secondary-container mb-8">
+            <div className="inline-flex items-center gap-2 rounded-full bg-accent px-4 py-1.5 text-sm font-medium text-accent-foreground mb-8">
               <span>🎂</span>
               <span>
                 Türkiye&apos;nin ilk kurumsal pasta teslimat platformu
@@ -29,23 +30,18 @@ export function HeroSection() {
               teslim edelim.
             </p>
 
-            {/* Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 mb-10">
-              <Link
-                href="/register"
-                className="gradient-primary text-foreground font-semibold px-8 py-3.5 rounded-xl shadow-lg hover:opacity-90 transition-opacity text-base text-center flex items-center justify-center"
-              >
-                Hemen Başla
-              </Link>
-              <a
-                href="#how-it-works"
-                className="flex items-center justify-center gap-2 border border-border text-foreground font-semibold px-8 py-3.5 rounded-xl hover:bg-background-secondary transition-colors text-base"
-              >
-                <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Play className="h-3.5 w-3.5 text-primary fill-primary" />
-                </div>
-                Nasıl Çalışır?
-              </a>
+              <Button asChild size="lg" className="px-10 font-bold">
+                <Link href="/register">Hemen Başla</Link>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="px-10 font-bold">
+                <a href="#how-it-works" className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Play className="h-3.5 w-3.5 text-primary fill-primary" />
+                  </div>
+                  Nasıl Çalışır?
+                </a>
+              </Button>
             </div>
 
             {/* Social proof */}
