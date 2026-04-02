@@ -116,7 +116,7 @@ const faqItems = [
   },
   {
     q: "Hangi bölgelere teslimat yapıyorsunuz?",
-    a: "Şu an İstanbul'un Beşiktaş ve Sarıyer bölgelerinde hizmet veriyoruz. Yeni bölgeler yakında eklenecektir.",
+    a: "Şimdilik İstanbul'da belirlenen ilçelerde hizmet veriyoruz. Yeni bölgeler yakında eklenecektir.",
   },
   {
     q: "HR sistemimizle entegre olabiliyor mu?",
@@ -127,8 +127,8 @@ const faqItems = [
     a: "Her ay sonunda tüm siparişleriniz için tek bir konsolide fatura kesilir. E-fatura ve kurumsal fatura desteği mevcuttur.",
   },
   {
-    q: "Deneme süreci nasıl işliyor?",
-    a: "İlk 14 gün tüm özellikleri ücretsiz deneyebilirsiniz. Deneme süresi sonunda size uygun planı seçerek devam edebilirsiniz.",
+    q: "Üyelik ücreti var mı?",
+    a: "Hayır, üyelik ücreti yoktur. Sadece sipariş ettiğiniz pastalar için pasta çeşidi ve boyutuna göre ücretlendirilirsiniz. Ay sonunda toplam siparişleriniz için tek bir fatura kesilir.",
   },
   {
     q: "Pasta seçeneklerini özelleştirebilir miyim?",
@@ -154,11 +154,11 @@ function NavBar() {
 
         {/* Center nav — desktop */}
         <nav className="hidden md:flex items-center gap-8">
-          {["Nasıl Çalışır", "Özellikler", "Fiyatlandırma", "SSS"].map((label) => {
+          {["Nasıl Çalışır", "Özellikler", "Ücretlendirme", "SSS"].map((label) => {
             const href = {
               "Nasıl Çalışır": "#how-it-works",
               Özellikler: "#features",
-              Fiyatlandırma: "#pricing",
+              Ücretlendirme: "#pricing",
               SSS: "#faq",
             }[label]!;
             return (
@@ -202,11 +202,11 @@ function NavBar() {
       {/* Mobile menu */}
       {mobileOpen && (
         <div className="md:hidden border-t border-outline-variant bg-surface-container-lowest px-6 py-4 space-y-3 absolute top-20 left-0 right-0 shadow-lg">
-          {["Nasıl Çalışır", "Özellikler", "Fiyatlandırma", "SSS"].map((label) => {
+          {["Nasıl Çalışır", "Özellikler", "Ücretlendirme", "SSS"].map((label) => {
             const href = {
               "Nasıl Çalışır": "#how-it-works",
               Özellikler: "#features",
-              Fiyatlandırma: "#pricing",
+              Ücretlendirme: "#pricing",
               SSS: "#faq",
             }[label]!;
             return (
@@ -287,7 +287,7 @@ function HeroSection() {
             {/* Social proof */}
             <div className="flex items-center gap-3">
               <div className="inline-flex items-center gap-2 bg-surface-container-low px-4 py-2 rounded-full">
-                <span className="text-sm text-on-surface-variant">🚀 Beşiktaş ve Sarıyer&apos;de aktif</span>
+                <span className="text-sm text-on-surface-variant">📍 Şimdilik İstanbul&apos;da belirlenen ilçelerde aktif</span>
               </div>
             </div>
           </div>
@@ -526,85 +526,47 @@ function PricingSection() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="font-headline text-4xl md:text-5xl font-extrabold text-on-surface mb-4">
-            Şeffaf Fiyatlandırma
+            Nasıl Çalışır?
           </h2>
-          <p className="text-lg text-on-surface-variant">
-            Her ölçekteki ekip için uygun plan. 14 gün ücretsiz deneyin.
+          <p className="text-lg text-on-surface-variant max-w-2xl mx-auto">
+            Üyelik ücreti yoktur. Kaydolun, çalışanlarınızı ekleyin, siparişlerinizi planlayın.
+            Ay sonunda sadece sipariş ettiğiniz pastalar için fatura kesilir.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-start">
-          {/* Profesyonel — highlighted */}
-          <div className="relative bg-surface-container-lowest rounded-2xl border-2 border-primary p-8 flex flex-col shadow-xl">
-            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-              <span className="gradient-primary text-white text-xs font-bold px-4 py-1 rounded-full">
-                En Popüler
-              </span>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          {[
+            {
+              icon: "🎂",
+              title: "Pasta Seçimi",
+              description: "Pasta çeşidi ve boyutuna göre fiyatlandırma. Küçük, orta ve büyük boy seçenekleri.",
+            },
+            {
+              icon: "📋",
+              title: "Sipariş Planı",
+              description: "Otomatik kurallarla veya tek seferlik siparişlerle çalışanlarınızın kutlamalarını planlayın.",
+            },
+            {
+              icon: "🧾",
+              title: "Aylık Fatura",
+              description: "Ay sonunda toplam sipariş sayınıza göre tek bir konsolide fatura kesilir.",
+            },
+          ].map((item) => (
+            <div key={item.title} className="bg-surface-container-lowest rounded-2xl border border-outline-variant p-8 text-center">
+              <div className="text-4xl mb-4">{item.icon}</div>
+              <h3 className="font-headline font-bold text-on-surface text-lg mb-3">{item.title}</h3>
+              <p className="text-sm text-on-surface-variant leading-relaxed">{item.description}</p>
             </div>
-            <div className="mb-6">
-              <div className="text-sm font-semibold text-primary uppercase tracking-wide mb-3">
-                Profesyonel
-              </div>
-              <div className="flex items-end gap-1">
-                <span className="text-4xl font-headline font-extrabold text-on-surface">₺299</span>
-                <span className="text-sm text-on-surface-variant mb-1">/ay</span>
-              </div>
-              <div className="text-sm text-on-surface-variant mt-1">50 çalışana kadar</div>
-            </div>
-            <ul className="space-y-3 mb-8 flex-1">
-              {[
-                "50 çalışana kadar",
-                "Otomatik sipariş kuralları",
-                "Gelişmiş raporlar",
-                "WhatsApp bildirimleri",
-                "CSV/Excel içe aktarma",
-                "Öncelikli destek",
-              ].map((f) => (
-                <li key={f} className="flex items-center gap-2 text-sm text-on-surface-variant">
-                  <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <Link
-              href="/register"
-              className="block text-center gradient-primary text-white font-semibold py-3 rounded-xl hover:opacity-90 transition-opacity text-sm"
-            >
-              Hemen Başla
-            </Link>
-          </div>
+          ))}
+        </div>
 
-          {/* Kurumsal */}
-          <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant p-8 flex flex-col">
-            <div className="mb-6">
-              <div className="text-sm font-semibold text-on-surface-variant uppercase tracking-wide mb-3">
-                Kurumsal
-              </div>
-              <div className="text-4xl font-headline font-extrabold text-on-surface">İletişime Geçin</div>
-              <div className="text-sm text-on-surface-variant mt-1">Sınırsız çalışan</div>
-            </div>
-            <ul className="space-y-3 mb-8 flex-1">
-              {[
-                "Sınırsız çalışan",
-                "HR sistem entegrasyonu",
-                "Özel pasta tasarımı",
-                "Fatura ve muhasebe",
-                "Özel SLA",
-                "Hesap yöneticisi",
-              ].map((f) => (
-                <li key={f} className="flex items-center gap-2 text-sm text-on-surface-variant">
-                  <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <Link
-              href="/contact"
-              className="block text-center border border-outline text-on-surface font-semibold py-3 rounded-xl hover:bg-surface-container-low transition-colors text-sm"
-            >
-              Teklif Alın
-            </Link>
-          </div>
+        <div className="text-center mt-12">
+          <Link
+            href="/register"
+            className="inline-block gradient-primary text-white font-semibold px-10 py-3.5 rounded-xl shadow-lg hover:opacity-90 transition-opacity text-base"
+          >
+            Hemen Başla
+          </Link>
         </div>
       </div>
     </section>
@@ -675,7 +637,7 @@ function CTASection() {
               Kutlamaya Başlayın
             </h2>
             <p className="text-white/80 text-lg mb-8 max-w-lg mx-auto">
-              Hemen kaydolun ve ilk 30 günü ücretsiz kullanın. Kredi kartı gerekmez.
+              Hemen kaydolun, çalışanlarınızı ekleyin ve kutlamaları otomatikleştirin.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
@@ -687,7 +649,7 @@ function CTASection() {
               </Link>
             </div>
 
-            <p className="text-white/70 text-sm">14 gün ücretsiz deneme · Kredi kartı gerekmez</p>
+            <p className="text-white/70 text-sm">Üyelik ücreti yok · Sadece sipariş başına ödeme</p>
           </div>
         </div>
       </div>
@@ -715,7 +677,7 @@ function Footer() {
           <div>
             <p className="text-sm font-semibold text-inverse-on-surface mb-4">Ürün</p>
             <ul className="space-y-2 text-sm">
-              {["Özellikler", "Fiyatlandırma", "Nasıl Çalışır", "Kaydol"].map((item) => (
+              {["Özellikler", "Ücretlendirme", "Nasıl Çalışır", "Kaydol"].map((item) => (
                 <li key={item}>
                   <a href="#" className="hover:text-inverse-on-surface transition-colors">
                     {item}
