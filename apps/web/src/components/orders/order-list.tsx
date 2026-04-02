@@ -26,11 +26,11 @@ export function OrderList({ orders, isLoading = false, onCancel, emptyMessage }:
   if (orders.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
-        <div className="h-16 w-16 rounded-2xl bg-gray-50 flex items-center justify-center mb-4">
-          <ShoppingBag className="h-8 w-8 text-gray-300" />
+        <div className="h-16 w-16 rounded-2xl bg-surface-container-low flex items-center justify-center mb-4">
+          <ShoppingBag className="h-8 w-8 text-on-surface-variant/40" />
         </div>
-        <p className="text-sm font-semibold text-gray-600 mb-1">Sipariş bulunamadı</p>
-        <p className="text-xs text-gray-400">
+        <p className="text-sm font-semibold text-on-surface-variant mb-1">Sipariş bulunamadı</p>
+        <p className="text-xs text-on-surface-variant/70">
           {emptyMessage ?? "Bu kategoride sipariş yok."}
         </p>
       </div>

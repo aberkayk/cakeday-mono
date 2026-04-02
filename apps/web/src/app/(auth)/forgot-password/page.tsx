@@ -49,15 +49,15 @@ export default function ForgotPasswordPage() {
         </div>
 
         <div className="space-y-2">
-          <h2 className="text-2xl font-extrabold text-[#1a1a2e]">E-posta Gönderildi</h2>
-          <p className="text-gray-500 max-w-xs mx-auto leading-relaxed">
+          <h2 className="text-2xl font-extrabold text-on-surface font-headline">E-posta Gönderildi</h2>
+          <p className="text-on-surface-variant max-w-xs mx-auto leading-relaxed">
             Şifre sıfırlama bağlantısı e-posta adresinize gönderildi. Gelen kutunuzu kontrol edin.
           </p>
         </div>
 
         <Button
           asChild
-          className="w-full h-12 bg-[#F97316] hover:bg-[#ea580c] text-white font-semibold rounded-xl"
+          className="w-full h-12 gradient-primary text-white font-semibold rounded-xl shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)]"
         >
           <Link href="/login">
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -70,11 +70,11 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="space-y-8">
-      {/* Lock icon in coral circle */}
+      {/* Lock icon in primary circle */}
       <div className="space-y-5">
-        <div className="w-14 h-14 rounded-full bg-[#F97316]/10 flex items-center justify-center">
+        <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
           <svg
-            className="w-7 h-7 text-[#F97316]"
+            className="w-7 h-7 text-primary"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -86,10 +86,10 @@ export default function ForgotPasswordPage() {
         </div>
 
         <div className="space-y-1.5">
-          <h1 className="text-3xl font-extrabold text-[#1a1a2e] tracking-tight">
+          <h1 className="text-3xl font-extrabold text-on-surface tracking-tight font-headline">
             Şifrenizi mi Unuttunuz?
           </h1>
-          <p className="text-gray-500 text-base leading-relaxed">
+          <p className="text-on-surface-variant text-base leading-relaxed">
             E-posta adresinizi girin, şifre sıfırlama bağlantısı gönderelim.
           </p>
         </div>
@@ -108,17 +108,17 @@ export default function ForgotPasswordPage() {
 
         {/* Email field */}
         <div className="space-y-1.5">
-          <Label htmlFor="email" className="text-sm font-medium text-[#1a1a2e]">
+          <Label htmlFor="email" className="text-sm font-medium text-on-surface">
             E-posta
           </Label>
           <div className="relative">
-            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 h-[18px] w-[18px]" />
+            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant h-[18px] w-[18px]" />
             <Input
               id="email"
               type="email"
               placeholder="ornek@sirket.com"
               autoComplete="email"
-              className="pl-10 h-12 rounded-xl border-gray-200 bg-gray-50 focus:bg-white text-[#1a1a2e] placeholder:text-gray-400 focus-visible:ring-[#F97316] focus-visible:ring-offset-0"
+              className="pl-10 h-12 rounded-xl border-outline-variant bg-surface-container-low focus:bg-surface-lowest text-on-surface placeholder:text-on-surface-variant focus-visible:ring-primary focus-visible:ring-offset-0"
               {...register("email")}
             />
           </div>
@@ -131,7 +131,7 @@ export default function ForgotPasswordPage() {
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full h-12 bg-[#F97316] hover:bg-[#ea580c] text-white font-semibold rounded-xl text-base shadow-sm shadow-orange-200 transition-all hover:shadow-md disabled:opacity-60"
+          className="w-full h-12 gradient-primary text-white font-semibold rounded-xl text-base shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)] transition-all hover:opacity-90 disabled:opacity-60"
         >
           {isSubmitting ? (
             <>
@@ -146,7 +146,7 @@ export default function ForgotPasswordPage() {
         {/* Back link */}
         <Link
           href="/login"
-          className="flex items-center justify-center gap-2 text-sm text-gray-500 hover:text-[#1a1a2e] transition-colors w-full py-2"
+          className="flex items-center justify-center gap-2 text-sm text-on-surface-variant hover:text-on-surface transition-colors w-full py-2"
         >
           <ArrowLeft className="h-4 w-4" />
           Giriş Sayfasına Dön

@@ -39,15 +39,15 @@ function SectionCard({ icon: Icon, title, description, children }: {
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-      <div className="px-6 py-5 border-b border-gray-50">
+    <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm overflow-hidden">
+      <div className="px-6 py-5 border-b border-outline-variant/50">
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-xl bg-coral-50 flex items-center justify-center shrink-0">
-            <Icon className="h-5 w-5 text-coral-500" />
+          <div className="h-9 w-9 rounded-xl bg-primary-fixed flex items-center justify-center shrink-0">
+            <Icon className="h-5 w-5 text-primary" />
           </div>
           <div>
-            <h2 className="text-base font-bold text-gray-900">{title}</h2>
-            {description && <p className="text-xs text-gray-500 mt-0.5">{description}</p>}
+            <h2 className="text-base font-bold font-headline text-on-surface">{title}</h2>
+            {description && <p className="text-xs text-on-surface-variant mt-0.5">{description}</p>}
           </div>
         </div>
       </div>
@@ -109,8 +109,8 @@ export default function SettingsPage() {
     <div className="space-y-6 max-w-2xl">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Ayarlar</h1>
-        <p className="text-sm text-gray-500 mt-1">
+        <h1 className="text-2xl font-bold font-headline text-on-surface">Ayarlar</h1>
+        <p className="text-sm text-on-surface-variant mt-1">
           Şirket profili ve bildirim tercihlerinizi yönetin.
         </p>
       </div>
@@ -123,11 +123,11 @@ export default function SettingsPage() {
       >
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-1.5">
-            <Label htmlFor="name" className="text-sm font-medium text-gray-700">Şirket Adı</Label>
+            <Label htmlFor="name" className="text-sm font-medium text-on-surface">Şirket Adı</Label>
             <Input
               id="name"
               {...register("name")}
-              className="rounded-xl border-gray-200 focus:border-coral-300"
+              className="rounded-xl border-outline-variant focus:border-primary"
               disabled={isLoading}
             />
             {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
@@ -135,12 +135,12 @@ export default function SettingsPage() {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-gray-700">Sektör</Label>
+              <Label className="text-sm font-medium text-on-surface">Sektör</Label>
               <Select
                 defaultValue={company?.sector ?? ""}
                 onValueChange={(v) => setValue("sector", v)}
               >
-                <SelectTrigger className="rounded-xl border-gray-200" disabled={isLoading}>
+                <SelectTrigger className="rounded-xl border-outline-variant" disabled={isLoading}>
                   <SelectValue placeholder="Seçin" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
@@ -151,12 +151,12 @@ export default function SettingsPage() {
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-gray-700">Çalışan Sayısı</Label>
+              <Label className="text-sm font-medium text-on-surface">Çalışan Sayısı</Label>
               <Select
                 defaultValue={company?.company_size_range ?? ""}
                 onValueChange={(v) => setValue("company_size_range", v)}
               >
-                <SelectTrigger className="rounded-xl border-gray-200" disabled={isLoading}>
+                <SelectTrigger className="rounded-xl border-outline-variant" disabled={isLoading}>
                   <SelectValue placeholder="Seçin" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
@@ -168,39 +168,39 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          <Separator className="bg-gray-100" />
+          <Separator className="bg-outline-variant/50" />
 
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Yetkili Bilgileri</p>
+          <p className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Yetkili Bilgileri</p>
 
           <div className="space-y-1.5">
-            <Label htmlFor="primary_contact_name" className="text-sm font-medium text-gray-700">Ad Soyad</Label>
+            <Label htmlFor="primary_contact_name" className="text-sm font-medium text-on-surface">Ad Soyad</Label>
             <Input
               id="primary_contact_name"
               {...register("primary_contact_name")}
-              className="rounded-xl border-gray-200 focus:border-coral-300"
+              className="rounded-xl border-outline-variant focus:border-primary"
               disabled={isLoading}
             />
             {errors.primary_contact_name && <p className="text-xs text-red-500">{errors.primary_contact_name.message}</p>}
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="primary_contact_phone" className="text-sm font-medium text-gray-700">Telefon</Label>
+            <Label htmlFor="primary_contact_phone" className="text-sm font-medium text-on-surface">Telefon</Label>
             <Input
               id="primary_contact_phone"
               type="tel"
               {...register("primary_contact_phone")}
-              className="rounded-xl border-gray-200 focus:border-coral-300"
+              className="rounded-xl border-outline-variant focus:border-primary"
               disabled={isLoading}
             />
             {errors.primary_contact_phone && <p className="text-xs text-red-500">{errors.primary_contact_phone.message}</p>}
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="billing_address" className="text-sm font-medium text-gray-700">Fatura Adresi</Label>
+            <Label htmlFor="billing_address" className="text-sm font-medium text-on-surface">Fatura Adresi</Label>
             <Input
               id="billing_address"
               {...register("billing_address")}
-              className="rounded-xl border-gray-200 focus:border-coral-300"
+              className="rounded-xl border-outline-variant focus:border-primary"
               disabled={isLoading}
             />
             {errors.billing_address && <p className="text-xs text-red-500">{errors.billing_address.message}</p>}
@@ -209,7 +209,7 @@ export default function SettingsPage() {
           <Button
             type="submit"
             disabled={isSubmitting || !isDirty || isLoading}
-            className="rounded-xl bg-coral-500 hover:bg-coral-600 text-white"
+            className="rounded-xl gradient-primary text-white shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)]"
           >
             {isSubmitting ? (
               <>
@@ -236,56 +236,56 @@ export default function SettingsPage() {
           {/* Email Notifications */}
           <div className="flex items-center justify-between py-4">
             <div className="flex items-center gap-3">
-              <div className="h-9 w-9 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
-                <Mail className="h-4 w-4 text-blue-500" />
+              <div className="h-9 w-9 rounded-xl bg-surface-container-low flex items-center justify-center shrink-0">
+                <Mail className="h-4 w-4 text-on-surface-variant" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-800">E-posta Bildirimleri</p>
-                <p className="text-xs text-gray-400">Sipariş durumu ve hatırlatıcılar</p>
+                <p className="text-sm font-semibold text-on-surface">E-posta Bildirimleri</p>
+                <p className="text-xs text-on-surface-variant">Sipariş durumu ve hatırlatıcılar</p>
               </div>
             </div>
             <Switch checked={notifEmail} onCheckedChange={setNotifEmail} />
           </div>
 
-          <Separator className="bg-gray-50" />
+          <Separator className="bg-outline-variant/30" />
 
           {/* WhatsApp */}
           <div className="flex items-center justify-between py-4">
             <div className="flex items-center gap-3">
-              <div className="h-9 w-9 rounded-xl bg-green-50 flex items-center justify-center shrink-0">
-                <MessageCircle className="h-4 w-4 text-green-500" />
+              <div className="h-9 w-9 rounded-xl bg-surface-container-low flex items-center justify-center shrink-0">
+                <MessageCircle className="h-4 w-4 text-on-surface-variant" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-800">WhatsApp Bildirimleri</p>
-                <p className="text-xs text-gray-400">Sipariş güncellemeleri için anlık mesajlar</p>
+                <p className="text-sm font-semibold text-on-surface">WhatsApp Bildirimleri</p>
+                <p className="text-xs text-on-surface-variant">Sipariş güncellemeleri için anlık mesajlar</p>
               </div>
             </div>
             <Switch checked={notifWA} onCheckedChange={setNotifWA} />
           </div>
 
-          <Separator className="bg-gray-50" />
+          <Separator className="bg-outline-variant/30" />
 
           {/* Birthday reminders */}
           <div className="flex items-center justify-between py-4">
             <div className="flex items-center gap-3">
-              <div className="h-9 w-9 rounded-xl bg-coral-50 flex items-center justify-center shrink-0">
-                <Clock className="h-4 w-4 text-coral-500" />
+              <div className="h-9 w-9 rounded-xl bg-primary-fixed flex items-center justify-center shrink-0">
+                <Clock className="h-4 w-4 text-primary" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-800">Doğum Günü Hatırlatıcısı</p>
-                <p className="text-xs text-gray-400">Doğum günü 3 gün önce bildirim</p>
+                <p className="text-sm font-semibold text-on-surface">Doğum Günü Hatırlatıcısı</p>
+                <p className="text-xs text-on-surface-variant">Doğum günü 3 gün önce bildirim</p>
               </div>
             </div>
             <Switch checked={notifBirthday} onCheckedChange={setNotifBirthday} />
           </div>
 
-          <Separator className="bg-gray-50" />
+          <Separator className="bg-outline-variant/30" />
 
           <div className="pt-3">
             <Button
               variant="outline"
               size="sm"
-              className="rounded-xl border-gray-200 text-gray-700 hover:bg-gray-50"
+              className="rounded-xl border-outline-variant text-on-surface hover:bg-surface-container-low"
             >
               <Save className="mr-2 h-3.5 w-3.5" />
               Bildirimleri Kaydet

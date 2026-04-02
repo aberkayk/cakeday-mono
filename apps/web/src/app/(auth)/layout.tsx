@@ -7,14 +7,14 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="
         relative flex-shrink-0
         h-[100px] md:h-auto md:w-[420px] lg:w-[480px]
-        bg-[#1a1a2e] flex flex-col
+        bg-[#1a1c1c] flex flex-col
         overflow-hidden
       ">
         {/* Logo */}
         <div className="absolute top-0 left-0 right-0 flex items-center px-8 py-6 z-10">
           <Link href="/" className="flex items-center gap-2.5 group">
             <span className="text-2xl">🎂</span>
-            <span className="text-white font-bold text-xl tracking-tight">CakeDay</span>
+            <span className="text-white font-bold text-xl tracking-tight font-headline">CakeDay</span>
           </Link>
         </div>
 
@@ -23,7 +23,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           {/* Decorative blob behind the cake */}
           <div className="relative mb-8">
             <div className="w-48 h-48 rounded-full bg-white/5 flex items-center justify-center">
-              <div className="w-36 h-36 rounded-full bg-[#F97316]/10 flex items-center justify-center">
+              <div className="w-36 h-36 rounded-full bg-primary/10 flex items-center justify-center">
                 <span className="text-7xl select-none">🎂</span>
               </div>
             </div>
@@ -33,7 +33,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               <span className="text-white/80 text-xs font-medium">Otomatik Sipariş</span>
             </div>
             {/* floating pill 2 */}
-            <div className="absolute -bottom-3 -left-6 bg-[#F97316]/20 rounded-full px-3 py-1.5 flex items-center gap-1.5 border border-[#F97316]/20">
+            <div className="absolute -bottom-3 -left-6 bg-primary/20 rounded-full px-3 py-1.5 flex items-center gap-1.5 border border-primary/20">
               <span className="text-xs">🎉</span>
               <span className="text-white/80 text-xs font-medium">500+ Şirket</span>
             </div>
@@ -48,8 +48,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
               "Excel / CSV içe aktarma",
             ].map((item) => (
               <li key={item} className="flex items-center gap-3 text-white/70 text-sm">
-                <div className="w-5 h-5 rounded-full bg-[#F97316]/20 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-3 h-3 text-[#F97316]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-3 h-3 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
@@ -79,13 +79,13 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       </div>
 
       {/* ── Right Panel (white, scrollable) ── */}
-      <div className="flex-1 bg-white flex flex-col">
+      <div className="flex-1 bg-surface-lowest flex flex-col">
         <div className="flex-1 flex items-start md:items-center justify-center px-6 py-10 md:py-16 overflow-y-auto">
           <div className="w-full max-w-md">
             {children}
           </div>
         </div>
-        <footer className="py-4 text-center text-xs text-gray-400 border-t border-gray-100">
+        <footer className="py-4 text-center text-xs text-on-surface-variant border-t border-outline-variant/30">
           © 2026 CakeDay. Tüm hakları saklıdır.
         </footer>
       </div>

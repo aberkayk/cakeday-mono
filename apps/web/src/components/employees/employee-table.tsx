@@ -42,29 +42,29 @@ interface EmployeeTableProps {
 }
 
 const AVATAR_COLORS = [
-  "bg-blue-100 text-blue-700",
-  "bg-purple-100 text-purple-700",
-  "bg-green-100 text-green-700",
-  "bg-coral-100 text-coral-700",
-  "bg-pink-100 text-pink-700",
-  "bg-yellow-100 text-yellow-700",
-  "bg-indigo-100 text-indigo-700",
-  "bg-teal-100 text-teal-700",
+  "bg-surface-container-high text-on-surface",
+  "bg-tertiary-container/40 text-tertiary",
+  "bg-surface-container text-on-surface-variant",
+  "bg-primary-fixed text-on-primary-fixed-variant",
+  "bg-secondary-container/30 text-secondary",
+  "bg-tertiary-container/20 text-on-tertiary-container",
+  "bg-surface-container-high text-on-surface",
+  "bg-primary-fixed/60 text-primary",
 ];
 
 const DEPT_COLORS: Record<string, string> = {
-  Mühendislik: "bg-blue-50 text-blue-700",
-  Pazarlama: "bg-purple-50 text-purple-700",
-  Satış: "bg-green-50 text-green-700",
-  İnsan: "bg-coral-50 text-coral-700",
-  Finans: "bg-yellow-50 text-yellow-700",
-  Tasarım: "bg-pink-50 text-pink-700",
+  Mühendislik: "bg-surface-container text-on-surface-variant",
+  Pazarlama: "bg-tertiary-container/30 text-tertiary",
+  Satış: "bg-surface-container-low text-on-surface-variant",
+  İnsan: "bg-primary-fixed text-on-primary-fixed-variant",
+  Finans: "bg-tertiary-container/20 text-on-tertiary-container",
+  Tasarım: "bg-secondary-container/20 text-secondary",
 };
 
 function getDeptColor(dept: string | null | undefined): string {
-  if (!dept) return "bg-gray-100 text-gray-600";
+  if (!dept) return "bg-surface-container text-on-surface-variant";
   const match = Object.keys(DEPT_COLORS).find((k) => dept.toLowerCase().includes(k.toLowerCase()));
-  return match ? DEPT_COLORS[match] : "bg-gray-100 text-gray-600";
+  return match ? DEPT_COLORS[match] : "bg-surface-container text-on-surface-variant";
 }
 
 export function EmployeeTable({
@@ -91,10 +91,10 @@ export function EmployeeTable({
       <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
         <div className="flex flex-col sm:flex-row gap-3 flex-1">
           <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-on-surface-variant" />
             <Input
               placeholder="Ad, soyad veya e-posta ara..."
-              className="pl-9 rounded-xl border-gray-200 focus:border-coral-300 focus:ring-coral-200 bg-white"
+              className="pl-9 rounded-xl border-outline-variant focus:border-primary bg-surface-container-lowest"
               value={search}
               onChange={(e) => onSearchChange(e.target.value)}
             />
@@ -103,7 +103,7 @@ export function EmployeeTable({
             value={statusFilter ?? "all"}
             onValueChange={(v) => onStatusChange(v === "all" ? undefined : v)}
           >
-            <SelectTrigger className="w-40 rounded-xl border-gray-200 bg-white">
+            <SelectTrigger className="w-40 rounded-xl border-outline-variant bg-surface-container-lowest">
               <SelectValue placeholder="Durum" />
             </SelectTrigger>
             <SelectContent className="rounded-xl">
@@ -115,13 +115,13 @@ export function EmployeeTable({
         </div>
 
         <div className="flex gap-2">
-          <Button variant="outline" asChild className="rounded-xl border-gray-200 text-gray-700 hover:bg-gray-50">
+          <Button variant="outline" asChild className="rounded-xl border-outline-variant text-on-surface hover:bg-surface-container-low">
             <Link href="/dashboard/employees/import">
               <Upload className="mr-2 h-4 w-4" />
               CSV Yükle
             </Link>
           </Button>
-          <Button onClick={onAdd} className="rounded-xl bg-coral-500 hover:bg-coral-600 text-white">
+          <Button onClick={onAdd} className="rounded-xl gradient-primary text-white shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)]">
             <Plus className="mr-2 h-4 w-4" />
             Çalışan Ekle
           </Button>
@@ -129,16 +129,16 @@ export function EmployeeTable({
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow className="bg-gray-50/80 hover:bg-gray-50/80">
-              <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Ad Soyad</TableHead>
-              <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Doğum Günü</TableHead>
-              <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Departman</TableHead>
-              <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">İlçe</TableHead>
-              <TableHead className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Durum</TableHead>
-              <TableHead className="w-24 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">İşlemler</TableHead>
+            <TableRow className="bg-surface-container-low/80 hover:bg-surface-container-low/80">
+              <TableHead className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Ad Soyad</TableHead>
+              <TableHead className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Doğum Günü</TableHead>
+              <TableHead className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Departman</TableHead>
+              <TableHead className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">İlçe</TableHead>
+              <TableHead className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Durum</TableHead>
+              <TableHead className="w-24 text-right text-xs font-semibold text-on-surface-variant uppercase tracking-wider">İşlemler</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -163,17 +163,17 @@ export function EmployeeTable({
               <TableRow>
                 <TableCell colSpan={6} className="py-16 text-center">
                   <div className="flex flex-col items-center">
-                    <div className="h-16 w-16 rounded-2xl bg-gray-50 flex items-center justify-center mb-4">
-                      <Users className="h-8 w-8 text-gray-300" />
+                    <div className="h-16 w-16 rounded-2xl bg-surface-container-low flex items-center justify-center mb-4">
+                      <Users className="h-8 w-8 text-on-surface-variant/40" />
                     </div>
-                    <p className="text-sm font-semibold text-gray-700 mb-1">
+                    <p className="text-sm font-semibold text-on-surface mb-1">
                       {search ? "Sonuç bulunamadı" : "Henüz çalışan eklenmemiş"}
                     </p>
-                    <p className="text-xs text-gray-400 mb-4">
+                    <p className="text-xs text-on-surface-variant mb-4">
                       {search ? `"${search}" için eşleşme yok.` : "İlk çalışanınızı ekleyerek başlayın."}
                     </p>
                     {!search && (
-                      <Button size="sm" onClick={onAdd} className="rounded-xl bg-coral-500 hover:bg-coral-600 text-white">
+                      <Button size="sm" onClick={onAdd} className="rounded-xl gradient-primary text-white shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)]">
                         <Plus className="mr-2 h-4 w-4" />
                         İlk Çalışanı Ekle
                       </Button>
@@ -185,7 +185,7 @@ export function EmployeeTable({
               employees.map((employee, idx) => {
                 const colorClass = AVATAR_COLORS[(startIdx + idx) % AVATAR_COLORS.length];
                 return (
-                  <TableRow key={employee.id} className="hover:bg-gray-50/70 border-gray-50">
+                  <TableRow key={employee.id} className="hover:bg-surface-container-low/50 border-outline-variant/30">
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <Avatar className="h-9 w-9 shrink-0">
@@ -194,16 +194,16 @@ export function EmployeeTable({
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="text-sm font-semibold text-gray-900">
+                          <p className="text-sm font-semibold text-on-surface">
                             {employee.first_name} {employee.last_name}
                           </p>
                           {employee.work_email && (
-                            <p className="text-xs text-gray-400">{employee.work_email}</p>
+                            <p className="text-xs text-on-surface-variant">{employee.work_email}</p>
                           )}
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell className="text-sm text-gray-600">
+                    <TableCell className="text-sm text-on-surface-variant">
                       {formatBirthday(employee.date_of_birth)}
                     </TableCell>
                     <TableCell>
@@ -212,10 +212,10 @@ export function EmployeeTable({
                           {employee.department}
                         </span>
                       ) : (
-                        <span className="text-xs text-gray-400">—</span>
+                        <span className="text-xs text-on-surface-variant">—</span>
                       )}
                     </TableCell>
-                    <TableCell className="text-sm text-gray-500">
+                    <TableCell className="text-sm text-on-surface-variant">
                       {employee.delivery_district
                         ? DISTRICT_LABELS[employee.delivery_district] ?? employee.delivery_district
                         : "—"}
@@ -224,11 +224,11 @@ export function EmployeeTable({
                       <span
                         className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold ${
                           employee.status === "active"
-                            ? "bg-green-50 text-green-700"
-                            : "bg-gray-100 text-gray-500"
+                            ? "bg-surface-container text-on-surface-variant"
+                            : "bg-surface-container-high text-on-surface-variant"
                         }`}
                       >
-                        <span className={`h-1.5 w-1.5 rounded-full ${employee.status === "active" ? "bg-green-500" : "bg-gray-400"}`} />
+                        <span className={`h-1.5 w-1.5 rounded-full ${employee.status === "active" ? "bg-tertiary" : "bg-on-surface-variant/40"}`} />
                         {employee.status === "active" ? "Aktif" : "Pasif"}
                       </span>
                     </TableCell>
@@ -237,7 +237,7 @@ export function EmployeeTable({
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-700"
+                          className="h-8 w-8 rounded-lg hover:bg-surface-container-low text-on-surface-variant hover:text-on-surface"
                           onClick={() => onEdit(employee)}
                         >
                           <Pencil className="h-3.5 w-3.5" />
@@ -245,7 +245,7 @@ export function EmployeeTable({
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500"
+                          className="h-8 w-8 rounded-lg hover:bg-red-50 text-on-surface-variant/60 hover:text-red-500"
                           onClick={() => onDelete(employee)}
                         >
                           <Trash2 className="h-3.5 w-3.5" />
@@ -263,8 +263,8 @@ export function EmployeeTable({
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between px-1">
-          <p className="text-sm text-gray-500">
-            <span className="font-medium text-gray-900">{Math.min((page - 1) * pageSize + 1, totalCount)}–{Math.min(page * pageSize, totalCount)}</span>
+          <p className="text-sm text-on-surface-variant">
+            <span className="font-medium text-on-surface">{Math.min((page - 1) * pageSize + 1, totalCount)}–{Math.min(page * pageSize, totalCount)}</span>
             {" "}/ {totalCount} çalışan
           </p>
           <div className="flex items-center gap-2">
@@ -273,11 +273,11 @@ export function EmployeeTable({
               size="sm"
               onClick={() => onPageChange(page - 1)}
               disabled={page <= 1}
-              className="rounded-xl border-gray-200 h-8 w-8 p-0"
+              className="rounded-xl border-outline-variant h-8 w-8 p-0"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            <span className="text-xs font-medium text-gray-600 px-1">
+            <span className="text-xs font-medium text-on-surface-variant px-1">
               {page} / {totalPages}
             </span>
             <Button
@@ -285,7 +285,7 @@ export function EmployeeTable({
               size="sm"
               onClick={() => onPageChange(page + 1)}
               disabled={page >= totalPages}
-              className="rounded-xl border-gray-200 h-8 w-8 p-0"
+              className="rounded-xl border-outline-variant h-8 w-8 p-0"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>

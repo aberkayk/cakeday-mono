@@ -41,24 +41,24 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
     <div className="fixed inset-0 z-50 lg:hidden">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-dark-900/40 backdrop-blur-sm"
+        className="fixed inset-0 bg-on-surface/40 backdrop-blur-sm"
         onClick={onClose}
       />
 
       {/* Drawer */}
-      <div className="fixed inset-y-0 left-0 flex flex-col w-72 bg-white shadow-2xl">
+      <div className="fixed inset-y-0 left-0 flex flex-col w-72 bg-surface-lowest shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-outline-variant/30">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-coral-500 text-white shadow-sm">
+            <div className="flex items-center justify-center w-9 h-9 rounded-xl gradient-primary text-white shadow-sm">
               <span className="text-lg leading-none">🎂</span>
             </div>
-            <span className="text-xl font-bold text-dark-900 tracking-tight">CakeDay</span>
+            <span className="text-xl font-bold text-on-surface tracking-tight font-headline">CakeDay</span>
           </div>
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 rounded-lg text-gray-400 hover:text-gray-600"
+            className="h-8 w-8 rounded-lg text-on-surface-variant hover:text-on-surface"
             onClick={onClose}
           >
             <X className="h-4 w-4" />
@@ -81,14 +81,14 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
                 className={cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150",
                   isActive
-                    ? "bg-coral-50 text-coral-600 border-l-[3px] border-coral-500 pl-[9px]"
-                    : "text-gray-500 hover:bg-gray-50 hover:text-gray-800"
+                    ? "bg-primary-fixed text-primary-dark border-l-[3px] border-primary pl-[9px]"
+                    : "text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface"
                 )}
               >
                 <Icon
                   className={cn(
                     "h-4 w-4 shrink-0",
-                    isActive ? "text-coral-500" : "text-gray-400"
+                    isActive ? "text-primary" : "text-on-surface-variant"
                   )}
                 />
                 {item.label}

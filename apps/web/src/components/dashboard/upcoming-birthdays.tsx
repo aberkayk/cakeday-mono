@@ -25,14 +25,14 @@ function getDaysUntilBirthday(dateOfBirth: string): number {
 }
 
 const AVATAR_COLORS = [
-  "bg-coral-100 text-coral-700",
-  "bg-blue-100 text-blue-700",
-  "bg-purple-100 text-purple-700",
-  "bg-green-100 text-green-700",
-  "bg-pink-100 text-pink-700",
-  "bg-yellow-100 text-yellow-700",
-  "bg-indigo-100 text-indigo-700",
-  "bg-teal-100 text-teal-700",
+  "bg-primary-fixed text-on-primary-fixed-variant",
+  "bg-surface-container-high text-on-surface",
+  "bg-tertiary-container/40 text-tertiary",
+  "bg-surface-container text-on-surface-variant",
+  "bg-secondary-container/30 text-secondary",
+  "bg-primary-fixed text-on-primary-fixed-variant",
+  "bg-surface-container-high text-on-surface",
+  "bg-tertiary-container/40 text-tertiary",
 ];
 
 export function UpcomingBirthdays({ employees, isLoading = false }: UpcomingBirthdaysProps) {
@@ -43,16 +43,16 @@ export function UpcomingBirthdays({ employees, isLoading = false }: UpcomingBirt
     .slice(0, 8);
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
-      <div className="flex items-center justify-between px-6 py-5 border-b border-gray-50">
+    <div className="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant">
+      <div className="flex items-center justify-between px-6 py-5 border-b border-outline-variant/50">
         <div className="flex items-center gap-2">
-          <Cake className="h-5 w-5 text-coral-500" />
-          <h2 className="text-base font-semibold text-gray-900">Yaklaşan Doğum Günleri</h2>
-          <span className="ml-1 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-coral-50 text-coral-700">
+          <Cake className="h-5 w-5 text-primary" />
+          <h2 className="text-base font-semibold font-headline text-on-surface">Yaklaşan Doğum Günleri</h2>
+          <span className="ml-1 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-primary-fixed text-on-primary-fixed-variant">
             30 gün
           </span>
         </div>
-        <Button variant="ghost" size="sm" asChild className="text-coral-600 hover:text-coral-700 hover:bg-coral-50">
+        <Button variant="ghost" size="sm" asChild className="text-primary hover:text-primary hover:bg-primary-fixed/50">
           <Link href="/dashboard/employees">
             Tümü
             <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
@@ -76,9 +76,9 @@ export function UpcomingBirthdays({ employees, isLoading = false }: UpcomingBirt
           </div>
         ) : upcoming.length === 0 ? (
           <div className="py-12 text-center">
-            <Gift className="mx-auto h-12 w-12 text-gray-200 mb-3" />
-            <p className="text-sm font-medium text-gray-600 mb-1">Yaklaşan doğum günü yok</p>
-            <p className="text-xs text-gray-400">Önümüzdeki 30 günde doğum günü bulunmuyor.</p>
+            <Gift className="mx-auto h-12 w-12 text-surface-container-highest mb-3" />
+            <p className="text-sm font-medium text-on-surface-variant mb-1">Yaklaşan doğum günü yok</p>
+            <p className="text-xs text-on-surface-variant/70">Önümüzdeki 30 günde doğum günü bulunmuyor.</p>
           </div>
         ) : (
           <div>
@@ -91,7 +91,7 @@ export function UpcomingBirthdays({ employees, isLoading = false }: UpcomingBirt
               return (
                 <div
                   key={employee.id}
-                  className="flex items-center gap-3 py-3 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 -mx-6 px-6 transition-colors"
+                  className="flex items-center gap-3 py-3 border-b border-outline-variant/30 last:border-0 hover:bg-surface-container-low/50 -mx-6 px-6 transition-colors"
                 >
                   <div className="relative">
                     <Avatar className="h-10 w-10 shrink-0">
@@ -100,17 +100,17 @@ export function UpcomingBirthdays({ employees, isLoading = false }: UpcomingBirt
                       </AvatarFallback>
                     </Avatar>
                     {isToday && (
-                      <span className="absolute -top-0.5 -right-0.5 h-3.5 w-3.5 bg-coral-500 rounded-full border-2 border-white flex items-center justify-center text-[7px]">
+                      <span className="absolute -top-0.5 -right-0.5 h-3.5 w-3.5 bg-primary rounded-full border-2 border-surface-container-lowest flex items-center justify-center text-[7px]">
                         🎂
                       </span>
                     )}
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-gray-900 truncate">
+                    <p className="text-sm font-semibold text-on-surface truncate">
                       {employee.first_name} {employee.last_name}
                     </p>
-                    <p className="text-xs text-gray-400 truncate">
+                    <p className="text-xs text-on-surface-variant truncate">
                       {employee.department ?? "Departman yok"} · {formatBirthday(employee.date_of_birth)}
                     </p>
                   </div>
@@ -118,12 +118,12 @@ export function UpcomingBirthdays({ employees, isLoading = false }: UpcomingBirt
                   <span
                     className={`shrink-0 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${
                       isToday
-                        ? "bg-coral-100 text-coral-700"
+                        ? "bg-primary-fixed text-on-primary-fixed-variant"
                         : isTomorrow
-                        ? "bg-orange-100 text-orange-700"
+                        ? "bg-tertiary-container/40 text-tertiary"
                         : isUrgent
-                        ? "bg-yellow-100 text-yellow-700"
-                        : "bg-gray-100 text-gray-600"
+                        ? "bg-tertiary-container/20 text-on-tertiary-container"
+                        : "bg-surface-container text-on-surface-variant"
                     }`}
                   >
                     {isToday ? "Bugün! 🎉" : isTomorrow ? "Yarın" : `${employee.daysUntil} gün`}

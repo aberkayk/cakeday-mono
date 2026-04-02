@@ -44,10 +44,10 @@ export default function LoginPage() {
     <div className="space-y-8">
       {/* Heading */}
       <div className="space-y-1.5">
-        <h1 className="text-3xl font-extrabold text-[#1a1a2e] tracking-tight">
+        <h1 className="text-3xl font-extrabold text-on-surface tracking-tight font-headline">
           Hoş Geldiniz 👋
         </h1>
-        <p className="text-gray-500 text-base">Hesabınıza giriş yapın</p>
+        <p className="text-on-surface-variant text-base">Hesabınıza giriş yapın</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -63,17 +63,17 @@ export default function LoginPage() {
 
         {/* Email */}
         <div className="space-y-1.5">
-          <Label htmlFor="email" className="text-sm font-medium text-[#1a1a2e]">
+          <Label htmlFor="email" className="text-sm font-medium text-on-surface">
             E-posta
           </Label>
           <div className="relative">
-            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-gray-400 h-[18px] w-[18px]" />
+            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-on-surface-variant h-[18px] w-[18px]" />
             <Input
               id="email"
               type="email"
               placeholder="ornek@sirket.com"
               autoComplete="email"
-              className="pl-10 h-12 rounded-xl border-gray-200 bg-gray-50 focus:bg-white text-[#1a1a2e] placeholder:text-gray-400 focus-visible:ring-[#F97316] focus-visible:ring-offset-0"
+              className="pl-10 h-12 rounded-xl border-outline-variant bg-surface-container-low focus:bg-surface-lowest text-on-surface placeholder:text-on-surface-variant focus-visible:ring-primary focus-visible:ring-offset-0"
               {...register("email")}
             />
           </div>
@@ -84,22 +84,22 @@ export default function LoginPage() {
 
         {/* Password */}
         <div className="space-y-1.5">
-          <Label htmlFor="password" className="text-sm font-medium text-[#1a1a2e]">
+          <Label htmlFor="password" className="text-sm font-medium text-on-surface">
             Şifre
           </Label>
           <div className="relative">
-            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 h-[18px] w-[18px]" />
+            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant h-[18px] w-[18px]" />
             <Input
               id="password"
               type={showPassword ? "text" : "password"}
               placeholder="••••••••"
               autoComplete="current-password"
-              className="pl-10 pr-11 h-12 rounded-xl border-gray-200 bg-gray-50 focus:bg-white text-[#1a1a2e] placeholder:text-gray-400 focus-visible:ring-[#F97316] focus-visible:ring-offset-0"
+              className="pl-10 pr-11 h-12 rounded-xl border-outline-variant bg-surface-container-low focus:bg-surface-lowest text-on-surface placeholder:text-on-surface-variant focus-visible:ring-primary focus-visible:ring-offset-0"
               {...register("password")}
             />
             <button
               type="button"
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors"
               onClick={() => setShowPassword((v) => !v)}
               tabIndex={-1}
               aria-label={showPassword ? "Şifreyi gizle" : "Şifreyi göster"}
@@ -117,16 +117,16 @@ export default function LoginPage() {
           <label className="flex items-center gap-2.5 cursor-pointer group">
             <input
               type="checkbox"
-              className="w-4 h-4 rounded border-gray-300 accent-[#F97316] cursor-pointer"
+              className="w-4 h-4 rounded border-outline-variant accent-primary cursor-pointer"
               {...register("rememberMe")}
             />
-            <span className="text-sm text-gray-600 group-hover:text-[#1a1a2e] transition-colors">
+            <span className="text-sm text-on-surface-variant group-hover:text-on-surface transition-colors">
               Beni hatırla
             </span>
           </label>
           <Link
             href="/forgot-password"
-            className="text-sm text-[#F97316] hover:text-[#ea580c] font-medium transition-colors"
+            className="text-sm text-primary hover:text-primary-dark font-medium transition-colors"
           >
             Şifremi Unuttum
           </Link>
@@ -136,7 +136,7 @@ export default function LoginPage() {
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="w-full h-12 bg-[#F97316] hover:bg-[#ea580c] text-white font-semibold rounded-xl text-base shadow-sm shadow-orange-200 transition-all hover:shadow-md hover:shadow-orange-200 disabled:opacity-60"
+          className="w-full h-12 gradient-primary text-white font-semibold rounded-xl text-base shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)] transition-all hover:opacity-90 disabled:opacity-60"
         >
           {isSubmitting ? (
             <>
@@ -152,19 +152,19 @@ export default function LoginPage() {
       {/* Divider */}
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-gray-200" />
+          <div className="w-full border-t border-outline-variant" />
         </div>
         <div className="relative flex justify-center">
-          <span className="bg-white px-4 text-sm text-gray-400">veya</span>
+          <span className="bg-surface-lowest px-4 text-sm text-on-surface-variant">veya</span>
         </div>
       </div>
 
       {/* Register link */}
-      <p className="text-center text-sm text-gray-500">
+      <p className="text-center text-sm text-on-surface-variant">
         Hesabınız yok mu?{" "}
         <Link
           href="/register"
-          className="text-[#F97316] hover:text-[#ea580c] font-semibold transition-colors"
+          className="text-primary hover:text-primary-dark font-semibold transition-colors"
         >
           Ücretsiz Kayıt Olun
         </Link>

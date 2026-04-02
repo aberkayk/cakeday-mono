@@ -51,12 +51,12 @@ export default function VerifyEmailPage() {
   if (status === "loading") {
     return (
       <div className="text-center space-y-6 py-8">
-        <div className="mx-auto w-20 h-20 rounded-full bg-[#F97316]/10 flex items-center justify-center">
-          <Loader2 className="h-9 w-9 text-[#F97316] animate-spin" />
+        <div className="mx-auto w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
+          <Loader2 className="h-9 w-9 text-primary animate-spin" />
         </div>
         <div className="space-y-2">
-          <h2 className="text-2xl font-extrabold text-[#1a1a2e]">Doğrulanıyor...</h2>
-          <p className="text-gray-500">E-posta adresiniz doğrulanıyor, lütfen bekleyin.</p>
+          <h2 className="text-2xl font-extrabold text-on-surface font-headline">Doğrulanıyor...</h2>
+          <p className="text-on-surface-variant">E-posta adresiniz doğrulanıyor, lütfen bekleyin.</p>
         </div>
       </div>
     );
@@ -72,14 +72,14 @@ export default function VerifyEmailPage() {
           </svg>
         </div>
         <div className="space-y-2">
-          <h2 className="text-2xl font-extrabold text-[#1a1a2e]">E-posta Doğrulandı! 🎉</h2>
-          <p className="text-gray-500 max-w-xs mx-auto leading-relaxed">
+          <h2 className="text-2xl font-extrabold text-on-surface font-headline">E-posta Doğrulandı! 🎉</h2>
+          <p className="text-on-surface-variant max-w-xs mx-auto leading-relaxed">
             Hesabınız aktif edildi. Birkaç saniye içinde panele yönlendiriliyorsunuz...
           </p>
         </div>
         <Button
           asChild
-          className="w-full h-12 bg-[#F97316] hover:bg-[#ea580c] text-white font-semibold rounded-xl"
+          className="w-full h-12 gradient-primary text-white font-semibold rounded-xl shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)]"
         >
           <Link href="/dashboard">Panele Git</Link>
         </Button>
@@ -93,23 +93,23 @@ export default function VerifyEmailPage() {
       <div className="space-y-8">
         {/* Mail icon */}
         <div className="space-y-5">
-          <div className="w-14 h-14 rounded-full bg-[#F97316]/10 flex items-center justify-center text-3xl select-none">
+          <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center text-3xl select-none">
             ✉️
           </div>
           <div className="space-y-1.5">
-            <h1 className="text-3xl font-extrabold text-[#1a1a2e] tracking-tight">
+            <h1 className="text-3xl font-extrabold text-on-surface tracking-tight font-headline">
               E-postanızı Doğrulayın ✉️
             </h1>
-            <p className="text-gray-500 text-base leading-relaxed">
+            <p className="text-on-surface-variant text-base leading-relaxed">
               Kayıt sırasında girdiğiniz e-posta adresine bir doğrulama bağlantısı gönderdik.
               Gelen kutunuzu (ve spam klasörünü) kontrol edin.
             </p>
           </div>
         </div>
 
-        <div className="rounded-xl border border-gray-200 bg-gray-50 px-5 py-4 space-y-1">
-          <p className="text-sm font-semibold text-[#1a1a2e]">E-posta gelmediyse:</p>
-          <ul className="text-sm text-gray-500 space-y-1 list-disc list-inside">
+        <div className="rounded-xl border border-outline-variant bg-surface-container-low px-5 py-4 space-y-1">
+          <p className="text-sm font-semibold text-on-surface">E-posta gelmediyse:</p>
+          <ul className="text-sm text-on-surface-variant space-y-1 list-disc list-inside">
             <li>Spam / Önemsiz klasörünü kontrol edin</li>
             <li>E-posta adresinizin doğru olduğundan emin olun</li>
             <li>Birkaç dakika bekleyin</li>
@@ -122,7 +122,7 @@ export default function VerifyEmailPage() {
           onClick={handleResend}
           disabled={resendCooldown > 0}
           variant="outline"
-          className="w-full h-12 rounded-xl border-gray-200 text-[#1a1a2e] font-semibold hover:bg-gray-50 disabled:opacity-60"
+          className="w-full h-12 rounded-xl border-outline-variant text-on-surface font-semibold hover:bg-surface-container-low disabled:opacity-60"
         >
           {resendCooldown > 0
             ? `Tekrar Gönder (${resendCooldown}s)`
@@ -131,7 +131,7 @@ export default function VerifyEmailPage() {
 
         <Link
           href="/login"
-          className="flex items-center justify-center gap-2 text-sm text-gray-500 hover:text-[#1a1a2e] transition-colors w-full py-2"
+          className="flex items-center justify-center gap-2 text-sm text-on-surface-variant hover:text-on-surface transition-colors w-full py-2"
         >
           <ArrowLeft className="h-4 w-4" />
           Giriş Sayfasına Dön
@@ -151,21 +151,21 @@ export default function VerifyEmailPage() {
       </div>
 
       <div className="space-y-2">
-        <h2 className="text-2xl font-extrabold text-[#1a1a2e]">Doğrulama Başarısız</h2>
-        <p className="text-gray-500 max-w-xs mx-auto leading-relaxed">{errorMessage}</p>
+        <h2 className="text-2xl font-extrabold text-on-surface font-headline">Doğrulama Başarısız</h2>
+        <p className="text-on-surface-variant max-w-xs mx-auto leading-relaxed">{errorMessage}</p>
       </div>
 
       <div className="flex flex-col gap-3">
         <Button
           asChild
-          className="w-full h-12 bg-[#F97316] hover:bg-[#ea580c] text-white font-semibold rounded-xl"
+          className="w-full h-12 gradient-primary text-white font-semibold rounded-xl shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)]"
         >
           <Link href="/login">Giriş Yap</Link>
         </Button>
         <Button
           asChild
           variant="outline"
-          className="w-full h-12 rounded-xl border-gray-200 text-[#1a1a2e] font-semibold hover:bg-gray-50"
+          className="w-full h-12 rounded-xl border-outline-variant text-on-surface font-semibold hover:bg-surface-container-low"
         >
           <Link href="/register">Yeniden Kayıt Ol</Link>
         </Button>
@@ -173,7 +173,7 @@ export default function VerifyEmailPage() {
 
       <Link
         href="/login"
-        className="flex items-center justify-center gap-2 text-sm text-gray-400 hover:text-[#1a1a2e] transition-colors"
+        className="flex items-center justify-center gap-2 text-sm text-on-surface-variant hover:text-on-surface transition-colors"
       >
         <ArrowLeft className="h-4 w-4" />
         Ana Sayfaya Dön

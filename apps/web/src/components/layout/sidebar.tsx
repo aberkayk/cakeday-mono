@@ -32,13 +32,13 @@ export function Sidebar() {
   const companyName = user?.user_metadata?.company_name ?? "Şirketiniz";
 
   return (
-    <aside className="flex flex-col w-64 min-h-screen bg-white border-r border-gray-100">
+    <aside className="flex flex-col w-64 min-h-screen bg-surface-lowest border-r border-outline-variant/30">
       {/* Logo */}
-      <div className="flex items-center gap-3 px-6 py-6 border-b border-gray-100">
-        <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-coral-500 text-white shadow-sm">
+      <div className="flex items-center gap-3 px-6 py-6 border-b border-outline-variant/30">
+        <div className="flex items-center justify-center w-9 h-9 rounded-xl gradient-primary text-white shadow-sm">
           <span className="text-lg leading-none">🎂</span>
         </div>
-        <span className="text-xl font-bold text-dark-900 tracking-tight">CakeDay</span>
+        <span className="text-xl font-bold text-on-surface tracking-tight font-headline">CakeDay</span>
       </div>
 
       {/* Navigation */}
@@ -56,14 +56,14 @@ export function Sidebar() {
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150",
                 isActive
-                  ? "bg-coral-50 text-coral-600 border-l-[3px] border-coral-500 pl-[9px]"
-                  : "text-gray-500 hover:bg-gray-50 hover:text-gray-800"
+                  ? "bg-primary-fixed text-primary-dark border-l-[3px] border-primary pl-[9px]"
+                  : "text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface"
               )}
             >
               <Icon
                 className={cn(
                   "h-4 w-4 shrink-0",
-                  isActive ? "text-coral-500" : "text-gray-400"
+                  isActive ? "text-primary" : "text-on-surface-variant"
                 )}
               />
               {item.label}
@@ -73,18 +73,18 @@ export function Sidebar() {
       </nav>
 
       {/* Bottom section */}
-      <div className="px-4 py-5 border-t border-gray-100 space-y-4">
+      <div className="px-4 py-5 border-t border-outline-variant/30 space-y-4">
         {/* Plan badge + upgrade */}
-        <div className="bg-coral-50 rounded-xl px-4 py-3">
+        <div className="bg-primary-fixed rounded-xl px-4 py-3">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs font-semibold text-dark-900">{companyName}</span>
-            <span className="text-[10px] font-semibold uppercase tracking-wider bg-coral-100 text-coral-700 px-2 py-0.5 rounded-full">
+            <span className="text-xs font-semibold text-on-surface">{companyName}</span>
+            <span className="text-[10px] font-semibold uppercase tracking-wider bg-primary/10 text-primary-dark px-2 py-0.5 rounded-full">
               Başlangıç
             </span>
           </div>
           <Link
             href="/dashboard/billing"
-            className="flex items-center gap-1.5 text-xs font-medium text-coral-600 hover:text-coral-700 transition-colors"
+            className="flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary-dark transition-colors"
           >
             <Zap className="h-3 w-3" />
             Pro&apos;ya Yükselt
@@ -94,13 +94,13 @@ export function Sidebar() {
         {/* User info */}
         <div className="flex items-center gap-3 px-1">
           <Avatar className="h-8 w-8 shrink-0">
-            <AvatarFallback className="bg-dark-100 text-dark-700 text-xs font-semibold">
+            <AvatarFallback className="bg-surface-container text-on-surface text-xs font-semibold">
               {getInitials(displayName)}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold text-dark-900 truncate">{displayName}</p>
-            <p className="text-[10px] text-gray-400 truncate">{user?.email}</p>
+            <p className="text-xs font-semibold text-on-surface truncate">{displayName}</p>
+            <p className="text-[10px] text-on-surface-variant truncate">{user?.email}</p>
           </div>
         </div>
       </div>

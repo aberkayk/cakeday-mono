@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -59,13 +61,13 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-surface text-on-surface;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
   ::selection {
-    background-color: #fed7aa;
-    color: #1a1a2e;
+    background-color: #ffdbca;
+    color: #9d4300;
   }
 }
 
@@ -80,5 +82,15 @@
 
   .carousel-track:hover {
     animation-play-state: paused;
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .gradient-primary {
+    background: linear-gradient(135deg, #9d4300 0%, #f97316 100%);
   }
 }

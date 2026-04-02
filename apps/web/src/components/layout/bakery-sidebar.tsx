@@ -16,12 +16,12 @@ export function BakerySidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="flex flex-col w-64 min-h-screen bg-white border-r border-border">
-      <div className="flex items-center gap-2 px-6 py-5 border-b border-border">
+    <aside className="flex flex-col w-64 min-h-screen bg-surface-container-lowest border-r border-outline-variant">
+      <div className="flex items-center gap-2 px-6 py-5 border-b border-outline-variant">
         <Cake className="h-7 w-7 text-primary" />
         <div>
-          <span className="text-lg font-bold text-foreground">CakeDay</span>
-          <p className="text-xs text-muted-foreground">Pastane Portalı</p>
+          <span className="text-lg font-bold font-headline text-on-surface">CakeDay</span>
+          <p className="text-xs text-on-surface-variant">Pastane Portalı</p>
         </div>
       </div>
 
@@ -37,10 +37,10 @@ export function BakerySidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                "flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-colors",
                 isActive
-                  ? "bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  ? "bg-primary-fixed text-primary"
+                  : "text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface"
               )}
             >
               <Icon className="h-4 w-4 shrink-0" />
@@ -50,8 +50,8 @@ export function BakerySidebar() {
         })}
       </nav>
 
-      <div className="px-3 py-4 border-t border-border">
-        <p className="px-3 text-xs text-muted-foreground">© 2026 CakeDay</p>
+      <div className="px-3 py-4 border-t border-outline-variant">
+        <p className="px-3 text-xs text-on-surface-variant">© 2026 CakeDay</p>
       </div>
     </aside>
   );

@@ -23,11 +23,11 @@ function BakeryMobileNav({ open, onClose }: { open: boolean; onClose: () => void
   return (
     <div className="fixed inset-0 z-50 lg:hidden">
       <div className="fixed inset-0 bg-black/50" onClick={onClose} />
-      <div className="fixed inset-y-0 left-0 flex flex-col w-72 bg-white shadow-xl">
-        <div className="flex items-center justify-between px-6 py-5 border-b border-border">
+      <div className="fixed inset-y-0 left-0 flex flex-col w-72 bg-surface-container-lowest shadow-xl">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-outline-variant">
           <div className="flex items-center gap-2">
             <Cake className="h-7 w-7 text-primary" />
-            <span className="text-lg font-bold">CakeDay</span>
+            <span className="text-lg font-bold font-headline text-on-surface">CakeDay</span>
           </div>
           <Button variant="ghost" size="icon" onClick={onClose}><X className="h-5 w-5" /></Button>
         </div>
@@ -38,7 +38,7 @@ function BakeryMobileNav({ open, onClose }: { open: boolean; onClose: () => void
             return (
               <Link key={item.href} href={item.href} onClick={onClose}
                 className={cn("flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors",
-                  isActive ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  isActive ? "bg-primary-fixed text-primary" : "text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface"
                 )}>
                 <Icon className="h-4 w-4 shrink-0" />{item.label}
               </Link>
@@ -54,7 +54,7 @@ export default function BakeryLayout({ children }: { children: React.ReactNode }
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-muted/20">
+    <div className="flex min-h-screen bg-surface-container-low">
       <div className="hidden lg:flex">
         <BakerySidebar />
       </div>

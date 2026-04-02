@@ -24,36 +24,36 @@ export function StatsCards({
       value: totalEmployees,
       icon: Users,
       description: "Kayıtlı çalışan",
-      iconBg: "bg-blue-50",
-      iconColor: "text-blue-500",
-      valueBg: "bg-blue-50/60",
+      iconBg: "bg-surface-container-low",
+      iconColor: "text-on-surface-variant",
+      valueBg: "bg-surface-container-low",
     },
     {
       title: "Yaklaşan Doğum Günleri",
       value: upcomingBirthdays,
       icon: Cake,
       description: "Sonraki 30 günde",
-      iconBg: "bg-pink-50",
-      iconColor: "text-pink-500",
-      valueBg: "bg-pink-50/60",
+      iconBg: "bg-secondary-container/30",
+      iconColor: "text-secondary",
+      valueBg: "bg-secondary-container/20",
     },
     {
       title: "Aktif Siparişler",
       value: activeOrders,
       icon: ShoppingBag,
       description: "Devam eden",
-      iconBg: "bg-coral-50",
-      iconColor: "text-coral-500",
-      valueBg: "bg-coral-50/60",
+      iconBg: "bg-primary-fixed",
+      iconColor: "text-primary",
+      valueBg: "bg-primary-fixed/60",
     },
     {
       title: "Bu Ay Siparişler",
       value: ordersThisMonth,
       icon: TrendingUp,
       description: "Toplam sipariş",
-      iconBg: "bg-green-50",
-      iconColor: "text-green-500",
-      valueBg: "bg-green-50/60",
+      iconBg: "bg-tertiary-container/30",
+      iconColor: "text-tertiary",
+      valueBg: "bg-tertiary-container/20",
     },
   ];
 
@@ -61,7 +61,7 @@ export function StatsCards({
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <div key={i} className="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant">
             <div className="flex items-center justify-between mb-4">
               <Skeleton className="h-4 w-32" />
               <Skeleton className="h-10 w-10 rounded-xl" />
@@ -79,17 +79,17 @@ export function StatsCards({
       {cards.map((card) => {
         const Icon = card.icon;
         return (
-          <div key={card.title} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+          <div key={card.title} className="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between mb-4">
-              <p className="text-sm font-medium text-gray-500">{card.title}</p>
+              <p className="text-sm font-medium text-on-surface-variant">{card.title}</p>
               <div className={`h-10 w-10 rounded-xl ${card.iconBg} flex items-center justify-center`}>
                 <Icon className={`h-5 w-5 ${card.iconColor}`} />
               </div>
             </div>
-            <p className="text-3xl font-bold text-gray-900 mb-1">
+            <p className="text-3xl font-bold font-headline text-on-surface mb-1">
               {card.value.toLocaleString("tr-TR")}
             </p>
-            <p className="text-xs text-gray-400">{card.description}</p>
+            <p className="text-xs text-on-surface-variant">{card.description}</p>
           </div>
         );
       })}

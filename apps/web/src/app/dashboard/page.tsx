@@ -44,10 +44,10 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8 max-w-7xl">
       {/* Welcome Banner */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-coral-500 to-orange-400 p-7 text-white shadow-sm">
+      <div className="relative overflow-hidden rounded-2xl gradient-primary p-7 text-white shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)]">
         <div className="relative z-10">
           <p className="text-white/80 text-sm font-medium mb-1">Hoş geldiniz 👋</p>
-          <h1 className="text-2xl font-bold mb-1">Merhaba, {firstName}!</h1>
+          <h1 className="text-2xl font-bold mb-1 font-headline">Merhaba, {firstName}!</h1>
           <p className="text-white/80 text-sm">
             İşte güncel durum özetiniz. Bugün {upcomingCount > 0 ? `${upcomingCount} yaklaşan doğum günü var.` : "yaklaşan doğum günü yok."}
           </p>
@@ -55,7 +55,7 @@ export default function DashboardPage() {
         <div className="absolute right-6 top-1/2 -translate-y-1/2 text-7xl opacity-20 select-none">🎂</div>
         <Button
           asChild
-          className="mt-5 bg-white text-coral-600 hover:bg-white/90 font-semibold shadow-sm"
+          className="mt-5 bg-white text-primary-dark hover:bg-white/90 font-semibold shadow-sm"
           size="sm"
         >
           <Link href="/dashboard/orders/new">
@@ -83,7 +83,7 @@ export default function DashboardPage() {
 
         {/* Quick Actions — right 1/3 */}
         <div className="space-y-3">
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider px-1">Hızlı İşlemler</h2>
+          <h2 className="text-sm font-semibold text-on-surface-variant uppercase tracking-wider px-1">Hızlı İşlemler</h2>
           {[
             { href: "/dashboard/orders/new", label: "Manuel Sipariş Ver", desc: "Çalışan için pasta sipar et", emoji: "🎂" },
             { href: "/dashboard/employees", label: "Çalışan Ekle", desc: "Yeni çalışan kaydı oluştur", emoji: "👤" },
@@ -93,31 +93,31 @@ export default function DashboardPage() {
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center gap-3 bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md hover:border-coral-100 transition-all group"
+              className="flex items-center gap-3 bg-surface-lowest rounded-xl p-4 shadow-sm border border-outline-variant/30 hover:shadow-md hover:border-primary-fixed transition-all group"
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-coral-50 text-xl shrink-0">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-fixed text-xl shrink-0">
                 {item.emoji}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-gray-900 group-hover:text-coral-600 transition-colors">
+                <p className="text-sm font-semibold text-on-surface group-hover:text-primary transition-colors">
                   {item.label}
                 </p>
-                <p className="text-xs text-gray-400">{item.desc}</p>
+                <p className="text-xs text-on-surface-variant">{item.desc}</p>
               </div>
-              <ArrowRight className="h-4 w-4 text-gray-300 group-hover:text-coral-400 transition-colors shrink-0" />
+              <ArrowRight className="h-4 w-4 text-outline group-hover:text-primary transition-colors shrink-0" />
             </Link>
           ))}
         </div>
       </div>
 
       {/* Recent Orders */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
-        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-50">
+      <div className="bg-surface-lowest rounded-2xl shadow-sm border border-outline-variant/30">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-outline-variant/20">
           <div className="flex items-center gap-2">
-            <ShoppingBag className="h-5 w-5 text-coral-500" />
-            <h2 className="text-base font-semibold text-gray-900">Son Siparişler</h2>
+            <ShoppingBag className="h-5 w-5 text-primary" />
+            <h2 className="text-base font-semibold text-on-surface">Son Siparişler</h2>
           </div>
-          <Button variant="ghost" size="sm" asChild className="text-coral-600 hover:text-coral-700 hover:bg-coral-50">
+          <Button variant="ghost" size="sm" asChild className="text-primary hover:text-primary-dark hover:bg-primary-fixed">
             <Link href="/dashboard/orders">
               Tümünü Gör
               <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
@@ -141,9 +141,9 @@ export default function DashboardPage() {
           ) : orders.length === 0 ? (
             <div className="py-12 text-center">
               <div className="text-4xl mb-3">🛒</div>
-              <p className="text-sm font-medium text-gray-700 mb-1">Henüz sipariş yok</p>
-              <p className="text-xs text-gray-400 mb-4">İlk siparişinizi vermek için aşağıdaki butona tıklayın.</p>
-              <Button asChild size="sm" className="bg-coral-500 hover:bg-coral-600 text-white">
+              <p className="text-sm font-medium text-on-surface mb-1">Henüz sipariş yok</p>
+              <p className="text-xs text-on-surface-variant mb-4">İlk siparişinizi vermek için aşağıdaki butona tıklayın.</p>
+              <Button asChild size="sm" className="gradient-primary text-white shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)]">
                 <Link href="/dashboard/orders/new">İlk Siparişi Ver</Link>
               </Button>
             </div>
@@ -152,21 +152,21 @@ export default function DashboardPage() {
               {orders.slice(0, 6).map((order: Order) => (
                 <div
                   key={order.id}
-                  className="flex items-center justify-between py-3.5 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 -mx-6 px-6 transition-colors"
+                  className="flex items-center justify-between py-3.5 border-b border-outline-variant/20 last:border-0 hover:bg-surface-container-low/50 -mx-6 px-6 transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="h-9 w-9 rounded-full bg-coral-50 flex items-center justify-center text-base shrink-0">
+                    <div className="h-9 w-9 rounded-full bg-primary-fixed flex items-center justify-center text-base shrink-0">
                       🎂
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-gray-900">{order.recipient_name}</p>
-                      <p className="text-xs text-gray-400">
+                      <p className="text-sm font-semibold text-on-surface">{order.recipient_name}</p>
+                      <p className="text-xs text-on-surface-variant">
                         {formatDate(order.delivery_date)} · {formatCurrency(order.order_total_try)}
                       </p>
                     </div>
                   </div>
                   <Badge
-                    className={`text-xs font-medium border-0 ${ORDER_STATUS_COLORS[order.status] ?? "bg-gray-100 text-gray-800"}`}
+                    className={`text-xs font-medium border-0 ${ORDER_STATUS_COLORS[order.status] ?? "bg-surface-container text-on-surface"}`}
                   >
                     {ORDER_STATUS_LABELS[order.status] ?? order.status}
                   </Badge>

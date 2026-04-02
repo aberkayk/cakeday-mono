@@ -10,24 +10,24 @@ import type { OrderingRule } from "@cakeday/shared";
 const RULE_TYPE_CONFIG: Record<string, { label: string; color: string; borderColor: string; icon: React.ElementType; badgeBg: string }> = {
   all_birthdays: {
     label: "Tüm Doğum Günleri",
-    color: "text-coral-600",
-    borderColor: "border-l-coral-400",
+    color: "text-primary",
+    borderColor: "border-l-primary",
     icon: Cake,
-    badgeBg: "bg-coral-50 text-coral-700",
+    badgeBg: "bg-primary-fixed text-on-primary-fixed-variant",
   },
   round_birthdays: {
     label: "Yuvarlak Doğum Günleri",
-    color: "text-purple-600",
-    borderColor: "border-l-purple-400",
+    color: "text-tertiary",
+    borderColor: "border-l-tertiary",
     icon: Star,
-    badgeBg: "bg-purple-50 text-purple-700",
+    badgeBg: "bg-tertiary-container/30 text-tertiary",
   },
   work_anniversary: {
     label: "İş Yıldönümü",
-    color: "text-blue-600",
-    borderColor: "border-l-blue-400",
+    color: "text-secondary",
+    borderColor: "border-l-secondary",
     icon: Briefcase,
-    badgeBg: "bg-blue-50 text-blue-700",
+    badgeBg: "bg-secondary-container/20 text-secondary",
   },
 };
 
@@ -41,16 +41,16 @@ interface RuleCardProps {
 export function RuleCard({ rule, onEdit, onDelete, onToggle }: RuleCardProps) {
   const config = RULE_TYPE_CONFIG[rule.rule_type] ?? {
     label: rule.rule_type,
-    color: "text-gray-600",
-    borderColor: "border-l-gray-400",
+    color: "text-on-surface-variant",
+    borderColor: "border-l-outline",
     icon: Cake,
-    badgeBg: "bg-gray-100 text-gray-600",
+    badgeBg: "bg-surface-container text-on-surface-variant",
   };
   const Icon = config.icon;
 
   return (
     <div
-      className={`bg-white rounded-2xl shadow-sm border border-gray-100 border-l-4 ${config.borderColor} transition-all ${
+      className={`bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant border-l-4 ${config.borderColor} transition-all ${
         rule.is_active ? "" : "opacity-60"
       } hover:shadow-md`}
     >
@@ -59,12 +59,12 @@ export function RuleCard({ rule, onEdit, onDelete, onToggle }: RuleCardProps) {
         <div className="flex items-start justify-between gap-3 mb-4">
           <div className="flex items-start gap-3 flex-1 min-w-0">
             <div className={`h-10 w-10 rounded-xl flex items-center justify-center shrink-0 ${
-              rule.is_active ? "bg-gray-50" : "bg-gray-100"
+              rule.is_active ? "bg-surface-container-low" : "bg-surface-container"
             }`}>
               <Icon className={`h-5 w-5 ${config.color}`} />
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-bold text-gray-900 truncate">{rule.name}</p>
+              <p className="text-sm font-bold text-on-surface truncate">{rule.name}</p>
               <span className={`inline-flex items-center mt-1 px-2 py-0.5 rounded-full text-xs font-medium ${config.badgeBg}`}>
                 {config.label}
               </span>
@@ -79,39 +79,39 @@ export function RuleCard({ rule, onEdit, onDelete, onToggle }: RuleCardProps) {
         {/* Details */}
         <div className="space-y-2.5 mb-4">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-gray-500">Pasta Boyutu</span>
-            <span className="font-semibold text-gray-800">
+            <span className="text-on-surface-variant">Pasta Boyutu</span>
+            <span className="font-semibold text-on-surface">
               {CAKE_SIZE_LABELS[rule.default_cake_size] ?? rule.default_cake_size}
             </span>
           </div>
 
           {rule.rule_type === "round_birthdays" && rule.milestone_ages && (
             <div className="flex items-center justify-between text-xs">
-              <span className="text-gray-500">Yuvarlak Yaşlar</span>
-              <span className="font-semibold text-gray-800">{rule.milestone_ages.join(", ")}</span>
+              <span className="text-on-surface-variant">Yuvarlak Yaşlar</span>
+              <span className="font-semibold text-on-surface">{rule.milestone_ages.join(", ")}</span>
             </div>
           )}
 
           {rule.rule_type === "work_anniversary" && rule.anniversary_years && (
             <div className="flex items-center justify-between text-xs">
-              <span className="text-gray-500">Yıldönümü Yılları</span>
-              <span className="font-semibold text-gray-800">{rule.anniversary_years.join(", ")}</span>
+              <span className="text-on-surface-variant">Yıldönümü Yılları</span>
+              <span className="font-semibold text-on-surface">{rule.anniversary_years.join(", ")}</span>
             </div>
           )}
         </div>
 
         {rule.custom_text_template && (
-          <div className="mb-4 bg-gray-50 rounded-xl px-3 py-2.5 border-l-2 border-gray-200">
-            <p className="text-xs font-medium text-gray-500 mb-0.5">Mesaj Şablonu</p>
-            <p className="text-xs italic text-gray-600">"{rule.custom_text_template}"</p>
+          <div className="mb-4 bg-surface-container-low rounded-xl px-3 py-2.5 border-l-2 border-outline-variant">
+            <p className="text-xs font-medium text-on-surface-variant mb-0.5">Mesaj Şablonu</p>
+            <p className="text-xs italic text-on-surface-variant">"{rule.custom_text_template}"</p>
           </div>
         )}
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-3 border-t border-gray-50">
+        <div className="flex items-center justify-between pt-3 border-t border-outline-variant/30">
           <div className="flex items-center gap-1.5">
-            <span className={`h-2 w-2 rounded-full ${rule.is_active ? "bg-green-500" : "bg-gray-300"}`} />
-            <span className={`text-xs font-medium ${rule.is_active ? "text-green-700" : "text-gray-400"}`}>
+            <span className={`h-2 w-2 rounded-full ${rule.is_active ? "bg-tertiary" : "bg-on-surface-variant/30"}`} />
+            <span className={`text-xs font-medium ${rule.is_active ? "text-tertiary" : "text-on-surface-variant/60"}`}>
               {rule.is_active ? "Aktif" : "Pasif"}
             </span>
           </div>
@@ -119,7 +119,7 @@ export function RuleCard({ rule, onEdit, onDelete, onToggle }: RuleCardProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 rounded-xl hover:bg-gray-100 text-gray-500 hover:text-gray-700"
+              className="h-8 w-8 rounded-xl hover:bg-surface-container-low text-on-surface-variant hover:text-on-surface"
               onClick={() => onEdit(rule)}
             >
               <Pencil className="h-3.5 w-3.5" />
@@ -127,7 +127,7 @@ export function RuleCard({ rule, onEdit, onDelete, onToggle }: RuleCardProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 rounded-xl hover:bg-red-50 text-gray-400 hover:text-red-500"
+              className="h-8 w-8 rounded-xl hover:bg-red-50 text-on-surface-variant/60 hover:text-red-500"
               onClick={() => onDelete(rule)}
             >
               <Trash2 className="h-3.5 w-3.5" />

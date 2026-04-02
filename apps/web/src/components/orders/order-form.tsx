@@ -40,12 +40,12 @@ interface OrderFormProps {
 
 function SectionCard({ icon: Icon, title, children }: { icon: React.ElementType; title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
+    <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm p-6 space-y-4">
       <div className="flex items-center gap-2.5">
-        <div className="h-8 w-8 rounded-xl bg-coral-50 flex items-center justify-center">
-          <Icon className="h-4 w-4 text-coral-500" />
+        <div className="h-8 w-8 rounded-xl bg-primary-fixed flex items-center justify-center">
+          <Icon className="h-4 w-4 text-primary" />
         </div>
-        <h2 className="text-base font-bold text-gray-900">{title}</h2>
+        <h2 className="text-base font-bold font-headline text-on-surface">{title}</h2>
       </div>
       {children}
     </div>
@@ -101,23 +101,23 @@ export function OrderForm({ onSubmit }: OrderFormProps) {
       <SectionCard icon={User} title="Alıcı Bilgileri">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
-            <Label htmlFor="recipient_name" className="text-sm font-medium text-gray-700">Alıcı Adı Soyadı *</Label>
+            <Label htmlFor="recipient_name" className="text-sm font-medium text-on-surface">Alıcı Adı Soyadı *</Label>
             <Input
               id="recipient_name"
               placeholder="Ad Soyad"
               {...register("recipient_name")}
-              className="rounded-xl border-gray-200 focus:border-coral-300"
+              className="rounded-xl border-outline-variant focus:border-primary"
             />
             {errors.recipient_name && <p className="text-xs text-red-500">{errors.recipient_name.message}</p>}
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="recipient_phone" className="text-sm font-medium text-gray-700">Telefon</Label>
+            <Label htmlFor="recipient_phone" className="text-sm font-medium text-on-surface">Telefon</Label>
             <Input
               id="recipient_phone"
               type="tel"
               placeholder="05XX XXX XX XX"
               {...register("recipient_phone")}
-              className="rounded-xl border-gray-200 focus:border-coral-300"
+              className="rounded-xl border-outline-variant focus:border-primary"
             />
           </div>
         </div>
@@ -127,19 +127,19 @@ export function OrderForm({ onSubmit }: OrderFormProps) {
       <SectionCard icon={MapPin} title="Teslimat Bilgileri">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
-            <Label htmlFor="delivery_date" className="text-sm font-medium text-gray-700">Teslimat Tarihi *</Label>
+            <Label htmlFor="delivery_date" className="text-sm font-medium text-on-surface">Teslimat Tarihi *</Label>
             <Input
               id="delivery_date"
               type="date"
               {...register("delivery_date")}
-              className="rounded-xl border-gray-200 focus:border-coral-300"
+              className="rounded-xl border-outline-variant focus:border-primary"
             />
             {errors.delivery_date && <p className="text-xs text-red-500">{errors.delivery_date.message}</p>}
           </div>
           <div className="space-y-1.5">
-            <Label className="text-sm font-medium text-gray-700">Teslimat İlçesi *</Label>
+            <Label className="text-sm font-medium text-on-surface">Teslimat İlçesi *</Label>
             <Select onValueChange={(v) => setValue("delivery_district", v)}>
-              <SelectTrigger className="rounded-xl border-gray-200">
+              <SelectTrigger className="rounded-xl border-outline-variant">
                 <SelectValue placeholder="İlçe seçin" />
               </SelectTrigger>
               <SelectContent className="rounded-xl">
@@ -152,22 +152,22 @@ export function OrderForm({ onSubmit }: OrderFormProps) {
           </div>
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="delivery_address" className="text-sm font-medium text-gray-700">Teslimat Adresi *</Label>
+          <Label htmlFor="delivery_address" className="text-sm font-medium text-on-surface">Teslimat Adresi *</Label>
           <Input
             id="delivery_address"
             placeholder="Mahalle, sokak, bina no, daire no"
             {...register("delivery_address")}
-            className="rounded-xl border-gray-200 focus:border-coral-300"
+            className="rounded-xl border-outline-variant focus:border-primary"
           />
           {errors.delivery_address && <p className="text-xs text-red-500">{errors.delivery_address.message}</p>}
         </div>
         <div className="space-y-1.5">
-          <Label className="text-sm font-medium text-gray-700">Teslimat Saati</Label>
+          <Label className="text-sm font-medium text-on-surface">Teslimat Saati</Label>
           <Select
             defaultValue="no_preference"
             onValueChange={(v) => setValue("delivery_window", v as FormData["delivery_window"])}
           >
-            <SelectTrigger className="rounded-xl border-gray-200">
+            <SelectTrigger className="rounded-xl border-outline-variant">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="rounded-xl">
@@ -194,22 +194,22 @@ export function OrderForm({ onSubmit }: OrderFormProps) {
       {/* Custom Message */}
       <SectionCard icon={MessageSquare} title="Pasta Mesajı">
         <div className="space-y-1.5">
-          <Label htmlFor="custom_text" className="text-sm font-medium text-gray-700">Pasta Üzerine Yazılacak Mesaj</Label>
+          <Label htmlFor="custom_text" className="text-sm font-medium text-on-surface">Pasta Üzerine Yazılacak Mesaj</Label>
           <Textarea
             id="custom_text"
             placeholder="İyi ki doğdun Ayşe! 🎂"
             maxLength={100}
             rows={2}
             {...register("custom_text")}
-            className="rounded-xl border-gray-200 focus:border-coral-300 resize-none"
+            className="rounded-xl border-outline-variant focus:border-primary resize-none"
           />
-          <p className="text-xs text-gray-400">Maksimum 100 karakter.</p>
+          <p className="text-xs text-on-surface-variant">Maksimum 100 karakter.</p>
         </div>
       </SectionCard>
 
       <Button
         type="submit"
-        className="w-full rounded-xl bg-coral-500 hover:bg-coral-600 text-white h-12 text-base font-semibold"
+        className="w-full rounded-xl gradient-primary text-white shadow-[0_10px_20px_-5px_rgba(157,67,0,0.3)] h-12 text-base font-semibold"
         size="lg"
         disabled={isSubmitting}
       >
