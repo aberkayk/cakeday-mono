@@ -45,8 +45,8 @@ export function NavBar() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 flex flex-col items-center pt-3 px-4">
-      <div className="bg-nav-dark rounded-xl px-3 py-4 flex items-center gap-8 shadow-lg">
+    <header className="sticky bg-transparent top-0 z-50 flex flex-col items-center pt-3 px-4 ">
+      <div className="bg-nav-dark rounded-xl px-3 py-4 flex items-center gap-8 shadow-lg w-full max-w-4xl">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 px-3 py-1.5">
           <Cake className="h-5 w-5 text-white" strokeWidth={2} />

@@ -68,7 +68,7 @@ export function FeaturesSection() {
             return (
               <div
                 key={f.title}
-                className="bg-white p-10 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 group"
+                className="bg-white p-10 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 group border border-primary"
               >
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-5 group-hover:bg-primary/20 transition-colors">
                   <Icon className="h-6 w-6 text-primary" />

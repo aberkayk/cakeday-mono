@@ -38,7 +38,7 @@ export function PricingSection() {
           ].map((item) => (
             <div
               key={item.title}
-              className="bg-surface-container-lowest rounded-2xl border border-outline-variant p-8 text-center"
+              className="bg-surface-container-lowest rounded-2xl border border-primary p-8 text-center"
             >
               <div className="text-4xl mb-4">{item.icon}</div>
               <h3 className="font-headline font-bold text-on-surface text-lg mb-3">

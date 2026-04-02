@@ -51,7 +51,7 @@ export function FAQSection() {
             return (
               <div
                 key={i}
-                className="bg-surface-container-lowest border border-outline-variant rounded-2xl overflow-hidden"
+                className="bg-surface-container-lowest border border-primary rounded-2xl overflow-hidden"
               >
                 <button
                   className="w-full flex items-center justify-between px-6 py-5 text-left"

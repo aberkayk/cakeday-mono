@@ -10,7 +10,7 @@ import { Footer } from "@/components/landing/footer";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-surface text-on-surface">
+    <div className="min-h-screen bg-surface-container-lowest text-on-surface">
       <NavBar />
       <HeroSection />
       <HowItWorksSection />
