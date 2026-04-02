@@ -107,7 +107,8 @@ export function BakeryOrderCard({ order, onAccept, onReject, onDeliver }: Bakery
             {canDeliver && onDeliver && (
               <Button
                 size="sm"
-                className="flex-1 h-8 text-xs rounded-xl bg-tertiary-container/40 text-tertiary hover:bg-tertiary-container/60 border-0"
+                variant="tonal"
+                className="flex-1 h-8 text-xs rounded-xl"
                 onClick={handleDeliver}
                 disabled={isSubmitting}
               >
@@ -118,8 +119,8 @@ export function BakeryOrderCard({ order, onAccept, onReject, onDeliver }: Bakery
             {canReject && onReject && (
               <Button
                 size="sm"
-                variant="outline"
-                className="flex-1 h-8 text-xs rounded-xl text-red-500 border-red-200 hover:bg-red-50"
+                variant="ghost"
+                className="flex-1 h-8 text-xs rounded-xl text-red-500 hover:text-red-600 hover:bg-red-50/50"
                 onClick={() => setRejectOpen(true)}
                 disabled={isSubmitting}
               >
@@ -132,33 +133,33 @@ export function BakeryOrderCard({ order, onAccept, onReject, onDeliver }: Bakery
       </div>
 
       <Dialog open={rejectOpen} onOpenChange={setRejectOpen}>
-        <DialogContent className="max-w-sm rounded-2xl">
+        <DialogContent className="max-w-sm rounded-2xl border-0 shadow-ambient">
           <DialogHeader>
             <DialogTitle className="font-headline text-foreground">Siparişi Reddet</DialogTitle>
           </DialogHeader>
-          <div className="space-y-3">
+          <div className="space-y-4">
             <p className="text-sm text-muted">
               <strong className="text-foreground">{order.recipient_name}</strong> siparişini reddetmek üzeresiniz.
             </p>
             <div className="space-y-2">
-              <Label htmlFor="reason" className="text-foreground">Red Nedeni</Label>
+              <Label htmlFor="reason" className="text-foreground text-sm font-medium">Red Nedeni</Label>
               <Textarea
                 id="reason"
                 placeholder="Neden reddediyorsunuz?"
                 value={rejectReason}
                 onChange={(e) => setRejectReason(e.target.value)}
                 rows={3}
-                className="rounded-xl border-border-soft focus:border-primary resize-none"
+                className="rounded-xl border-border-soft bg-background-secondary focus:bg-background focus:ring-primary/20 resize-none"
               />
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setRejectOpen(false)} className="rounded-xl border-border-soft">İptal</Button>
+          <DialogFooter className="gap-2 mt-4">
+            <Button variant="outline" onClick={() => setRejectOpen(false)} className="flex-1 rounded-xl">İptal</Button>
             <Button
               variant="destructive"
               onClick={handleRejectConfirm}
               disabled={isSubmitting || !rejectReason.trim()}
-              className="rounded-xl"
+              className="flex-1 rounded-xl"
             >
               Reddet
             </Button>
