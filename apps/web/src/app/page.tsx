@@ -48,7 +48,7 @@ const features = [
     icon: Plug,
     title: "HR Entegrasyonu",
     description:
-      "BambooHR, KolayIK ve diğer popüler HR sistemleriyle tek tıkla entegrasyon. Çalışan verilerini otomatik senkronize edin.",
+      "BambooHR ve KolayIK ile tek tıkla entegrasyon. Çalışan verilerini otomatik senkronize edin.",
   },
   {
     icon: Brain,
@@ -60,7 +60,7 @@ const features = [
     icon: BookOpen,
     title: "Pasta Kataloğu",
     description:
-      "İstanbul'un seçkin pastanelerinden özenle seçilmiş yüzlerce pasta seçeneği. Her damak zevkine uygun.",
+      "Anlaşmalı pastanelerimizden özenle seçilmiş pasta seçenekleri. Her damak zevkine uygun.",
   },
   {
     icon: Truck,
@@ -115,24 +115,24 @@ const faqItems = [
     a: "Şirketinizi kaydettikten sonra çalışanlarınızı platforma ekleyin, sipariş kurallarınızı belirleyin. Sistem, doğum günleri yaklaşırken otomatik sipariş oluşturur ve teslimatı organize eder.",
   },
   {
-    q: "Hangi şehirlere teslimat yapıyorsunuz?",
-    a: "Şu an İstanbul'un tüm ilçelerine teslimat yapıyoruz. Ankara ve İzmir için beta sürecimiz devam etmekte; yakında hizmet vereceğiz.",
+    q: "Hangi bölgelere teslimat yapıyorsunuz?",
+    a: "Şu an İstanbul'un Beşiktaş ve Sarıyer bölgelerinde hizmet veriyoruz. Yeni bölgeler yakında eklenecektir.",
   },
   {
     q: "HR sistemimizle entegre olabiliyor mu?",
-    a: "Evet! BambooHR, KolayIK, Personio ve diğer popüler HR sistemleriyle entegrasyon sunuyoruz. CSV/Excel ile de toplu yükleme yapabilirsiniz.",
+    a: "Evet! BambooHR ve KolayIK entegrasyonları sunuyoruz. Ayrıca CSV/Excel ile de toplu çalışan yüklemesi yapabilirsiniz.",
   },
   {
     q: "Faturalama nasıl işliyor?",
     a: "Her ay sonunda tüm siparişleriniz için tek bir konsolide fatura kesilir. E-fatura ve kurumsal fatura desteği mevcuttur.",
   },
   {
-    q: "Ücretsiz plan ne kadar süre geçerli?",
-    a: "Ücretsiz plan süresiz olarak 5 çalışana kadar geçerlidir. Daha fazla çalışan veya otomasyon özellikleri için ücretli planlara geçiş yapabilirsiniz.",
+    q: "Deneme süreci nasıl işliyor?",
+    a: "İlk 14 gün tüm özellikleri ücretsiz deneyebilirsiniz. Deneme süresi sonunda size uygun planı seçerek devam edebilirsiniz.",
   },
   {
     q: "Pasta seçeneklerini özelleştirebilir miyim?",
-    a: "Evet, departmana veya çalışan tercihlerine göre farklı pasta seçenekleri ve fiyat aralıkları belirleyebilirsiniz. Kataloğumuzda 200'den fazla seçenek bulunmaktadır.",
+    a: "Evet, departmana veya çalışan tercihlerine göre farklı pasta seçenekleri ve fiyat aralıkları belirleyebilirsiniz. Kataloğumuz sürekli genişlemektedir.",
   },
 ];
 
@@ -185,7 +185,7 @@ function NavBar() {
             href="/register"
             className="gradient-primary text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-md hover:opacity-90 transition-opacity"
           >
-            Ücretsiz Başla
+            Hemen Başla
           </Link>
         </div>
 
@@ -231,7 +231,7 @@ function NavBar() {
               href="/register"
               className="block text-center gradient-primary text-white text-sm font-semibold rounded-xl py-2.5"
             >
-              Ücretsiz Başla
+              Hemen Başla
             </Link>
           </div>
         </div>
@@ -271,7 +271,7 @@ function HeroSection() {
                 href="/register"
                 className="gradient-primary text-white font-semibold px-8 py-3.5 rounded-xl shadow-lg hover:opacity-90 transition-opacity text-base text-center"
               >
-                Ücretsiz Başla
+                Hemen Başla
               </Link>
               <a
                 href="#how-it-works"
@@ -286,25 +286,9 @@ function HeroSection() {
 
             {/* Social proof */}
             <div className="flex items-center gap-3">
-              {/* Avatar stack */}
-              <div className="flex -space-x-2">
-                {[
-                  { initials: "AK", color: "#9d4300" },
-                  { initials: "MY", color: "#b4136d" },
-                  { initials: "ZD", color: "#855300" },
-                  { initials: "CE", color: "#9d4300" },
-                ].map((av) => (
-                  <div
-                    key={av.initials}
-                    className="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-bold"
-                    style={{ backgroundColor: av.color }}
-                  >
-                    {av.initials}
-                  </div>
-                ))}
+              <div className="inline-flex items-center gap-2 bg-surface-container-low px-4 py-2 rounded-full">
+                <span className="text-sm text-on-surface-variant">🚀 Beşiktaş ve Sarıyer&apos;de aktif</span>
               </div>
-              <span className="text-sm font-semibold text-on-surface">+497</span>
-              <span className="text-sm text-on-surface-variant">500+ şirket güveniyor</span>
             </div>
           </div>
 
@@ -401,27 +385,7 @@ function HeroSection() {
 }
 
 function LogosSection() {
-  return (
-    <section className="bg-surface-container-low py-12">
-      <div className="max-w-7xl mx-auto px-6 mb-8">
-        <p className="text-center text-xs font-semibold text-on-surface-variant uppercase tracking-[0.2em]">
-          Güvendikleri şirketler arasında
-        </p>
-      </div>
-      <div className="flex flex-wrap justify-center gap-8 px-6">
-        {logos.map((name) => (
-          <div
-            key={name}
-            className="grayscale hover:grayscale-0 transition-all opacity-50 hover:opacity-100 flex items-center justify-center px-8 py-3 rounded-lg"
-          >
-            <span className="text-sm font-bold text-on-surface-variant tracking-widest">
-              {name}
-            </span>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
+  return null;
 }
 
 function HowItWorksSection() {
@@ -565,43 +529,13 @@ function PricingSection() {
             Şeffaf Fiyatlandırma
           </h2>
           <p className="text-lg text-on-surface-variant">
-            Her ölçekteki ekip için uygun plan. İlk 30 gün ücretsiz.
+            Her ölçekteki ekip için uygun plan. 14 gün ücretsiz deneyin.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto items-start">
-          {/* Başlangıç */}
-          <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant p-8 flex flex-col">
-            <div className="mb-6">
-              <div className="text-sm font-semibold text-on-surface-variant uppercase tracking-wide mb-3">
-                Başlangıç
-              </div>
-              <div className="text-4xl font-headline font-extrabold text-on-surface">₺0</div>
-              <div className="text-sm text-on-surface-variant mt-1">Sonsuza kadar ücretsiz</div>
-            </div>
-            <ul className="space-y-3 mb-8 flex-1">
-              {[
-                "5 çalışana kadar",
-                "Temel raporlar",
-                "E-posta bildirimleri",
-                "Manuel sipariş",
-              ].map((f) => (
-                <li key={f} className="flex items-center gap-2 text-sm text-on-surface-variant">
-                  <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <Link
-              href="/register"
-              className="block text-center border border-outline text-on-surface font-semibold py-3 rounded-xl hover:bg-surface-container-low transition-colors text-sm"
-            >
-              Ücretsiz Başla
-            </Link>
-          </div>
-
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-start">
           {/* Profesyonel — highlighted */}
-          <div className="relative bg-surface-container-lowest rounded-2xl border-2 border-primary p-8 flex flex-col scale-105 shadow-xl">
+          <div className="relative bg-surface-container-lowest rounded-2xl border-2 border-primary p-8 flex flex-col shadow-xl">
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
               <span className="gradient-primary text-white text-xs font-bold px-4 py-1 rounded-full">
                 En Popüler
@@ -749,11 +683,11 @@ function CTASection() {
                 href="/register"
                 className="bg-white text-primary font-bold px-10 py-3.5 rounded-xl hover:bg-white/90 transition-colors text-base"
               >
-                Ücretsiz Başla
+                Hemen Başla
               </Link>
             </div>
 
-            <p className="text-white/70 text-sm">İlk 30 gün ücretsiz · Kredi kartı gerekmez</p>
+            <p className="text-white/70 text-sm">14 gün ücretsiz deneme · Kredi kartı gerekmez</p>
           </div>
         </div>
       </div>
