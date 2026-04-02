@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -62,7 +62,9 @@
 
   body {
     @apply bg-surface text-on-surface;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
   }
 
   ::selection {
@@ -94,6 +96,6 @@
   }
 
   .shadow-primary {
-    box-shadow: 0 10px 20px -5px theme('colors.primary / 0.3');
+    box-shadow: 0 10px 20px -5px color-mix(in srgb, theme("colors.primary.DEFAULT") 30%, transparent);
   }
 }
