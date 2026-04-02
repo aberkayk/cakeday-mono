@@ -1,15 +1,52 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Cake, Menu, X } from "lucide-react";
 
+const navItems = [
+  { label: "Nasıl Çalışır", href: "#how-it-works" },
+  { label: "Özellikler", href: "#features" },
+  { label: "Ücretlendirme", href: "#pricing" },
+  { label: "SSS", href: "#faq" },
+  { label: "İletişim", href: "#contact" },
+];
+
 export function NavBar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
+
+  useEffect(() => {
+    const sectionIds = navItems.map((item) => item.href.replace("#", ""));
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Find the entry that is most visible
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+        if (visible.length > 0) {
+          setActiveSection(`#${visible[0].target.id}`);
+        }
+      },
+      {
+        rootMargin: "-20% 0px -60% 0px",
+        threshold: [0, 0.25, 0.5, 0.75, 1],
+      }
+    );
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 flex flex-col items-center pt-3 px-4">
-      <div className="bg-[#3E2723] rounded-xl px-3 py-4 flex items-center gap-8  shadow-lg">
+      <div className="bg-[#3E2723] rounded-xl px-3 py-4 flex items-center gap-8 shadow-lg">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 px-3 py-1.5">
           <Cake className="h-5 w-5 text-white" strokeWidth={2} />
@@ -20,27 +57,19 @@ export function NavBar() {
 
         {/* Center nav — desktop */}
         <nav className="hidden md:flex items-center gap-1 flex-1 justify-center">
-          {[
-            "Nasıl Çalışır",
-            "Özellikler",
-            "Ücretlendirme",
-            "SSS",
-            "İletişim",
-          ].map((label) => {
-            const href = {
-              "Nasıl Çalışır": "#how-it-works",
-              Özellikler: "#features",
-              Ücretlendirme: "#pricing",
-              SSS: "#faq",
-              İletişim: "#contact",
-            }[label]!;
+          {navItems.map((item) => {
+            const isActive = activeSection === item.href;
             return (
               <a
-                key={label}
-                href={href}
-                className="text-sm font-medium text-white/80 hover:text-white transition-colors px-3 py-1.5 rounded-full hover:bg-white/10"
+                key={item.label}
+                href={item.href}
+                className={`text-sm font-medium transition-all px-3 py-1.5 rounded-full ${
+                  isActive
+                    ? "bg-white/20 text-white"
+                    : "text-white/60 hover:text-white hover:bg-white/10"
+                }`}
               >
-                {label}
+                {item.label}
               </a>
             );
           })}
@@ -79,28 +108,20 @@ export function NavBar() {
       {/* Mobile menu */}
       {mobileOpen && (
         <div className="md:hidden mt-2 bg-[#3E2723] rounded-2xl px-4 py-3 space-y-1 w-full max-w-3xl shadow-lg">
-          {[
-            "Nasıl Çalışır",
-            "Özellikler",
-            "Ücretlendirme",
-            "SSS",
-            "İletişim",
-          ].map((label) => {
-            const href = {
-              "Nasıl Çalışır": "#how-it-works",
-              Özellikler: "#features",
-              Ücretlendirme: "#pricing",
-              SSS: "#faq",
-              İletişim: "#contact",
-            }[label]!;
+          {navItems.map((item) => {
+            const isActive = activeSection === item.href;
             return (
               <a
-                key={label}
-                href={href}
-                className="block text-sm font-medium text-white/80 hover:text-white py-2 px-3 rounded-lg hover:bg-white/10"
+                key={item.label}
+                href={item.href}
+                className={`block text-sm font-medium py-2 px-3 rounded-lg ${
+                  isActive
+                    ? "bg-white/20 text-white"
+                    : "text-white/80 hover:text-white hover:bg-white/10"
+                }`}
                 onClick={() => setMobileOpen(false)}
               >
-                {label}
+                {item.label}
               </a>
             );
           })}
