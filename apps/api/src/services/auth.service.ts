@@ -22,15 +22,17 @@ export class AuthService {
    * Register a new company + owner profile.
    */
   async register(input: RegisterInput) {
-    // Check if company VKN is already taken
-    const [existingCompany] = await db
-      .select({ id: companies.id })
-      .from(companies)
-      .where(eq(companies.vkn, input.vkn))
-      .limit(1);
+    // Check if company VKN is already taken (only when VKN is provided)
+    if (input.vkn) {
+      const [existingCompany] = await db
+        .select({ id: companies.id })
+        .from(companies)
+        .where(eq(companies.vkn, input.vkn))
+        .limit(1);
 
-    if (existingCompany) {
-      throw new ConflictError('Bu vergi kimlik numarasina sahip bir sirket zaten kayitlidir.');
+      if (existingCompany) {
+        throw new ConflictError('Bu vergi kimlik numarasina sahip bir sirket zaten kayitlidir.');
+      }
     }
 
     // Create Supabase auth user
@@ -59,15 +61,15 @@ export class AuthService {
         .insert(companies)
         .values({
           name: input.company_name,
-          vkn: input.vkn,
-          sector: input.sector,
-          company_size_range: input.company_size_range,
+          vkn: input.vkn || undefined,
+          sector: input.sector || undefined,
+          company_size_range: input.company_size_range || undefined,
           primary_contact_name: input.primary_contact_name,
-          primary_contact_title: input.primary_contact_title,
+          primary_contact_title: input.primary_contact_title || undefined,
           primary_contact_email: input.email,
           primary_contact_phone: input.phone,
-          billing_address: input.billing_address,
-          billing_district: input.billing_district,
+          billing_address: input.billing_address || undefined,
+          billing_district: (input.billing_district || undefined) as typeof companies.billing_district._.data | undefined,
           status: 'pending_verification',
           kvkk_accepted_at: new Date(),
         })

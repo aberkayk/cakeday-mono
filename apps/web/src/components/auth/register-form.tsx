@@ -161,11 +161,11 @@ export function RegisterForm() {
         companyName: data.companyName,
         contactName: data.contactName,
         phone: `+90${data.phone}`,
-        vkn: data.vkn,
-        sector: data.sector,
-        companySize: data.companySize,
-        billingAddress: data.billingAddress,
-        district: data.district,
+        vkn: data.vkn || undefined,
+        sector: data.sector || undefined,
+        companySize: data.companySize || undefined,
+        billingAddress: data.billingAddress || undefined,
+        district: data.district || undefined,
         kvkkAccepted: data.terms,
       });
       setSuccess(true);
@@ -173,7 +173,7 @@ export function RegisterForm() {
       setServerError(
         err instanceof Error
           ? err.message
-          : "Kayııt işlemi başarısız. Lütfen tekrar deneyin.",
+          : "Kayıt işlemi başarısız. Lütfen tekrar deneyin.",
       );
     }
   };
