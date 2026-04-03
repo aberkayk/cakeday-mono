@@ -28,6 +28,7 @@ const envSchema = z.object({
   // Resend
   RESEND_API_KEY: z.string().min(1).optional(),
   RESEND_FROM_EMAIL: z.string().email().default('noreply@cakeday.com.tr'),
+  ENABLE_EMAIL: z.coerce.boolean().default(false),
 
   // WhatsApp
   WHATSAPP_API_URL: z.string().url().optional(),

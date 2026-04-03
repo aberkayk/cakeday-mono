@@ -8,6 +8,7 @@ import {
   ConflictError,
   BadRequestError,
 } from '../utils/errors';
+import { emailService } from './email.service';
 import type {
   RegisterInput,
   LoginInput,
@@ -89,6 +90,28 @@ export class AuthService {
       await db.insert(companySettings).values({
         company_id: newCompany.id,
       });
+
+      // 4. Generate verification link and send email
+      try {
+        const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
+          type: 'signup',
+          email: input.email,
+          password: input.password,
+        });
+
+        if (linkError) {
+          console.error('Failed to generate verification link:', linkError.message);
+        } else if (linkData.properties?.hashed_token) {
+          await emailService.sendVerificationEmail(
+            input.email,
+            input.primary_contact_name,
+            linkData.properties.hashed_token
+          );
+        }
+      } catch (emailErr) {
+        // Non-fatal error for the registration itself, but log it
+        console.error('Registration email sending failed:', emailErr);
+      }
 
       return {
         user_id: userId,
