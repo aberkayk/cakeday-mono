@@ -18,7 +18,7 @@ export function HeroSection() {
             </div>
 
             {/* Heading */}
-            <h1 className="font-headline text-5xl md:text-6xl font-extrabold text-foreground leading-[1.1] tracking-tight mb-6">
+            <h1 className="font-headline text-5xl leading-[1.2] md:text-6xl font-extrabold text-foreground md:leading-[1.3] tracking-tight mb-6">
               Çalışanlarınızın Doğum Günlerini{" "}
               <span className="text-primary italic">Asla</span> Unutmayın
             </h1>
@@ -34,13 +34,13 @@ export function HeroSection() {
               <Button asChild size="lg" className="px-10 font-bold">
                 <Link href="/register">Hemen Başla</Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="px-10 font-bold">
-                <a href="#how-it-works" className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Play className="h-3.5 w-3.5 text-primary fill-primary" />
-                  </div>
-                  Nasıl Çalışır?
-                </a>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="px-10 font-bold"
+              >
+                <Link href="#how-it-works">Nasıl Çalışır?</Link>
               </Button>
             </div>
 
@@ -96,7 +96,7 @@ export function HeroSection() {
                     status: "Planlandı",
                     statusColor: "text-blue-700 bg-blue-100",
                     initials: "MD",
-                    color: "bg-tertiary",
+                    color: "bg-muted",
                   },
                 ].map((emp) => (
                   <div

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export function CTASection() {
   return (
@@ -21,12 +22,13 @@ export function CTASection() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
-              <Link
-                href="/register"
-                className="bg-white text-primary font-bold px-10 py-3.5 rounded-xl hover:bg-white/90 transition-colors text-base"
+              <Button
+                asChild
+                size="lg"
+                className="bg-white text-primary hover:bg-white/90 font-bold px-10 rounded-xl transition-colors text-base border-none"
               >
-                Hemen Başla
-              </Link>
+                <Link href="/register">Hemen Başla</Link>
+              </Button>
             </div>
 
             <p className="text-white/70 text-sm">

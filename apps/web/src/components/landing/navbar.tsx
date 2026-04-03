@@ -47,17 +47,22 @@ export function NavBar() {
 
   return (
     <header className="sticky bg-transparent top-0 z-50 flex flex-col items-center pt-3 px-4 ">
-      <div className="bg-background-secondary/80 backdrop-blur-md rounded-xl px-3 py-4 flex items-center gap-8 shadow-ambient w-full max-w-4xl">
+      <div className="bg-foreground backdrop-blur-md rounded-xl px-3 py-4 flex items-center gap-8 shadow-ambient w-full max-w-4xl">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 px-3 py-1.5">
-          <Cake className="h-5 w-5 text-primary" strokeWidth={2} />
-          <span className="font-headline font-bold text-base text-foreground italic">
-            CakeDay
-          </span>
-        </Link>
+        <div className="flex-1 flex items-center">
+          <Link
+            href="/"
+            className="flex items-center gap-2 px-3 py-1.5 whitespace-nowrap"
+          >
+            <Cake className="h-5 w-5 text-background" strokeWidth={2} />
+            <span className="font-headline font-bold text-base text-background italic">
+              CakeDay
+            </span>
+          </Link>
+        </div>
 
         {/* Center nav — desktop */}
-        <nav className="hidden md:flex items-center gap-1 flex-1 justify-center">
+        <nav className="hidden lg:flex items-center gap-1">
           {navItems.map((item) => {
             const isActive = activeSection === item.href;
             return (
@@ -66,8 +71,8 @@ export function NavBar() {
                 href={item.href}
                 className={`text-sm font-medium transition-all px-3 py-1.5 rounded-full ${
                   isActive
-                    ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground hover:text-foreground hover:bg-foreground/5"
+                    ? "bg-background/10 text-background"
+                    : "text-muted hover:text-background hover:bg-background/5"
                 }`}
               >
                 {item.label}
@@ -77,7 +82,7 @@ export function NavBar() {
         </nav>
 
         {/* Right CTA — desktop */}
-        <div className="hidden md:flex items-center gap-2">
+        <div className="hidden lg:flex items-center gap-2 flex-1 justify-end">
           <Button asChild variant="ghost">
             <Link href="/login">Giriş Yap</Link>
           </Button>
@@ -88,7 +93,7 @@ export function NavBar() {
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden p-2 text-foreground ml-auto"
+          className="lg:hidden p-2 text-background ml-auto"
           onClick={() => setMobileOpen((v) => !v)}
           aria-label="Menü"
         >
@@ -102,7 +107,7 @@ export function NavBar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden mt-2 bg-background-secondary rounded-2xl px-4 py-3 space-y-1 w-full max-w-3xl shadow-ambient">
+        <div className="lg:hidden mt-2 bg-background-secondary rounded-2xl px-4 py-3 space-y-1 w-full max-w-3xl shadow-ambient">
           {navItems.map((item) => {
             const isActive = activeSection === item.href;
             return (
@@ -111,7 +116,7 @@ export function NavBar() {
                 href={item.href}
                 className={`block text-sm font-medium py-2 px-3 rounded-lg ${
                   isActive
-                    ? "bg-primary/10 text-primary"
+                    ? "bg-primary/10 text-background"
                     : "text-muted-foreground hover:text-foreground hover:bg-foreground/5"
                 }`}
                 onClick={() => setMobileOpen(false)}

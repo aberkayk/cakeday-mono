@@ -21,7 +21,7 @@ const testimonials = [
     name: "Zeynep Arslan",
     title: "İK Direktörü, GlobalFin",
     initials: "ZA",
-    color: "bg-tertiary/70",
+    color: "bg-muted/70",
     quote:
       "Pastaların kalitesi harika, teslimat her seferinde zamanında. Ekibimiz çok memnun; artık doğum günlerini unutmak mümkün değil.",
   },
@@ -72,9 +72,7 @@ export function TestimonialsSection() {
                   <div className="text-sm font-semibold text-foreground">
                     {t.name}
                   </div>
-                  <div className="text-xs text-muted">
-                    {t.title}
-                  </div>
+                  <div className="text-xs text-muted">{t.title}</div>
                 </div>
               </div>
             </div>
