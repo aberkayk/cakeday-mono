@@ -28,32 +28,52 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAuth } from "@/hooks/use-auth";
-import { SECTOR_OPTIONS, COMPANY_SIZE_LABELS, DISTRICT_LABELS } from "@/lib/utils";
+import {
+  SECTOR_OPTIONS,
+  COMPANY_SIZE_LABELS,
+  DISTRICT_LABELS,
+} from "@/lib/utils";
 
 const schema = z
   .object({
     companyName: z.string().min(2, "Şirket adı en az 2 karakter olmalı."),
     vkn: z
       .string()
-      .length(10, "Vergi numarası 10 haneli olmalı.")
-      .regex(/^\d+$/, "Vergi numarası sadece rakam içermeli."),
-    sector: z.string().min(1, "Sektör seçin."),
-    companySize: z.string().min(1, "Çalışan sayısı aralığı seçin."),
+      .regex(/^\d{10}$/, "Vergi numarası 10 haneli olmalı.")
+      .optional()
+      .or(z.literal("")),
+    sector: z.string().optional().or(z.literal("")),
+    companySize: z.string().optional().or(z.literal("")),
     contactName: z.string().min(2, "Ad Soyad en az 2 karakter olmalı."),
-    contactTitle: z.string().optional(),
+    contactTitle: z.string().optional().or(z.literal("")),
     email: z.string().email("Geçerli bir e-posta adresi girin."),
     phone: z
-      .string()
-      .regex(/^\+90[5][0-9]{9}$/, "Geçerli bir Türk cep telefonu girin. (+905XXXXXXXXX)"),
-    billingAddress: z.string().min(5, "Fatura adresi en az 5 karakter olmalı."),
-    district: z.string().min(1, "İlçe seçin."),
+      .preprocess((val) => {
+        if (typeof val !== "string") return val;
+        // Sadece rakamları al
+        const cleaned = val.replace(/\D/g, "");
+        // Eğer 10'dan fazlaysa sondan 10 haneyi al (ör: +905... -> 5...)
+        return cleaned.length > 10 ? cleaned.slice(-10) : cleaned;
+      }, z.string())
+      .pipe(
+        z
+          .string()
+          .regex(
+            /^[5][0-9]{9}$/,
+            "Geçerli bir cep telefonu girin. (Örn: 5XX XXX XX XX)",
+          ),
+      ),
+    billingAddress: z.string().optional().or(z.literal("")),
+    district: z.string().optional().or(z.literal("")),
     password: z
       .string()
       .min(8, "Şifre en az 8 karakter olmalı.")
       .regex(/[A-Z]/, "En az bir büyük harf içermeli.")
       .regex(/[0-9]/, "En az bir rakam içermeli."),
     passwordConfirm: z.string(),
-    terms: z.literal(true, { errorMap: () => ({ message: "Kullanım koşullarını kabul etmelisiniz." }) }),
+    terms: z.literal(true, {
+      errorMap: () => ({ message: "Kullanım koşullarını kabul etmelisiniz." }),
+    }),
   })
   .refine((d) => d.password === d.passwordConfirm, {
     path: ["passwordConfirm"],
@@ -61,14 +81,19 @@ const schema = z
   });
 type FormData = z.infer<typeof schema>;
 
-function getPasswordStrength(pw: string): { score: number; label: string; color: string } {
-  if (!pw) return { score: 0, label: "", color: "" };
+function getPasswordStrength(pw: string): {
+  score: number;
+  label: string;
+  color: string;
+} {
+  if (!pw || pw.trim().length === 0) return { score: 0, label: "", color: "" };
   let score = 0;
   if (pw.length >= 8) score++;
   if (pw.length >= 12) score++;
   if (/[A-Z]/.test(pw)) score++;
   if (/[0-9]/.test(pw)) score++;
   if (/[^A-Za-z0-9]/.test(pw)) score++;
+
   if (score <= 1) return { score, label: "Çok zayıf", color: "bg-red-500" };
   if (score === 2) return { score, label: "Zayıf", color: "bg-orange-400" };
   if (score === 3) return { score, label: "Orta", color: "bg-yellow-400" };
@@ -109,8 +134,20 @@ export function RegisterForm() {
     handleSubmit,
     setValue,
     watch,
-    formState: { errors, isSubmitting },
-  } = useForm<FormData>({ resolver: zodResolver(schema) });
+    formState: { errors, isSubmitting, dirtyFields },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    mode: "onSubmit",
+    defaultValues: {
+      companyName: "",
+      contactName: "",
+      email: "",
+      phone: "",
+      password: "",
+      passwordConfirm: "",
+      terms: false as unknown as true,
+    },
+  });
 
   const watchedPassword = watch("password") ?? "";
   const strength = getPasswordStrength(watchedPassword);
@@ -123,17 +160,20 @@ export function RegisterForm() {
         password: data.password,
         companyName: data.companyName,
         contactName: data.contactName,
-        phone: data.phone,
+        phone: `+90${data.phone}`,
         vkn: data.vkn,
         sector: data.sector,
         companySize: data.companySize,
         billingAddress: data.billingAddress,
         district: data.district,
+        kvkkAccepted: data.terms,
       });
       setSuccess(true);
     } catch (err) {
       setServerError(
-        err instanceof Error ? err.message : "Kayııt işlemi başarısız. Lütfen tekrar deneyin."
+        err instanceof Error
+          ? err.message
+          : "Kayııt işlemi başarısız. Lütfen tekrar deneyin.",
       );
     }
   };
@@ -146,16 +186,15 @@ export function RegisterForm() {
           <CheckCircle2 className="h-10 w-10 text-green-600" />
         </div>
         <div className="space-y-2">
-          <h2 className="text-2xl font-extrabold text-foreground font-headline">Kayıt Başarılı! 🎉</h2>
+          <h2 className="text-2xl font-extrabold text-foreground font-headline">
+            Kayıt Başarılı! 🎉
+          </h2>
           <p className="text-muted max-w-xs mx-auto leading-relaxed">
-            E-posta adresinize doğrulama bağlantısı gönderdik. Hesabınızı aktif etmek için e-postanızdaki bağlantıya tıklayın.
+            E-posta adresinize doğrulama bağlantısı gönderdik. Hesabınızı aktif
+            etmek için e-postanızdaki bağlantıya tıklayın.
           </p>
         </div>
-        <Button
-          asChild
-          size="lg"
-          className="w-full"
-        >
+        <Button asChild size="lg" className="w-full">
           <Link href="/login">Giriş Sayfasına Git</Link>
         </Button>
       </div>
@@ -172,12 +211,20 @@ export function RegisterForm() {
         <p className="text-muted text-base">1 dakikada başlayın</p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" autoComplete="off">
         {/* Server error */}
         {serverError && (
           <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700 flex items-start gap-2.5">
-            <svg className="w-4 h-4 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            <svg
+              className="w-4 h-4 mt-0.5 flex-shrink-0"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                clipRule="evenodd"
+              />
             </svg>
             {serverError}
           </div>
@@ -185,11 +232,16 @@ export function RegisterForm() {
 
         {/* ── Section: Şirket Adı ── */}
         <div className="space-y-1.5">
-          <Label htmlFor="companyName" className="text-sm font-medium text-foreground">
+          <Label
+            htmlFor="companyName"
+            className="text-sm font-medium text-foreground"
+          >
             Şirket Adı <span className="text-primary">*</span>
           </Label>
           <div className="relative">
-            <FieldIcon><Building2 className="h-[18px] w-[18px]" /></FieldIcon>
+            <FieldIcon>
+              <Building2 className="h-[18px] w-[18px]" />
+            </FieldIcon>
             <Input
               id="companyName"
               placeholder="Örnek A.Ş."
@@ -197,16 +249,23 @@ export function RegisterForm() {
               {...register("companyName")}
             />
           </div>
-          {errors.companyName && <p className="text-xs text-red-600">{errors.companyName.message}</p>}
+          {errors.companyName && (
+            <p className="text-xs text-red-600">{errors.companyName.message}</p>
+          )}
         </div>
 
         {/* ── Section: Yetkili ── */}
         <div className="space-y-1.5">
-          <Label htmlFor="contactName" className="text-sm font-medium text-foreground">
+          <Label
+            htmlFor="contactName"
+            className="text-sm font-medium text-foreground"
+          >
             Yetkili Ad Soyad <span className="text-primary">*</span>
           </Label>
           <div className="relative">
-            <FieldIcon><User className="h-[18px] w-[18px]" /></FieldIcon>
+            <FieldIcon>
+              <User className="h-[18px] w-[18px]" />
+            </FieldIcon>
             <Input
               id="contactName"
               placeholder="Ad Soyad"
@@ -214,16 +273,23 @@ export function RegisterForm() {
               {...register("contactName")}
             />
           </div>
-          {errors.contactName && <p className="text-xs text-red-600">{errors.contactName.message}</p>}
+          {errors.contactName && (
+            <p className="text-xs text-red-600">{errors.contactName.message}</p>
+          )}
         </div>
 
         {/* ── Section: Email ── */}
         <div className="space-y-1.5">
-          <Label htmlFor="email" className="text-sm font-medium text-foreground">
+          <Label
+            htmlFor="email"
+            className="text-sm font-medium text-foreground"
+          >
             İş E-postası <span className="text-primary">*</span>
           </Label>
           <div className="relative">
-            <FieldIcon><Mail className="h-[18px] w-[18px]" /></FieldIcon>
+            <FieldIcon>
+              <Mail className="h-[18px] w-[18px]" />
+            </FieldIcon>
             <Input
               id="email"
               type="email"
@@ -233,12 +299,17 @@ export function RegisterForm() {
               {...register("email")}
             />
           </div>
-          {errors.email && <p className="text-xs text-red-600">{errors.email.message}</p>}
+          {errors.email && (
+            <p className="text-xs text-red-600">{errors.email.message}</p>
+          )}
         </div>
 
         {/* ── Section: Phone ── */}
         <div className="space-y-1.5">
-          <Label htmlFor="phone" className="text-sm font-medium text-foreground">
+          <Label
+            htmlFor="phone"
+            className="text-sm font-medium text-foreground"
+          >
             Telefon <span className="text-primary">*</span>
           </Label>
           <div className="flex">
@@ -253,20 +324,28 @@ export function RegisterForm() {
               {...register("phone")}
             />
           </div>
-          {errors.phone && <p className="text-xs text-red-600">{errors.phone.message}</p>}
+          {errors.phone && (
+            <p className="text-xs text-red-600">{errors.phone.message}</p>
+          )}
         </div>
 
         {/* ── Section: Password ── */}
         <div className="space-y-1.5">
-          <Label htmlFor="password" className="text-sm font-medium text-foreground">
+          <Label
+            htmlFor="password"
+            className="text-sm font-medium text-foreground"
+          >
             Şifre <span className="text-primary">*</span>
           </Label>
           <div className="relative">
-            <FieldIcon><Lock className="h-[18px] w-[18px]" /></FieldIcon>
+            <FieldIcon>
+              <Lock className="h-[18px] w-[18px]" />
+            </FieldIcon>
             <Input
               id="password"
               type={showPassword ? "text" : "password"}
               placeholder="En az 8 karakter"
+              autoComplete="new-password"
               className={`${inputWithIconCls} pr-11`}
               {...register("password")}
             />
@@ -277,51 +356,78 @@ export function RegisterForm() {
               tabIndex={-1}
               aria-label={showPassword ? "Şifreyi gizle" : "Şifreyi göster"}
             >
-              {showPassword ? <EyeOff className="h-[18px] w-[18px]" /> : <Eye className="h-[18px] w-[18px]" />}
+              {showPassword ? (
+                <EyeOff className="h-[18px] w-[18px]" />
+              ) : (
+                <Eye className="h-[18px] w-[18px]" />
+              )}
             </button>
           </div>
+          <p className="text-xs text-muted">(En az 8 karakter, bir büyük harf ve bir rakam içermelidir)</p>
+          {errors.password && (
+            <p className="text-xs text-red-600">{errors.password.message}</p>
+          )}
           {/* Strength meter */}
-          {watchedPassword.length > 0 && (
+          {dirtyFields.password && watchedPassword.length > 0 && (
             <div className="space-y-1.5">
               <div className="flex gap-1">
                 {[1, 2, 3, 4, 5].map((i) => (
                   <div
                     key={i}
                     className={`h-1 flex-1 rounded-full transition-colors ${
-                      i <= strength.score ? strength.color : "bg-background-secondary"
+                      i <= strength.score
+                        ? strength.color
+                        : "bg-background-secondary"
                     }`}
                   />
                 ))}
               </div>
               {strength.label && (
-                <p className={`text-xs font-medium ${
-                  strength.score <= 2 ? "text-red-500" :
-                  strength.score === 3 ? "text-yellow-600" : "text-green-600"
-                }`}>
+                <p
+                  className={`text-xs font-medium ${
+                    strength.score <= 2
+                      ? "text-red-500"
+                      : strength.score === 3
+                        ? "text-yellow-600"
+                        : "text-green-600"
+                  }`}
+                >
                   {strength.label}
                 </p>
               )}
             </div>
           )}
-          {errors.password && <p className="text-xs text-red-600">{errors.password.message}</p>}
+          {errors.password && (
+            <p className="text-xs text-red-600">{errors.password.message}</p>
+          )}
         </div>
 
         {/* ── Section: Password Confirm ── */}
         <div className="space-y-1.5">
-          <Label htmlFor="passwordConfirm" className="text-sm font-medium text-foreground">
+          <Label
+            htmlFor="passwordConfirm"
+            className="text-sm font-medium text-foreground"
+          >
             Şifre Tekrar <span className="text-primary">*</span>
           </Label>
           <div className="relative">
-            <FieldIcon><Lock className="h-[18px] w-[18px]" /></FieldIcon>
+            <FieldIcon>
+              <Lock className="h-[18px] w-[18px]" />
+            </FieldIcon>
             <Input
               id="passwordConfirm"
               type={showPassword ? "text" : "password"}
               placeholder="Şifrenizi tekrar girin"
+              autoComplete="new-password"
               className={inputWithIconCls}
               {...register("passwordConfirm")}
             />
           </div>
-          {errors.passwordConfirm && <p className="text-xs text-red-600">{errors.passwordConfirm.message}</p>}
+          {errors.passwordConfirm && (
+            <p className="text-xs text-red-600">
+              {errors.passwordConfirm.message}
+            </p>
+          )}
         </div>
 
         {/* ── Collapsible: Ek Bilgiler ── */}
@@ -346,7 +452,10 @@ export function RegisterForm() {
             <div className="px-4 pb-4 pt-3 space-y-4 border-t border-border-soft bg-background">
               {/* VKN */}
               <div className="space-y-1.5">
-                <Label htmlFor="vkn" className="text-sm font-medium text-foreground">
+                <Label
+                  htmlFor="vkn"
+                  className="text-sm font-medium text-foreground"
+                >
                   Vergi Kimlik No (VKN)
                 </Label>
                 <Input
@@ -356,12 +465,17 @@ export function RegisterForm() {
                   className={inputCls}
                   {...register("vkn")}
                 />
-                {errors.vkn && <p className="text-xs text-red-600">{errors.vkn.message}</p>}
+                {errors.vkn && (
+                  <p className="text-xs text-red-600">{errors.vkn.message}</p>
+                )}
               </div>
 
               {/* Fatura Adresi */}
               <div className="space-y-1.5">
-                <Label htmlFor="billingAddress" className="text-sm font-medium text-foreground">
+                <Label
+                  htmlFor="billingAddress"
+                  className="text-sm font-medium text-foreground"
+                >
                   Fatura Adresi
                 </Label>
                 <Input
@@ -370,44 +484,66 @@ export function RegisterForm() {
                   className={inputCls}
                   {...register("billingAddress")}
                 />
-                {errors.billingAddress && <p className="text-xs text-red-600">{errors.billingAddress.message}</p>}
+                {errors.billingAddress && (
+                  <p className="text-xs text-red-600">
+                    {errors.billingAddress.message}
+                  </p>
+                )}
               </div>
 
               {/* Sektör + İlçe */}
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <Label className="text-sm font-medium text-foreground">Sektör</Label>
+                  <Label className="text-sm font-medium text-foreground">
+                    Sektör
+                  </Label>
                   <Select onValueChange={(v) => setValue("sector", v)}>
                     <SelectTrigger className={`${inputCls} px-3`}>
                       <SelectValue placeholder="Seçin" />
                     </SelectTrigger>
                     <SelectContent>
                       {SECTOR_OPTIONS.map((s) => (
-                        <SelectItem key={s} value={s}>{s}</SelectItem>
+                        <SelectItem key={s} value={s}>
+                          {s}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
-                  {errors.sector && <p className="text-xs text-red-600">{errors.sector.message}</p>}
+                  {errors.sector && (
+                    <p className="text-xs text-red-600">
+                      {errors.sector.message}
+                    </p>
+                  )}
                 </div>
                 <div className="space-y-1.5">
-                  <Label className="text-sm font-medium text-foreground">İlçe</Label>
+                  <Label className="text-sm font-medium text-foreground">
+                    İlçe
+                  </Label>
                   <Select onValueChange={(v) => setValue("district", v)}>
                     <SelectTrigger className={`${inputCls} px-3`}>
                       <SelectValue placeholder="Seçin" />
                     </SelectTrigger>
                     <SelectContent>
                       {Object.entries(DISTRICT_LABELS).map(([k, v]) => (
-                        <SelectItem key={k} value={k}>{v}</SelectItem>
+                        <SelectItem key={k} value={k}>
+                          {v}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
-                  {errors.district && <p className="text-xs text-red-600">{errors.district.message}</p>}
+                  {errors.district && (
+                    <p className="text-xs text-red-600">
+                      {errors.district.message}
+                    </p>
+                  )}
                 </div>
               </div>
 
               {/* Şirket Büyüklüğü — radio pills */}
               <div className="space-y-2">
-                <Label className="text-sm font-medium text-foreground">Şirket Büyüklüğü</Label>
+                <Label className="text-sm font-medium text-foreground">
+                  Şirket Büyüklüğü
+                </Label>
                 <div className="flex gap-2 flex-wrap">
                   {COMPANY_SIZE_OPTIONS.map((opt) => (
                     <label key={opt.value} className="cursor-pointer">
@@ -417,23 +553,32 @@ export function RegisterForm() {
                         className="sr-only peer"
                         {...register("companySize")}
                       />
-                      <span className="
+                      <span
+                        className="
                         block px-4 py-1.5 rounded-full text-sm font-medium border border-border-soft
                         bg-background-secondary text-muted
                         peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary
                         hover:border-primary/40 transition-all cursor-pointer
-                      ">
+                      "
+                      >
                         {opt.label}
                       </span>
                     </label>
                   ))}
                 </div>
-                {errors.companySize && <p className="text-xs text-red-600">{errors.companySize.message}</p>}
+                {errors.companySize && (
+                  <p className="text-xs text-red-600">
+                    {errors.companySize.message}
+                  </p>
+                )}
               </div>
 
               {/* Unvan */}
               <div className="space-y-1.5">
-                <Label htmlFor="contactTitle" className="text-sm font-medium text-foreground">
+                <Label
+                  htmlFor="contactTitle"
+                  className="text-sm font-medium text-foreground"
+                >
                   Unvan
                 </Label>
                 <Input
@@ -455,13 +600,18 @@ export function RegisterForm() {
             {...register("terms")}
           />
           <span className="text-sm text-muted leading-relaxed group-hover:text-foreground transition-colors">
-            <Link href="/terms" className="text-primary hover:text-primary font-medium underline">
+            <Link
+              href="/terms"
+              className="text-primary hover:text-primary font-medium underline"
+            >
               Kullanım koşullarını
             </Link>{" "}
             kabul ediyorum
           </span>
         </label>
-        {errors.terms && <p className="text-xs text-red-600 -mt-4">{errors.terms.message}</p>}
+        {errors.terms && (
+          <p className="text-xs text-red-600 -mt-4">{errors.terms.message}</p>
+        )}
 
         {/* ── Submit ── */}
         <Button

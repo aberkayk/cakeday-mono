@@ -14,7 +14,6 @@ export const paginationSchema = z.object({
 export type PaginationInput = z.infer<typeof paginationSchema>;
 
 const turkishPhoneRegex = /^\+90[5][0-9]{9}$/;
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 // ─── Auth Schemas ─────────────────────────────────────────────────────────────
 
@@ -23,7 +22,8 @@ export const registerSchema = z.object({
   vkn: z
     .string()
     .length(10, 'Vergi kimlik numarasi 10 haneli olmalidir.')
-    .regex(/^\d{10}$/, 'VKN yalnizca rakam icermelidir.'),
+    .regex(/^\d{10}$/, 'VKN yalnizca rakam icermelidir.')
+    .optional(),
   sector: z.string().optional(),
   company_size_range: z.string().optional(),
   primary_contact_name: z.string().min(2, 'Ad Soyad en az 2 karakter olmalidir.'),
@@ -34,13 +34,9 @@ export const registerSchema = z.object({
     .regex(turkishPhoneRegex, 'Gecerli bir Turk cep telefonu giriniz. (+905XXXXXXXXX)'),
   password: z
     .string()
-    .min(8, 'Sifre en az 8 karakter olmalidir.')
-    .regex(
-      passwordRegex,
-      'Sifre en az bir buyuk harf, bir kucuk harf, bir rakam ve bir ozel karakter icermelidir.',
-    ),
-  billing_address: z.string().min(10, 'Fatura adresi en az 10 karakter olmalidir.'),
-  billing_district: z.enum(['besiktas', 'sariyer']),
+    .min(8, 'Sifre en az 8 karakter olmalidir.'),
+  billing_address: z.string().optional(),
+  billing_district: z.string().optional(),
   kvkk_accepted: z.literal(true, {
     errorMap: () => ({ message: 'KVKK metnini kabul etmelisiniz.' }),
   }),
@@ -82,11 +78,7 @@ export const resetPasswordSchema = z.object({
   token: z.string().min(1, 'Sifre sifirlama tokeni gereklidir.'),
   new_password: z
     .string()
-    .min(8, 'Sifre en az 8 karakter olmalidir.')
-    .regex(
-      passwordRegex,
-      'Sifre en az bir buyuk harf, bir kucuk harf, bir rakam ve bir ozel karakter icermelidir.',
-    ),
+    .min(8, 'Sifre en az 8 karakter olmalidir.'),
 });
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 
@@ -95,11 +87,7 @@ export const acceptInvitationSchema = z.object({
   full_name: z.string().min(2, 'Ad Soyad en az 2 karakter olmalidir.'),
   password: z
     .string()
-    .min(8, 'Sifre en az 8 karakter olmalidir.')
-    .regex(
-      passwordRegex,
-      'Sifre en az bir buyuk harf, bir kucuk harf, bir rakam ve bir ozel karakter icermelidir.',
-    ),
+    .min(8, 'Sifre en az 8 karakter olmalidir.'),
   phone: z
     .string()
     .regex(turkishPhoneRegex, 'Gecerli bir Turk cep telefonu giriniz.')

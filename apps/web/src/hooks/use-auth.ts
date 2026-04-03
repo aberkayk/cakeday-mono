@@ -60,6 +60,7 @@ export function useAuth() {
       companySize?: string;
       billingAddress?: string;
       district?: string;
+      kvkkAccepted: boolean;
     }) => {
       const res = await authApi.register({
         email: data.email,
@@ -72,6 +73,7 @@ export function useAuth() {
         company_size_range: data.companySize,
         billing_address: data.billingAddress,
         billing_district: data.district,
+        kvkk_accepted: data.kvkkAccepted,
       });
       return res;
     },

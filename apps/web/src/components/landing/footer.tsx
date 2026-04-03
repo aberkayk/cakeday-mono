@@ -5,7 +5,7 @@ export function Footer() {
   return (
     <footer className="bg-background-secondary text-muted-foreground py-16">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 justify-items-center gap-10 mb-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2.5 mb-4">
@@ -22,9 +22,7 @@ export function Footer() {
 
           {/* Ürün */}
           <div>
-            <p className="text-sm font-semibold text-foreground mb-4">
-              Ürün
-            </p>
+            <p className="text-sm font-semibold text-foreground mb-4">Ürün</p>
             <ul className="space-y-2 text-sm">
               {["Özellikler", "Ücretlendirme", "Nasıl Çalışır", "Kaydol"].map(
                 (item) => (
@@ -43,16 +41,11 @@ export function Footer() {
 
           {/* Şirket */}
           <div>
-            <p className="text-sm font-semibold text-foreground mb-4">
-              Şirket
-            </p>
+            <p className="text-sm font-semibold text-foreground mb-4">Şirket</p>
             <ul className="space-y-2 text-sm">
               {["Hakkımızda", "Blog", "Kariyer", "İletişim"].map((item) => (
                 <li key={item}>
-                  <a
-                    href="#"
-                    className="hover:text-primary transition-colors"
-                  >
+                  <a href="#" className="hover:text-primary transition-colors">
                     {item}
                   </a>
                 </li>
@@ -62,9 +55,7 @@ export function Footer() {
 
           {/* Destek */}
           <div>
-            <p className="text-sm font-semibold text-foreground mb-4">
-              Destek
-            </p>
+            <p className="text-sm font-semibold text-foreground mb-4">Destek</p>
             <ul className="space-y-2 text-sm">
               {[
                 "Gizlilik Politikası",
@@ -73,10 +64,7 @@ export function Footer() {
                 "Çerez Politikası",
               ].map((item) => (
                 <li key={item}>
-                  <a
-                    href="#"
-                    className="hover:text-primary transition-colors"
-                  >
+                  <a href="#" className="hover:text-primary transition-colors">
                     {item}
                   </a>
                 </li>
@@ -88,22 +76,13 @@ export function Footer() {
         <div className="border-t border-foreground/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-muted-foreground/60">
           <p>© 2026 CakeDay | Tüm Hakları Saklıdır.</p>
           <div className="flex gap-6">
-            <a
-              href="#"
-              className="hover:text-foreground transition-colors"
-            >
+            <a href="#" className="hover:text-foreground transition-colors">
               Gizlilik
             </a>
-            <a
-              href="#"
-              className="hover:text-foreground transition-colors"
-            >
+            <a href="#" className="hover:text-foreground transition-colors">
               Şartlar
             </a>
-            <a
-              href="#"
-              className="hover:text-foreground transition-colors"
-            >
+            <a href="#" className="hover:text-foreground transition-colors">
               KVKK
             </a>
           </div>

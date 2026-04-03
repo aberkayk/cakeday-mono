@@ -3,14 +3,26 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { X, LayoutDashboard, Users, ShoppingBag, ListChecks, CreditCard, Settings } from "lucide-react";
+import {
+  X,
+  LayoutDashboard,
+  Users,
+  ShoppingBag,
+  ListChecks,
+  CreditCard,
+  Settings,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
   { href: "/dashboard", label: "Genel Bakış", icon: LayoutDashboard },
   { href: "/dashboard/employees", label: "Çalışanlar", icon: Users },
-  { href: "/dashboard/ordering-rules", label: "Sipariş Kuralları", icon: ListChecks },
+  {
+    href: "/dashboard/ordering-rules",
+    label: "Sipariş Kuralları",
+    icon: ListChecks,
+  },
   { href: "/dashboard/orders", label: "Siparişler", icon: ShoppingBag },
   { href: "/dashboard/billing", label: "Faturalama", icon: CreditCard },
   { href: "/dashboard/settings", label: "Ayarlar", icon: Settings },
@@ -53,7 +65,9 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
             <div className="flex items-center justify-center w-9 h-9 rounded-xl gradient-primary text-white shadow-sm">
               <span className="text-lg leading-none">🎂</span>
             </div>
-            <span className="text-xl font-bold text-foreground tracking-tight font-headline">CakeDay</span>
+            <span className="text-xl font-bold text-foreground tracking-tight font-headline">
+              CakeDay
+            </span>
           </div>
           <Button
             variant="ghost"
@@ -81,14 +95,14 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
                 className={cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150",
                   isActive
-                    ? "bg-primary/20 text-primary border-l-[3px] border-primary pl-[9px]"
-                    : "text-muted hover:bg-background-secondary hover:text-foreground"
+                    ? "bg-primary/50 text-primary border-l-[3px] border-primary pl-[9px]"
+                    : "text-muted hover:bg-background-secondary hover:text-foreground",
                 )}
               >
                 <Icon
                   className={cn(
                     "h-4 w-4 shrink-0",
-                    isActive ? "text-primary" : "text-muted"
+                    isActive ? "text-primary" : "text-muted",
                   )}
                 />
                 {item.label}

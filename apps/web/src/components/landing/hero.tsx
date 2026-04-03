@@ -8,7 +8,7 @@ export function HeroSection() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left */}
-          <div>
+          <div className="text-center lg:text-start">
             {/* Badge */}
             <div className="inline-flex items-center gap-2 rounded-full bg-accent px-4 py-1.5 text-sm font-medium text-accent-foreground mb-8">
               <span>🎂</span>
@@ -24,13 +24,13 @@ export function HeroSection() {
             </h1>
 
             {/* Description */}
-            <p className="text-lg text-muted leading-relaxed mb-8 max-w-lg">
+            <p className="text-lg text-muted leading-relaxed mb-8 max-w-lg mx-auto">
               CakeDay, çalışanlarınızın doğum günü kutlamalarını tamamen
               otomatikleştirir. Siz kuralları belirleyin, biz pastayı kapıya
               teslim edelim.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 mb-10">
+            <div className="flex flex-col sm:flex-row gap-4 mb-10 justify-center lg:justify-start">
               <Button asChild size="lg" className="px-10 font-bold">
                 <Link href="/register">Hemen Başla</Link>
               </Button>
@@ -45,7 +45,7 @@ export function HeroSection() {
             </div>
 
             {/* Social proof */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center lg:justify-start gap-3">
               <div className="inline-flex items-center gap-2 bg-background-secondary px-4 py-2 rounded-full">
                 <span className="text-sm text-muted">
                   📍 Şimdilik İstanbul&apos;da belirlenen ilçelerde aktif
@@ -55,7 +55,7 @@ export function HeroSection() {
           </div>
 
           {/* Right: Glass card mockup */}
-          <div className="hidden lg:flex items-center justify-center relative">
+          <div className="flex items-center justify-center relative">
             {/* Decorative blur circle */}
             <div className="absolute w-72 h-72 rounded-full opacity-20 blur-3xl bg-gradient-to-br from-primary-container to-secondary" />
 

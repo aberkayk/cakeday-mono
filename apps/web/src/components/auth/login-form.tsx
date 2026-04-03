@@ -91,7 +91,7 @@ export function LoginForm() {
               id="password"
               type={showPassword ? "text" : "password"}
               placeholder="••••••••"
-              autoComplete="current-password"
+              autoComplete="off"
               className="pl-10 pr-11 h-12 rounded-xl border-border-soft bg-background-secondary focus:bg-background text-foreground placeholder:text-muted focus-visible:ring-primary focus-visible:ring-offset-0"
               {...register("password")}
             />

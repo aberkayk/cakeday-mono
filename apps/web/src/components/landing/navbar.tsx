@@ -83,11 +83,15 @@ export function NavBar() {
 
         {/* Right CTA — desktop */}
         <div className="hidden lg:flex items-center gap-2 flex-1 justify-end">
-          <Button asChild variant="ghost">
+          <Button
+            asChild
+            variant="outline"
+            className="text-background/70 hover:text-background border-background/70 hover:border-background"
+          >
             <Link href="/login">Giriş Yap</Link>
           </Button>
           <Button asChild variant="default">
-            <Link href="/register">Kutlamaya Başla</Link>
+            <Link href="/register">Kayıt Ol</Link>
           </Button>
         </div>
 
@@ -107,7 +111,7 @@ export function NavBar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="lg:hidden mt-2 bg-background-secondary rounded-2xl px-4 py-3 space-y-1 w-full max-w-3xl shadow-ambient">
+        <div className="lg:hidden mt-2 bg-background-secondary rounded-2xl px-4 py-3 space-y-1 w-full max-w-3xl shadow-ambient border border-border">
           {navItems.map((item) => {
             const isActive = activeSection === item.href;
             return (
@@ -116,7 +120,7 @@ export function NavBar() {
                 href={item.href}
                 className={`block text-sm font-medium py-2 px-3 rounded-lg ${
                   isActive
-                    ? "bg-primary/10 text-background"
+                    ? "bg-primary/10 text-primary"
                     : "text-muted-foreground hover:text-foreground hover:bg-foreground/5"
                 }`}
                 onClick={() => setMobileOpen(false)}
@@ -125,15 +129,18 @@ export function NavBar() {
               </a>
             );
           })}
-          <div className="pt-2 flex flex-col gap-2 border-t border-foreground/5 mt-2">
-            <Link
-              href="/login"
-              className="block text-center text-sm font-medium text-muted-foreground py-2"
+          <div className="pt-2 flex flex-col gap-2 border-t border-foreground/5 mt-2 items-center">
+            <Button variant="outline" asChild>
+              <Link href="/login" className="w-full max-w-64 font-bold">
+                Giriş Yap
+              </Link>
+            </Button>
+            <Button
+              asChild
+              variant="default"
+              className="w-full max-w-64 font-bold"
             >
-              Giriş Yap
-            </Link>
-            <Button asChild variant="default" className="w-full font-bold">
-              <Link href="/register">Kutlamaya Başla</Link>
+              <Link href="/register">Kayıt Ol</Link>
             </Button>
           </div>
         </div>
