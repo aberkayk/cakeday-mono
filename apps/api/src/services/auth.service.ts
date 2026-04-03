@@ -1,21 +1,26 @@
-import { db } from '../config/database';
-import { supabase, supabaseAdmin } from '../config/supabase';
-import { profiles, companies, companyMemberships, companySettings } from '../db/schema';
-import { eq } from 'drizzle-orm';
+import { db } from "../config/database";
+import { supabase, supabaseAdmin } from "../config/supabase";
+import {
+  profiles,
+  companies,
+  companyMemberships,
+  companySettings,
+} from "../db/schema";
+import { eq } from "drizzle-orm";
 import {
   UnauthorizedError,
   NotFoundError,
   ConflictError,
   BadRequestError,
-} from '../utils/errors';
-import { emailService } from './email.service';
+} from "../utils/errors";
+import { emailService } from "./email.service";
 import type {
   RegisterInput,
   LoginInput,
   ForgotPasswordInput,
   ResetPasswordInput,
-} from '@cakeday/shared';
-import { env } from '../config/env';
+} from "@cakeday/shared";
+import { env } from "../config/env";
 
 export class AuthService {
   /**
@@ -31,26 +36,32 @@ export class AuthService {
         .limit(1);
 
       if (existingCompany) {
-        throw new ConflictError('Bu vergi kimlik numarasina sahip bir sirket zaten kayitlidir.');
+        throw new ConflictError(
+          "Bu vergi kimlik numarasina sahip bir sirket zaten kayitlidir.",
+        );
       }
     }
 
     // Create Supabase auth user
-    const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
-      email: input.email,
-      password: input.password,
-      email_confirm: false, // user must verify
-      user_metadata: {
-        full_name: input.primary_contact_name,
-        phone: input.phone,
-      },
-    });
+    const { data: authData, error: authError } =
+      await supabaseAdmin.auth.admin.createUser({
+        email: input.email,
+        password: input.password,
+        // TODO: Remove this when we have a proper email verification flow
+        email_confirm: env.NODE_ENV !== "development", // auto-confirm in dev
+        user_metadata: {
+          full_name: input.primary_contact_name,
+          phone: input.phone,
+        },
+      });
 
     if (authError || !authData.user) {
-      if (authError?.message?.includes('already registered')) {
-        throw new ConflictError('Bu e-posta adresi zaten kullanilmaktadir.');
+      if (authError?.message?.includes("already registered")) {
+        throw new ConflictError("Bu e-posta adresi zaten kullanilmaktadir.");
       }
-      throw new BadRequestError(authError?.message ?? 'Kullanici olusturulamadi.');
+      throw new BadRequestError(
+        authError?.message ?? "Kullanici olusturulamadi.",
+      );
     }
 
     const userId = authData.user.id;
@@ -69,8 +80,10 @@ export class AuthService {
           primary_contact_email: input.email,
           primary_contact_phone: input.phone,
           billing_address: input.billing_address || undefined,
-          billing_district: (input.billing_district || undefined) as typeof companies.billing_district._.data | undefined,
-          status: 'pending_verification',
+          billing_district: (input.billing_district || undefined) as
+            | typeof companies.billing_district._.data
+            | undefined,
+          status: "pending_verification",
           kvkk_accepted_at: new Date(),
         })
         .returning();
@@ -79,13 +92,13 @@ export class AuthService {
         id: userId,
         full_name: input.primary_contact_name,
         phone: input.phone,
-        role: 'company_owner',
+        role: "company_owner",
       });
 
       await db.insert(companyMemberships).values({
         user_id: userId,
         company_id: newCompany.id,
-        role: 'company_owner',
+        role: "company_owner",
       });
 
       // Create default company settings
@@ -95,31 +108,35 @@ export class AuthService {
 
       // 4. Generate verification link and send email
       try {
-        const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
-          type: 'signup',
-          email: input.email,
-          password: input.password,
-        });
+        const { data: linkData, error: linkError } =
+          await supabaseAdmin.auth.admin.generateLink({
+            type: "signup",
+            email: input.email,
+            password: input.password,
+          });
 
         if (linkError) {
-          console.error('Failed to generate verification link:', linkError.message);
+          console.error(
+            "Failed to generate verification link:",
+            linkError.message,
+          );
         } else if (linkData.properties?.hashed_token) {
           await emailService.sendVerificationEmail(
             input.email,
             input.primary_contact_name,
-            linkData.properties.hashed_token
+            linkData.properties.hashed_token,
           );
         }
       } catch (emailErr) {
         // Non-fatal error for the registration itself, but log it
-        console.error('Registration email sending failed:', emailErr);
+        console.error("Registration email sending failed:", emailErr);
       }
 
       return {
         user_id: userId,
         company_id: newCompany.id,
         email: input.email,
-        message: 'Kayit basarili. Lutfen e-postanizi dogrulayin.',
+        message: "Kayit basarili. Lutfen e-postanizi dogrulayin.",
       };
     } catch (err) {
       // Rollback: remove auth user if DB insert failed
@@ -138,7 +155,7 @@ export class AuthService {
     });
 
     if (error || !data.session) {
-      throw new UnauthorizedError('E-posta adresi veya sifre yanlis.');
+      throw new UnauthorizedError("E-posta adresi veya sifre yanlis.");
     }
 
     const [profile] = await db
@@ -148,12 +165,12 @@ export class AuthService {
       .limit(1);
 
     if (!profile) {
-      throw new NotFoundError('User profile');
+      throw new NotFoundError("User profile");
     }
 
     // Get company membership if applicable
     let company_id: string | null = null;
-    if (profile.role !== 'bakery_admin' && profile.role !== 'platform_admin') {
+    if (profile.role !== "bakery_admin" && profile.role !== "platform_admin") {
       const [membership] = await db
         .select({ company_id: companyMemberships.company_id })
         .from(companyMemberships)
@@ -191,9 +208,12 @@ export class AuthService {
       }
     } catch (err) {
       // Non-fatal — token may already be expired or invalid
-      console.warn('Logout warning:', err instanceof Error ? err.message : String(err));
+      console.warn(
+        "Logout warning:",
+        err instanceof Error ? err.message : String(err),
+      );
     }
-    return { message: 'Basariyla cikis yapildi.' };
+    return { message: "Basariyla cikis yapildi." };
   }
 
   /**
@@ -206,12 +226,12 @@ export class AuthService {
 
     if (error) {
       // Don't reveal whether email exists
-      console.warn('Forgot password error:', error.message);
+      console.warn("Forgot password error:", error.message);
     }
 
     return {
       message:
-        'Sifre sifirlama baglantisi e-posta adresinize gonderildi (e-posta kayitliysa).',
+        "Sifre sifirlama baglantisi e-posta adresinize gonderildi (e-posta kayitliysa).",
     };
   }
 
@@ -221,14 +241,16 @@ export class AuthService {
   async verifyEmail(token: string) {
     const { error } = await supabaseAdmin.auth.verifyOtp({
       token_hash: token,
-      type: 'email',
+      type: "email",
     });
 
     if (error) {
-      throw new BadRequestError('Dogrulama basarisiz. Token gecersiz veya suresi dolmus olabilir.');
+      throw new BadRequestError(
+        "Dogrulama basarisiz. Token gecersiz veya suresi dolmus olabilir.",
+      );
     }
 
-    return { message: 'E-posta adresiniz basariyla dogrulandi.' };
+    return { message: "E-posta adresiniz basariyla dogrulandi." };
   }
 
   /**
@@ -236,15 +258,20 @@ export class AuthService {
    */
   async resetPassword(input: ResetPasswordInput) {
     // The token here is the access_token from the reset link
-    const { error } = await supabaseAdmin.auth.admin.updateUserById(input.token, {
-      password: input.new_password,
-    });
+    const { error } = await supabaseAdmin.auth.admin.updateUserById(
+      input.token,
+      {
+        password: input.new_password,
+      },
+    );
 
     if (error) {
-      throw new BadRequestError('Sifre sifirlanamadi. Token gecersiz veya suresi dolmus olabilir.');
+      throw new BadRequestError(
+        "Sifre sifirlanamadi. Token gecersiz veya suresi dolmus olabilir.",
+      );
     }
 
-    return { message: 'Sifreniz basariyla guncellendi.' };
+    return { message: "Sifreniz basariyla guncellendi." };
   }
 
   /**
@@ -258,13 +285,13 @@ export class AuthService {
       .limit(1);
 
     if (!profile) {
-      throw new NotFoundError('User profile');
+      throw new NotFoundError("User profile");
     }
 
     let company_id: string | null = null;
     let membership_role = profile.role;
 
-    if (profile.role !== 'bakery_admin' && profile.role !== 'platform_admin') {
+    if (profile.role !== "bakery_admin" && profile.role !== "platform_admin") {
       const [membership] = await db
         .select()
         .from(companyMemberships)
