@@ -4,7 +4,7 @@ import { Calendar, MapPin, Cake, XCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatDate, formatCurrency, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS, CAKE_SIZE_LABELS, DISTRICT_LABELS } from "@/lib/utils";
-import type { Order } from "@cakeday/shared";
+import type { Order } from "@/lib/shared";
 
 interface OrderCardProps {
   order: Order;

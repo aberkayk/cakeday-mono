@@ -28,7 +28,7 @@ import {
 import { catalogueApi, bakeryApi } from "@/lib/api";
 import { formatCurrency, CAKE_SIZE_LABELS } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
-import type { CakeType } from "@cakeday/shared";
+import type { CakeType } from "@/lib/shared";
 
 const MOCK_CURRENT_PRICES: Record<string, Record<string, number>> = {
   small: { default: 280 },

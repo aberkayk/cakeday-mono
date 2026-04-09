@@ -20,7 +20,7 @@ import {
 import { companyApi } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import { SECTOR_OPTIONS, COMPANY_SIZE_LABELS } from "@/lib/utils";
-import type { Company } from "@cakeday/shared";
+import type { Company } from "@/lib/shared";
 
 const schema = z.object({
   name: z.string().min(1, "Şirket adı gerekli."),

@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { formatBirthday, DISTRICT_LABELS, getInitials } from "@/lib/utils";
-import type { Employee } from "@cakeday/shared";
+import type { Employee } from "@/lib/shared";
 import Link from "next/link";
 
 interface EmployeeTableProps {

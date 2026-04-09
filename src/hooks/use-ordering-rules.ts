@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { rulesApi } from "@/lib/api";
-import type { OrderingRule } from "@cakeday/shared";
+import type { OrderingRule } from "@/lib/shared";
 
 export function useOrderingRules() {
   const [rules, setRules] = useState<OrderingRule[]>([]);

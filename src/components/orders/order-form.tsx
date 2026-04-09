@@ -19,7 +19,7 @@ import {
 import { CakeSelector } from "./cake-selector";
 import { catalogueApi } from "@/lib/api";
 import { DISTRICT_LABELS } from "@/lib/utils";
-import type { CakeType } from "@cakeday/shared";
+import type { CakeType } from "@/lib/shared";
 
 const schema = z.object({
   recipient_name: z.string().min(1, "Alıcı adı gerekli."),

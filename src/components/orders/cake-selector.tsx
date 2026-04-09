@@ -3,7 +3,7 @@
 import { Check } from "lucide-react";
 import { cn, CAKE_SIZE_LABELS, formatCurrency } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import type { CakeType } from "@cakeday/shared";
+import type { CakeType } from "@/lib/shared";
 
 interface CakeSelectorProps {
   cakeTypes: CakeType[];

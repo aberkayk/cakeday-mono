@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { getInitials, formatBirthday } from "@/lib/utils";
-import type { Employee } from "@cakeday/shared";
+import type { Employee } from "@/lib/shared";
 import { differenceInDays, parseISO, setYear, isAfter } from "date-fns";
 import Link from "next/link";
 

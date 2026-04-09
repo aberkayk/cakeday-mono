@@ -3,7 +3,7 @@
 import { ShoppingBag } from "lucide-react";
 import { OrderCard } from "./order-card";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { Order } from "@cakeday/shared";
+import type { Order } from "@/lib/shared";
 
 interface OrderListProps {
   orders: Order[];

@@ -99,7 +99,7 @@ import type {
   SubscriptionPlan,
   Invoice,
   PriceChangeRequest,
-} from "@cakeday/shared";
+} from "@/lib/shared";
 
 // Auth
 export const authApi = {

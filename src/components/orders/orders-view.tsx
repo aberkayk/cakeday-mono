@@ -14,7 +14,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import type { Order } from "@cakeday/shared";
+import type { Order } from "@/lib/shared";
 
 const TABS = [
   { value: "upcoming", label: "Yaklaşan", statuses: ["draft", "pending_approval", "confirmed"], color: "bg-blue-50 text-blue-700" },

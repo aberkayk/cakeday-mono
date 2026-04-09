@@ -24,7 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CAKE_SIZE_LABELS } from "@/lib/utils";
-import type { OrderingRule } from "@cakeday/shared";
+import type { OrderingRule } from "@/lib/shared";
 
 const schema = z.object({
   name: z.string().min(1, "Kural adı gerekli."),

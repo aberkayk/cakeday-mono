@@ -14,7 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Loader2, AlertTriangle } from "lucide-react";
 import { useEmployees } from "@/hooks/use-employees";
-import type { Employee } from "@cakeday/shared";
+import type { Employee } from "@/lib/shared";
 
 export function EmployeesView() {
   const {

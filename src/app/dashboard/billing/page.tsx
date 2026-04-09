@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/table";
 import { billingApi } from "@/lib/api";
 import { formatDate, formatCurrency } from "@/lib/utils";
-import type { Invoice } from "@cakeday/shared";
+import type { Invoice } from "@/lib/shared";
 
 const PAYMENT_STATUS_LABELS: Record<string, string> = {
   pending: "Bekliyor",

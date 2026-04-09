@@ -14,7 +14,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { formatDate, formatCurrency, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS, CAKE_SIZE_LABELS, DISTRICT_LABELS } from "@/lib/utils";
-import type { Order } from "@cakeday/shared";
+import type { Order } from "@/lib/shared";
 
 interface BakeryOrderCardProps {
   order: Order;

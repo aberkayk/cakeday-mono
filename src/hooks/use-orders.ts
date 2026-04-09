@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { ordersApi, bakeryApi } from "@/lib/api";
-import type { Order } from "@cakeday/shared";
+import type { Order } from "@/lib/shared";
 
 export function useOrders() {
   const [orders, setOrders] = useState<Order[]>([]);

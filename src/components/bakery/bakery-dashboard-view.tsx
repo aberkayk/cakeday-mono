@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBakeryOrders } from "@/hooks/use-orders";
 import { formatDate, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS, formatCurrency } from "@/lib/utils";
-import type { Order } from "@cakeday/shared";
+import type { Order } from "@/lib/shared";
 
 export function BakeryDashboardView() {
   const { orders, isLoading, fetchOrders } = useBakeryOrders();

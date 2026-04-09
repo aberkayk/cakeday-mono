@@ -15,7 +15,7 @@ import { useOrderingRules } from "@/hooks/use-ordering-rules";
 import { RuleCard } from "@/components/rules/rule-card";
 import { RuleForm } from "@/components/rules/rule-form";
 import { useToast } from "@/hooks/use-toast";
-import type { OrderingRule } from "@cakeday/shared";
+import type { OrderingRule } from "@/lib/shared";
 
 export function OrderingRulesView() {
   const { rules, isLoading, fetchRules, createRule, updateRule, deleteRule } = useOrderingRules();

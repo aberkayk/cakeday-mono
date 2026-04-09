@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { employeesApi } from "@/lib/api";
-import type { Employee } from "@cakeday/shared";
+import type { Employee } from "@/lib/shared";
 
 interface UseEmployeesOptions {
   initialPage?: number;

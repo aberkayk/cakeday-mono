@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { DISTRICT_LABELS, CAKE_SIZE_LABELS } from "@/lib/utils";
-import type { Employee } from "@cakeday/shared";
+import type { Employee } from "@/lib/shared";
 
 const schema = z.object({
   first_name: z.string().min(1, "Ad gerekli."),

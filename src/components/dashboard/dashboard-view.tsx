@@ -12,7 +12,7 @@ import { useEmployees } from "@/hooks/use-employees";
 import { useOrders } from "@/hooks/use-orders";
 import { useAuth } from "@/hooks/use-auth";
 import { formatDate, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS, formatCurrency } from "@/lib/utils";
-import type { Order } from "@cakeday/shared";
+import type { Order } from "@/lib/shared";
 
 export function DashboardView() {
   const { employees, totalCount: totalEmployees, fetchEmployees, isLoading: empLoading } = useEmployees({ pageSize: 100 });

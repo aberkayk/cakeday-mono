@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { CAKE_SIZE_LABELS } from "@/lib/utils";
-import type { OrderingRule } from "@cakeday/shared";
+import type { OrderingRule } from "@/lib/shared";
 
 const RULE_TYPE_CONFIG: Record<string, { label: string; color: string; borderColor: string; icon: React.ElementType; badgeBg: string }> = {
   all_birthdays: {

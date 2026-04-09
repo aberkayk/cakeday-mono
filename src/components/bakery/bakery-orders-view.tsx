@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ShoppingBag } from "lucide-react";
 import { useBakeryOrders } from "@/hooks/use-orders";
 import { useToast } from "@/hooks/use-toast";
-import type { Order } from "@cakeday/shared";
+import type { Order } from "@/lib/shared";
 
 const TABS = [
   { value: "new", label: "Yeni", statuses: ["assigned"] },
