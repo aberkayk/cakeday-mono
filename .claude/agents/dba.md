@@ -54,14 +54,12 @@ Create database design documents under `docs/architecture/`:
 
 ## Migration Format
 
-```sql
--- Migration: [number]_[description].sql
--- Up
-CREATE TABLE ...;
-CREATE INDEX ...;
+Use Drizzle Kit for migrations. Schema files are at `src/lib/db/schema/`.
+Config at `drizzle.config.ts` in repo root.
 
--- Down
-DROP TABLE ...;
+```bash
+pnpm drizzle-kit generate  # generate migration
+pnpm drizzle-kit push       # apply to DB
 ```
 
 ## Rules
@@ -74,3 +72,4 @@ DROP TABLE ...;
 - Encrypt sensitive data (PII, passwords)
 - Define backup and recovery strategy
 - Provide connection pooling recommendations
+- Schema definitions use Drizzle ORM TypeScript syntax (not raw SQL)

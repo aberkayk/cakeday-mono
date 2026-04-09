@@ -4,34 +4,54 @@ B2B birthday cake delivery platform for the Turkish market. Automates employee b
 
 ## Project Structure
 
+Single Next.js application (no monorepo).
+
 ```
-apps/
-├── web/              # Next.js 16 — Customer portal + Bakery portal
-├── admin/            # Next.js 16 — Admin dashboard
-└── api/              # Express.js — Backend API
-packages/
-└── shared/           # Shared types, utils, Zod schemas
+src/
+├── app/
+│   ├── (auth)/             # Login, register, forgot-password, verify-email
+│   ├── (dashboard)/        # Company portal: orders, employees, rules, billing, settings
+│   ├── (bakery)/           # Bakery portal: orders, pricing, settings
+│   ├── (admin)/            # Platform admin: companies, bakeries, orders, catalogue, settings
+│   └── api/v1/             # REST endpoints (webhooks, cron, health)
+├── actions/                # Server Actions (UI mutations)
+├── lib/
+│   ├── db/                 # Drizzle schema, connection, migrations
+│   ├── services/           # Business logic layer (pure functions)
+│   ├── shared/             # Types, Zod schemas, constants
+│   ├── supabase/           # Supabase client (server + browser)
+│   └── utils/              # Utility functions
+├── components/             # UI components (shadcn/ui + custom)
+├── hooks/                  # React hooks
+├── stores/                 # Zustand stores
+└── middleware.ts           # Auth + role-based route guard
 docs/
-├── architecture/     # ADRs, tech stack, DB schema
-├── requirements/     # User stories, requirements
-├── design/           # UI/UX design documents
-├── api/              # API documentation (OpenAPI)
-└── testing/          # Test plans and reports
+├── architecture/           # ADRs, tech stack, DB schema
+├── requirements/           # User stories, requirements
+├── design/                 # UI/UX design documents
+├── api/                    # API documentation (OpenAPI)
+└── testing/                # Test plans and reports
 ```
 
 ## Tech Stack
 
 See `docs/architecture/tech-stack.md` for full details.
 
-- **Frontend:** Next.js 16 + TypeScript + Tailwind + shadcn/ui
-- **Backend:** Express.js + TypeScript
+- **Framework:** Next.js 15 + TypeScript + Tailwind + shadcn/ui
+- **Backend:** Next.js Server Actions + API Routes (hybrid)
 - **Database:** PostgreSQL via Supabase
 - **ORM:** Drizzle
 - **Auth:** Supabase Auth
 - **Payments:** iyzico
 - **Notifications:** Email (Resend) + WhatsApp
-- **Hosting:** Vercel (frontend) + Railway (backend)
-- **Monorepo:** Turborepo + pnpm
+- **Package Manager:** pnpm
+
+## Architecture
+
+- **Server Actions** for all UI-triggered mutations
+- **API Routes** only for external access: webhooks, cron, health
+- **Server Components** read data via service layer directly
+- **Service layer** (`src/lib/services/`) = pure functions, no framework dependency
 
 ## Conventions
 
@@ -43,7 +63,7 @@ See `docs/architecture/tech-stack.md` for full details.
 
 ## Agent Usage
 
-Agents are defined in `.Codex/agents/`. To run:
+Agents are defined in `.claude/agents/`. To run:
 ```
 Run PM agent: [task description]
 ```

@@ -40,12 +40,12 @@ Scan these areas in every review:
 
 ### Additional Checks
 - [ ] Sensitive data exposure (PII, secrets, tokens)
-- [ ] CORS configuration
-- [ ] Rate limiting
-- [ ] Input sanitization
+- [ ] Rate limiting (Next.js middleware level)
+- [ ] Input sanitization (Zod schemas in Server Actions)
 - [ ] Error message information leakage
-- [ ] HTTP security headers
+- [ ] HTTP security headers (Next.js config)
 - [ ] Dependency vulnerabilities (npm audit / snyk)
+- [ ] Server Action authorization (every action must verify auth + role)
 
 ## Report Format
 

@@ -41,25 +41,33 @@ jobs:
   lint:        # Code quality check
   test:        # Unit + integration tests
   security:    # Security scan
-  build:       # Docker image build
+  build:       # Next.js build
   deploy-stg:  # Staging deployment
   deploy-prod: # Production deployment (manual approval)
 ```
 
+## Architecture Note
+
+This is a single Next.js application. No monorepo, no separate backend deployment.
+- Single build artifact (`next build`)
+- Single deployment target
+- Health check at `/api/v1/health`
+- Cron jobs via API routes at `/api/v1/cron/*` — trigger mechanism TBD
+
 ## Docker Structure
 
 ```dockerfile
-# Multi-stage build
+# Multi-stage build for Next.js standalone
 FROM node:20-alpine AS builder
-# build stage
+# pnpm install + next build
 
 FROM node:20-alpine AS runner
-# production stage — minimal image
+# copy .next/standalone + public + static
 ```
 
 ## Monitoring
 
-- Health check endpoints
+- Health check endpoint: `/api/v1/health`
 - Application metrics (response time, error rate, throughput)
 - Infrastructure metrics (CPU, memory, disk)
 - Log aggregation
