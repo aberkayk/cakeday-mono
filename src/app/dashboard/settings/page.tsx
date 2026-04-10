@@ -15,7 +15,7 @@ export default async function SettingsPage() {
 
   return (
     <SettingsView
-      company={company as Parameters<typeof SettingsView>[0]["company"]}
+      company={company as unknown as Parameters<typeof SettingsView>[0]["company"]}
     />
   );
 }

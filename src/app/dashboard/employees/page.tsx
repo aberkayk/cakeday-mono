@@ -19,7 +19,7 @@ export default async function EmployeesPage() {
 
   return (
     <EmployeesView
-      initialEmployees={result.data as Parameters<typeof EmployeesView>[0]["initialEmployees"]}
+      initialEmployees={result.data as unknown as Parameters<typeof EmployeesView>[0]["initialEmployees"]}
       totalCount={result.meta.totalCount}
     />
   );

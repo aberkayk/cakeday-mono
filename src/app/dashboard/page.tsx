@@ -21,9 +21,9 @@ export default async function DashboardPage() {
 
   return (
     <DashboardView
-      employees={employeesResult.data as Parameters<typeof DashboardView>[0]["employees"]}
+      employees={employeesResult.data as unknown as Parameters<typeof DashboardView>[0]["employees"]}
       totalEmployees={employeesResult.meta.totalCount}
-      recentOrders={ordersResult.data as Parameters<typeof DashboardView>[0]["recentOrders"]}
+      recentOrders={ordersResult.data as unknown as Parameters<typeof DashboardView>[0]["recentOrders"]}
       firstName={firstName}
     />
   );

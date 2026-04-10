@@ -19,7 +19,7 @@ export default async function BakeryDashboardPage() {
 
   return (
     <BakeryDashboardView
-      initialOrders={result.data as Parameters<typeof BakeryDashboardView>[0]["initialOrders"]}
+      initialOrders={result.data as unknown as Parameters<typeof BakeryDashboardView>[0]["initialOrders"]}
     />
   );
 }

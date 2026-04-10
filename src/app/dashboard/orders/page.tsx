@@ -19,7 +19,7 @@ export default async function OrdersPage() {
 
   return (
     <OrdersView
-      initialOrders={result.data as Parameters<typeof OrdersView>[0]["initialOrders"]}
+      initialOrders={result.data as unknown as Parameters<typeof OrdersView>[0]["initialOrders"]}
     />
   );
 }

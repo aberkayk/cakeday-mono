@@ -15,7 +15,7 @@ export default async function OrderingRulesPage() {
 
   return (
     <OrderingRulesView
-      initialRules={rules as Parameters<typeof OrderingRulesView>[0]["initialRules"]}
+      initialRules={rules as unknown as Parameters<typeof OrderingRulesView>[0]["initialRules"]}
     />
   );
 }

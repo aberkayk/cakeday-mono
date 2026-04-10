@@ -7,82 +7,82 @@ Tracking the consolidation of `apps/web` + `apps/admin` + `apps/api` + `packages
 ## Migration Steps
 
 ### Step 1: Move `apps/web` to repo root
-- [ ] Copy `apps/web/` contents to repo root
-- [ ] Replace root `package.json` with web's `package.json`
-- [ ] Remove `turbo.json`
-- [ ] Remove `pnpm-workspace.yaml`
-- [ ] Update `tsconfig.json` paths
-- [ ] Update `next.config.ts` if needed
-- [ ] Verify `pnpm install` works
-- [ ] Verify `pnpm dev` starts successfully
+- [x] Copy `apps/web/` contents to repo root
+- [x] Replace root `package.json` with web's `package.json`
+- [x] Remove `turbo.json`
+- [x] Remove `pnpm-workspace.yaml`
+- [x] Update `tsconfig.json` paths
+- [x] Update `next.config.ts` if needed
+- [x] Verify `pnpm install` works
+- [x] Verify `pnpm dev` starts successfully
 
 ### Step 2: Move shared package
-- [ ] Copy `packages/shared/src/` → `src/lib/shared/`
-- [ ] Update all imports from `@cakeday/shared` → `@/lib/shared`
-- [ ] Remove `packages/` directory
-- [ ] Verify build succeeds
+- [x] Copy `packages/shared/src/` → `src/lib/shared/`
+- [x] Update all imports from `@cakeday/shared` → `@/lib/shared`
+- [x] Remove `packages/` directory
+- [x] Verify build succeeds
 
 ### Step 3: Move backend layer
-- [ ] Copy `apps/api/src/db/schema/` → `src/lib/db/schema/`
-- [ ] Copy `apps/api/src/services/` → `src/lib/services/`
-- [ ] Copy `apps/api/drizzle.config.ts` → repo root
-- [ ] Copy `apps/api/src/db/migrations/` → `src/lib/db/migrations/`
-- [ ] Refactor services: remove Express req/res dependency → pure functions
-- [ ] Add backend dependencies to `package.json` (drizzle-orm, pg, resend, etc.)
-- [ ] Create `src/lib/db/index.ts` (DB connection + drizzle instance)
-- [ ] Verify DB connection works
+- [x] Copy `apps/api/src/db/schema/` → `src/lib/db/schema/`
+- [x] Copy `apps/api/src/services/` → `src/lib/services/`
+- [x] Copy `apps/api/drizzle.config.ts` → repo root
+- [x] Copy `apps/api/src/db/migrations/` → `src/lib/db/migrations/`
+- [x] Refactor services: remove Express req/res dependency → pure functions
+- [x] Add backend dependencies to `package.json` (drizzle-orm, pg, resend, etc.)
+- [x] Create `src/lib/db/index.ts` (DB connection + drizzle instance)
+- [x] Verify DB connection works
 
 ### Step 4: Add admin pages
-- [ ] Copy `apps/admin/src/app/(dashboard)/` → `src/app/(admin)/`
-- [ ] Copy admin-specific components → `src/components/admin/`
-- [ ] Remove duplicate shadcn/ui components (keep web's versions)
-- [ ] Update admin page imports
-- [ ] Verify admin pages render
+- [x] Copy `apps/admin/src/app/(dashboard)/` → `src/app/(admin)/`
+- [x] Copy admin-specific components → `src/components/admin/`
+- [x] Remove duplicate shadcn/ui components (keep web's versions)
+- [x] Update admin page imports
+- [x] Verify admin pages render
 
 ### Step 5: Create Server Actions
-- [ ] Create `src/actions/auth.ts`
-- [ ] Create `src/actions/companies.ts`
-- [ ] Create `src/actions/employees.ts`
-- [ ] Create `src/actions/orders.ts`
-- [ ] Create `src/actions/ordering-rules.ts`
-- [ ] Create `src/actions/bakery.ts`
-- [ ] Create `src/actions/admin.ts`
-- [ ] Create auth helper: `getCurrentUser()` in `src/lib/supabase/server.ts`
-- [ ] Create guard helpers: `requireRole()`, `requireCompanyUser()`, `requireBakeryUser()`
-- [ ] Wire up Server Actions to pages/forms
+- [x] Create `src/actions/auth.ts`
+- [x] Create `src/actions/companies.ts`
+- [x] Create `src/actions/employees.ts`
+- [x] Create `src/actions/orders.ts`
+- [x] Create `src/actions/ordering-rules.ts`
+- [x] Create `src/actions/bakery.ts`
+- [x] Create `src/actions/admin.ts`
+- [x] Create auth helper: `getCurrentUser()` in `src/lib/supabase/server.ts`
+- [x] Create guard helpers: `requireRole()`, `requireCompanyUser()`, `requireBakeryUser()`
+- [x] Wire up Server Actions to pages/forms
 
 ### Step 6: Create API Routes
-- [ ] Create `src/app/api/v1/webhooks/iyzico/route.ts`
-- [ ] Create `src/app/api/v1/cron/create-birthday-orders/route.ts` (+ TODO: trigger)
-- [ ] Create `src/app/api/v1/cron/send-reminders/route.ts` (+ TODO: trigger)
-- [ ] Create `src/app/api/v1/health/route.ts`
+- [x] Create `src/app/api/v1/webhooks/iyzico/route.ts`
+- [x] Create `src/app/api/v1/cron/create-birthday-orders/route.ts` (+ TODO: trigger)
+- [x] Create `src/app/api/v1/cron/send-reminders/route.ts` (+ TODO: trigger)
+- [x] Create `src/app/api/v1/health/route.ts`
 
 ### Step 7: Update middleware
-- [ ] Update `src/middleware.ts` with role-based route protection
-- [ ] Add `/admin/*` guard (platform_admin only)
-- [ ] Add `/bakery/*` guard (bakery_admin only)
-- [ ] Add `/dashboard/*` guard (company user only)
-- [ ] Add post-login redirect by role
+- [x] Update `src/middleware.ts` with role-based route protection
+- [x] Add `/admin/*` guard (platform_admin only)
+- [x] Add `/bakery/*` guard (bakery_admin only)
+- [x] Add `/dashboard/*` guard (company user only)
+- [x] Add post-login redirect by role
 
 ### Step 8: Cleanup
-- [ ] Delete `apps/` directory
-- [ ] Delete `packages/` directory
-- [ ] Remove unused dependencies (express, cors, helmet, morgan, multer, express-rate-limit)
-- [ ] Consolidate environment variables into `.env.local`
-- [ ] Update `.gitignore` if needed
-- [ ] Final build verification: `pnpm build`
-- [ ] Smoke test all portals: auth, dashboard, bakery, admin
+- [x] Delete `apps/` directory
+- [x] Delete `packages/` directory
+- [x] Remove unused dependencies (express, cors, helmet, morgan, multer, express-rate-limit)
+- [x] Consolidate environment variables into `.env.local`
+- [x] Update `.gitignore` if needed
+- [x] Final build verification: `pnpm build`
+- [x] Smoke test all portals: auth, dashboard, bakery, admin
 
 ## Implementation Status
 
 | Area | Status | Notes |
 |------|--------|-------|
 | Design spec | Done | Approved 2026-04-09 |
-| Step 1: Move web to root | Not started | |
-| Step 2: Move shared | Not started | |
-| Step 3: Move backend | Not started | |
-| Step 4: Add admin pages | Not started | |
-| Step 5: Server Actions | Not started | |
-| Step 6: API Routes | Not started | |
-| Step 7: Middleware | Not started | |
-| Step 8: Cleanup | Not started | |
+| Step 1: Move web to root | Done | |
+| Step 2: Move shared | Done | |
+| Step 3: Move backend | Done | |
+| Step 4: Add admin pages | Done | |
+| Step 5: Server Actions | Done | |
+| Step 6: API Routes | Done | |
+| Step 7: Middleware | Done | |
+| Step 8: Cleanup | Done | |

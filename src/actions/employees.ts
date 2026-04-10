@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { requireAuth, requireRole, requireCompanyUser } from '@/lib/auth';
 import { employeeService } from '@/lib/services/employee.service';
-import type { CreateEmployeeInput, UpdateEmployeeInput } from '@/lib/shared';
+import type { CreateEmployeeInput, UpdateEmployeeInput, District } from '@/lib/shared';
 
 export async function createEmployee(formData: FormData) {
   const user = await requireAuth();
@@ -18,7 +18,7 @@ export async function createEmployee(formData: FormData) {
     department: (formData.get('department') as string) || undefined,
     office_location: (formData.get('office_location') as string) || undefined,
     delivery_address: (formData.get('delivery_address') as string) || undefined,
-    delivery_district: (formData.get('delivery_district') as string) || undefined,
+    delivery_district: ((formData.get('delivery_district') as string) || undefined) as District | undefined,
     personal_email: (formData.get('personal_email') as string) || undefined,
     work_email: (formData.get('work_email') as string) || undefined,
   };
@@ -41,7 +41,7 @@ export async function updateEmployee(id: string, formData: FormData) {
     department: (formData.get('department') as string) || undefined,
     office_location: (formData.get('office_location') as string) || undefined,
     delivery_address: (formData.get('delivery_address') as string) || undefined,
-    delivery_district: (formData.get('delivery_district') as string) || undefined,
+    delivery_district: ((formData.get('delivery_district') as string) || undefined) as District | undefined,
     personal_email: (formData.get('personal_email') as string) || undefined,
     work_email: (formData.get('work_email') as string) || undefined,
   };

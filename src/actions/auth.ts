@@ -19,7 +19,7 @@ export async function register(formData: FormData) {
     primary_contact_title: (formData.get('primary_contact_title') as string) || undefined,
     billing_address: (formData.get('billing_address') as string) || undefined,
     billing_district: (formData.get('billing_district') as string) || undefined,
-    kvkk_accepted: formData.get('kvkk_accepted') === 'true',
+    kvkk_accepted: (formData.get('kvkk_accepted') === 'true') as true,
   };
 
   return authService.register(input);

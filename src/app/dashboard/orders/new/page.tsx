@@ -13,7 +13,7 @@ export default async function NewOrderPage() {
   requireCompanyUser(user);
 
   const cakesWithPrices = await cakeService.listCakes();
-  const cakeTypes: CakeType[] = cakesWithPrices.map(({ prices: _prices, ...rest }) => rest);
+  const cakeTypes = cakesWithPrices.map(({ prices: _prices, ...rest }) => rest) as unknown as CakeType[];
 
   return <NewOrderView cakeTypes={cakeTypes} />;
 }
