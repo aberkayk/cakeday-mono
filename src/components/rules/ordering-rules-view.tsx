@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { Plus, ListChecks, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Dialog,
   DialogContent,
@@ -11,33 +11,34 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { useOrderingRules } from "@/hooks/use-ordering-rules";
+import { createRule, updateRule, deleteRule } from "@/actions/ordering-rules";
 import { RuleCard } from "@/components/rules/rule-card";
 import { RuleForm } from "@/components/rules/rule-form";
 import { useToast } from "@/hooks/use-toast";
 import type { OrderingRule } from "@/lib/shared";
 
-export function OrderingRulesView() {
-  const { rules, isLoading, fetchRules, createRule, updateRule, deleteRule } = useOrderingRules();
+interface OrderingRulesViewProps {
+  initialRules: OrderingRule[];
+}
+
+export function OrderingRulesView({ initialRules }: OrderingRulesViewProps) {
+  const router = useRouter();
   const [formOpen, setFormOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<OrderingRule | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<OrderingRule | null>(null);
+  const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
-
-  useEffect(() => {
-    fetchRules();
-  }, []);
 
   const handleSubmit = async (data: Partial<OrderingRule>) => {
     try {
       if (editTarget) {
-        await updateRule(editTarget.id, data);
+        await updateRule(editTarget.id, data as Parameters<typeof updateRule>[1]);
         toast({ title: "Kural güncellendi." });
       } else {
-        await createRule(data);
+        await createRule(data as Parameters<typeof createRule>[0]);
         toast({ title: "Kural oluşturuldu." });
       }
-      fetchRules();
+      startTransition(() => { router.refresh(); });
     } catch (err) {
       toast({
         title: "Hata",
@@ -51,7 +52,7 @@ export function OrderingRulesView() {
   const handleToggle = async (rule: OrderingRule, active: boolean) => {
     try {
       await updateRule(rule.id, { is_active: active });
-      fetchRules();
+      startTransition(() => { router.refresh(); });
     } catch {
       toast({ title: "Durum güncellenemedi.", variant: "destructive" });
     }
@@ -62,8 +63,8 @@ export function OrderingRulesView() {
     try {
       await deleteRule(deleteTarget.id);
       toast({ title: "Kural silindi." });
-      fetchRules();
       setDeleteTarget(null);
+      startTransition(() => { router.refresh(); });
     } catch (err) {
       toast({
         title: "Hata",
@@ -80,9 +81,9 @@ export function OrderingRulesView() {
         <div>
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-bold text-foreground font-headline">Sipariş Kuralları</h1>
-            {!isLoading && rules.length > 0 && (
+            {initialRules.length > 0 && (
               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/20 text-primary">
-                {rules.length} kural
+                {initialRules.length} kural
               </span>
             )}
           </div>
@@ -93,19 +94,14 @@ export function OrderingRulesView() {
         <Button
           onClick={() => { setEditTarget(null); setFormOpen(true); }}
           size="lg"
+          disabled={isPending}
         >
           <Plus className="mr-2 h-4 w-4" />
           Yeni Kural
         </Button>
       </div>
 
-      {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {[...Array(4)].map((_, i) => (
-            <Skeleton key={i} className="h-52 rounded-2xl" />
-          ))}
-        </div>
-      ) : rules.length === 0 ? (
+      {initialRules.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-24 text-center bg-background rounded-2xl border border-border-soft/30 shadow-sm">
           <div className="h-20 w-20 rounded-2xl bg-primary/20 flex items-center justify-center mb-5">
             <ListChecks className="h-10 w-10 text-primary" />
@@ -128,12 +124,12 @@ export function OrderingRulesView() {
           <div className="flex items-center gap-3 bg-primary/20 rounded-xl p-4 border border-primary/20">
             <Sparkles className="h-5 w-5 text-primary shrink-0" />
             <p className="text-sm text-primary">
-              <strong>{rules.filter(r => r.is_active).length} aktif kural</strong> otomatik sipariş sürecinizi yönetiyor.
+              <strong>{initialRules.filter(r => r.is_active).length} aktif kural</strong> otomatik sipariş sürecinizi yönetiyor.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {rules.map((rule) => (
+            {initialRules.map((rule) => (
               <RuleCard
                 key={rule.id}
                 rule={rule}

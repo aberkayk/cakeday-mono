@@ -5,17 +5,28 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { OrderForm } from "@/components/orders/order-form";
-import { useOrders } from "@/hooks/use-orders";
+import { createOrder } from "@/actions/orders";
 import { useToast } from "@/hooks/use-toast";
+import type { CakeType } from "@/lib/shared";
 
-export function NewOrderView() {
+interface NewOrderViewProps {
+  cakeTypes: CakeType[];
+}
+
+export function NewOrderView({ cakeTypes }: NewOrderViewProps) {
   const router = useRouter();
-  const { createOrder } = useOrders();
   const { toast } = useToast();
 
   const handleSubmit = async (data: Record<string, unknown>) => {
     try {
-      await createOrder({ ...data, order_type: "ad_hoc" });
+      const formData = new FormData();
+      formData.append("order_type", "ad_hoc");
+      Object.entries(data).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          formData.append(key, String(value));
+        }
+      });
+      await createOrder(formData);
       toast({ title: "Sipariş oluşturuldu!" });
       router.push("/dashboard/orders");
     } catch (err) {
@@ -50,7 +61,7 @@ export function NewOrderView() {
         </div>
       </div>
 
-      <OrderForm onSubmit={handleSubmit} />
+      <OrderForm cakeTypes={cakeTypes} onSubmit={handleSubmit} />
     </div>
   );
 }

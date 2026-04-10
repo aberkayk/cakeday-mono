@@ -1,31 +1,23 @@
 "use client";
 
-import { useEffect } from "react";
 import Link from "next/link";
 import { Plus, ArrowRight, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import { StatsCards } from "@/components/dashboard/stats-cards";
 import { UpcomingBirthdays } from "@/components/dashboard/upcoming-birthdays";
-import { useEmployees } from "@/hooks/use-employees";
-import { useOrders } from "@/hooks/use-orders";
-import { useAuth } from "@/hooks/use-auth";
 import { formatDate, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS, formatCurrency } from "@/lib/utils";
-import type { Order } from "@/lib/shared";
+import type { Employee, Order } from "@/lib/shared";
 
-export function DashboardView() {
-  const { employees, totalCount: totalEmployees, fetchEmployees, isLoading: empLoading } = useEmployees({ pageSize: 100 });
-  const { orders, fetchOrders, isLoading: ordersLoading } = useOrders();
-  const { user } = useAuth();
+interface DashboardViewProps {
+  employees: Employee[];
+  totalEmployees: number;
+  recentOrders: Order[];
+  firstName: string;
+}
 
-  const displayName = user?.user_metadata?.full_name ?? user?.email ?? "Kullanıcı";
-  const firstName = displayName.split(" ")[0];
-
-  useEffect(() => {
-    fetchEmployees();
-    fetchOrders({ pageSize: 5, sort: "created_at:desc" });
-  }, []);
+export function DashboardView({ employees, totalEmployees, recentOrders, firstName }: DashboardViewProps) {
+  const orders = recentOrders;
 
   const activeOrders = orders.filter((o) =>
     ["confirmed", "assigned", "accepted", "preparing", "out_for_delivery"].includes(o.status)
@@ -71,14 +63,14 @@ export function DashboardView() {
         upcomingBirthdays={upcomingCount}
         activeOrders={activeOrders}
         ordersThisMonth={orders.length}
-        isLoading={empLoading}
+        isLoading={false}
       />
 
       {/* Two-column section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Upcoming Birthdays — left 2/3 */}
         <div className="lg:col-span-2">
-          <UpcomingBirthdays employees={employees} isLoading={empLoading} />
+          <UpcomingBirthdays employees={employees} isLoading={false} />
         </div>
 
         {/* Quick Actions — right 1/3 */}
@@ -126,19 +118,7 @@ export function DashboardView() {
         </div>
 
         <div className="px-6 py-2">
-          {ordersLoading ? (
-            <div className="space-y-3 py-3">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="flex items-center justify-between py-2.5">
-                  <div className="space-y-1.5">
-                    <Skeleton className="h-4 w-40" />
-                    <Skeleton className="h-3 w-28" />
-                  </div>
-                  <Skeleton className="h-6 w-24 rounded-full" />
-                </div>
-              ))}
-            </div>
-          ) : orders.length === 0 ? (
+          {orders.length === 0 ? (
             <div className="py-12 text-center">
               <div className="text-4xl mb-3">🛒</div>
               <p className="text-sm font-medium text-foreground mb-1">Henüz sipariş yok</p>

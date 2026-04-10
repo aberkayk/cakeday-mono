@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Plus, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { OrderList } from "@/components/orders/order-list";
-import { useOrders } from "@/hooks/use-orders";
+import { cancelOrder } from "@/actions/orders";
 import { useToast } from "@/hooks/use-toast";
 import {
   Dialog,
@@ -23,23 +24,24 @@ const TABS = [
   { value: "cancelled", label: "İptal", statuses: ["cancelled", "rejected", "failed"], color: "bg-background-secondary text-muted" },
 ];
 
-export function OrdersView() {
-  const { orders, isLoading, fetchOrders, cancelOrder } = useOrders();
+interface OrdersViewProps {
+  initialOrders: Order[];
+}
+
+export function OrdersView({ initialOrders }: OrdersViewProps) {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState("upcoming");
   const [cancelTarget, setCancelTarget] = useState<Order | null>(null);
+  const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
-
-  useEffect(() => {
-    fetchOrders({ pageSize: 100 });
-  }, []);
 
   const handleCancelConfirm = async () => {
     if (!cancelTarget) return;
     try {
       await cancelOrder(cancelTarget.id);
       toast({ title: "Sipariş iptal edildi." });
-      fetchOrders({ pageSize: 100 });
       setCancelTarget(null);
+      startTransition(() => { router.refresh(); });
     } catch (err) {
       toast({
         title: "Hata",
@@ -50,7 +52,7 @@ export function OrdersView() {
   };
 
   const filteredOrders = (statuses: string[]) =>
-    orders.filter((o) => statuses.includes(o.status));
+    initialOrders.filter((o) => statuses.includes(o.status));
 
   const activeTabConfig = TABS.find((t) => t.value === activeTab)!;
 
@@ -62,7 +64,7 @@ export function OrdersView() {
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-bold text-foreground font-headline">Siparişler</h1>
             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/20 text-primary">
-              {orders.length} toplam
+              {initialOrders.length} toplam
             </span>
           </div>
           <p className="text-sm text-muted mt-1">
@@ -107,7 +109,7 @@ export function OrdersView() {
         <div className="p-5">
           <OrderList
             orders={filteredOrders(activeTabConfig.statuses)}
-            isLoading={isLoading}
+            isLoading={isPending}
             onCancel={activeTab === "upcoming" ? setCancelTarget : undefined}
             emptyMessage={
               activeTab === "upcoming"

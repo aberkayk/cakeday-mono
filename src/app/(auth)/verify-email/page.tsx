@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Loader2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { authApi } from "@/lib/api";
+import { createClient } from "@/lib/supabase/client";
 
 export default function VerifyEmailPage() {
   const searchParams = useSearchParams();
@@ -22,13 +22,15 @@ export default function VerifyEmailPage() {
       return;
     }
 
-    authApi
-      .verifyEmail(token)
-      .then(() => {
+    const supabase = createClient();
+    supabase.auth
+      .verifyOtp({ token_hash: token, type: "email" })
+      .then(({ error }) => {
+        if (error) throw error;
         setStatus("success");
         setTimeout(() => router.push("/dashboard"), 2500);
       })
-      .catch((err) => {
+      .catch((err: Error) => {
         setStatus("error");
         setErrorMessage(err.message ?? "Doğrulama başarısız. Bağlantı süresi dolmuş olabilir.");
       });

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useAuthStore } from "@/stores/auth-store";
-import { authApi } from "@/lib/api";
+import { login as loginAction, logout as logoutAction, register as registerAction, forgotPassword as forgotPasswordAction } from "@/actions/auth";
 
 export function useAuth() {
   const router = useRouter();
@@ -33,19 +33,16 @@ export function useAuth() {
 
   const login = useCallback(
     async (email: string, password: string) => {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw new Error(error.message);
-      setSession(data.session);
-      const role = data.session?.user?.user_metadata?.role;
-      if (role === "bakery_admin") {
-        router.push("/bakery");
-      } else if (role === "platform_admin") {
-        router.push("/admin");
-      } else {
-        router.push("/dashboard");
+      const formData = new FormData();
+      formData.append("email", email);
+      formData.append("password", password);
+      const result = await loginAction(formData);
+      if (result && "error" in result) {
+        throw new Error(result.error);
       }
+      // loginAction redirects on success, so no need to push router
     },
-    [setSession, router, supabase]
+    []
   );
 
   const register = useCallback(
@@ -62,36 +59,33 @@ export function useAuth() {
       district?: string;
       kvkkAccepted: boolean;
     }) => {
-      const res = await authApi.register({
-        email: data.email,
-        password: data.password,
-        company_name: data.companyName,
-        primary_contact_name: data.contactName,
-        phone: data.phone,
-        vkn: data.vkn,
-        sector: data.sector,
-        company_size_range: data.companySize,
-        billing_address: data.billingAddress,
-        billing_district: data.district,
-        kvkk_accepted: data.kvkkAccepted,
-      });
-      return res;
+      const formData = new FormData();
+      formData.append("email", data.email);
+      formData.append("password", data.password);
+      formData.append("company_name", data.companyName);
+      formData.append("primary_contact_name", data.contactName);
+      formData.append("phone", data.phone);
+      if (data.vkn) formData.append("vkn", data.vkn);
+      if (data.sector) formData.append("sector", data.sector);
+      if (data.companySize) formData.append("company_size_range", data.companySize);
+      if (data.billingAddress) formData.append("billing_address", data.billingAddress);
+      if (data.district) formData.append("billing_district", data.district);
+      formData.append("kvkk_accepted", String(data.kvkkAccepted));
+      return registerAction(formData);
     },
     []
   );
 
   const logout = useCallback(async () => {
-    await supabase.auth.signOut();
     clearAuth();
-    router.push("/login");
-  }, [clearAuth, router, supabase]);
+    await logoutAction();
+  }, [clearAuth]);
 
   const forgotPassword = useCallback(async (email: string) => {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
-    });
-    if (error) throw new Error(error.message);
-  }, [supabase]);
+    const formData = new FormData();
+    formData.append("email", email);
+    await forgotPasswordAction(formData);
+  }, []);
 
   return {
     user,

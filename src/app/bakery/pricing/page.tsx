@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -10,7 +10,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Dialog,
   DialogContent,
@@ -25,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { catalogueApi, bakeryApi } from "@/lib/api";
+import { requestPriceChange } from "@/actions/bakery";
 import { formatCurrency, CAKE_SIZE_LABELS } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import type { CakeType } from "@/lib/shared";
@@ -45,9 +44,11 @@ const requestSchema = z.object({
 });
 type RequestFormData = z.infer<typeof requestSchema>;
 
-export default function BakeryPricingPage() {
-  const [cakeTypes, setCakeTypes] = useState<CakeType[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+interface BakeryPricingClientProps {
+  cakeTypes: CakeType[];
+}
+
+function BakeryPricingClient({ cakeTypes }: BakeryPricingClientProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const { toast } = useToast();
@@ -63,16 +64,9 @@ export default function BakeryPricingPage() {
     defaultValues: { size: "medium" },
   });
 
-  useEffect(() => {
-    catalogueApi
-      .list()
-      .then((res) => setCakeTypes(res.data))
-      .finally(() => setIsLoading(false));
-  }, []);
-
   const onSubmit = async (data: RequestFormData) => {
     try {
-      await bakeryApi.createPricingRequest(data);
+      await requestPriceChange(data);
       setSubmitted(true);
       toast({ title: "Fiyat değişiklik talebi gönderildi." });
       reset();
@@ -110,12 +104,8 @@ export default function BakeryPricingPage() {
           </h2>
         </div>
         <div className="px-6 py-5">
-          {isLoading ? (
-            <div className="space-y-3">
-              {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-12 rounded-lg" />)}
-            </div>
-          ) : cakeTypes.length === 0 ? (
-            <p className="text-sm text-muted">Katalog yükleniyor...</p>
+          {cakeTypes.length === 0 ? (
+            <p className="text-sm text-muted">Katalogda pasta türü bulunamadı.</p>
           ) : (
             <div className="space-y-4">
               {cakeTypes.map((cake) => (
@@ -249,4 +239,18 @@ export default function BakeryPricingPage() {
       </Dialog>
     </div>
   );
+}
+
+// Server component shell — fetches data, renders client component
+import { requireAuth, requireBakeryUser } from "@/lib/auth";
+import { cakeService } from "@/lib/services/cake.service";
+
+export default async function BakeryPricingPage() {
+  await requireAuth();
+
+  const cakesWithPrices = await cakeService.listCakes();
+  // Map to CakeType shape (strip prices for the prop)
+  const cakeTypes: CakeType[] = cakesWithPrices.map(({ prices: _prices, ...rest }) => rest);
+
+  return <BakeryPricingClient cakeTypes={cakeTypes} />;
 }

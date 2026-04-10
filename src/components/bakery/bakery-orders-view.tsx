@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BakeryOrderCard } from "@/components/bakery/bakery-order-card";
-import { Skeleton } from "@/components/ui/skeleton";
 import { ShoppingBag } from "lucide-react";
-import { useBakeryOrders } from "@/hooks/use-orders";
+import { acceptOrder, rejectOrder, markDelivered } from "@/actions/bakery";
 import { useToast } from "@/hooks/use-toast";
 import type { Order } from "@/lib/shared";
 
@@ -17,20 +17,21 @@ const TABS = [
   { value: "rejected", label: "Reddedilen", statuses: ["rejected"] },
 ];
 
-export function BakeryOrdersView() {
-  const { orders, isLoading, fetchOrders, acceptOrder, rejectOrder, markDelivered } = useBakeryOrders();
-  const [activeTab, setActiveTab] = useState("new");
-  const { toast } = useToast();
+interface BakeryOrdersViewProps {
+  initialOrders: Order[];
+}
 
-  useEffect(() => {
-    fetchOrders({ pageSize: 100 });
-  }, []);
+export function BakeryOrdersView({ initialOrders }: BakeryOrdersViewProps) {
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState("new");
+  const [isPending, startTransition] = useTransition();
+  const { toast } = useToast();
 
   const handleAccept = async (id: string) => {
     try {
       await acceptOrder(id);
       toast({ title: "Sipariş kabul edildi." });
-      fetchOrders({ pageSize: 100 });
+      startTransition(() => { router.refresh(); });
     } catch (err) {
       toast({ title: "Hata", description: err instanceof Error ? err.message : "Kabul başarısız.", variant: "destructive" });
     }
@@ -40,7 +41,7 @@ export function BakeryOrdersView() {
     try {
       await rejectOrder(id, reason);
       toast({ title: "Sipariş reddedildi." });
-      fetchOrders({ pageSize: 100 });
+      startTransition(() => { router.refresh(); });
     } catch (err) {
       toast({ title: "Hata", description: err instanceof Error ? err.message : "Reddetme başarısız.", variant: "destructive" });
     }
@@ -50,13 +51,13 @@ export function BakeryOrdersView() {
     try {
       await markDelivered(id);
       toast({ title: "Sipariş teslim edildi olarak işaretlendi." });
-      fetchOrders({ pageSize: 100 });
+      startTransition(() => { router.refresh(); });
     } catch (err) {
       toast({ title: "Hata", description: err instanceof Error ? err.message : "Güncelleme başarısız.", variant: "destructive" });
     }
   };
 
-  const filteredOrders = (statuses: string[]) => orders.filter((o) => statuses.includes(o.status));
+  const filteredOrders = (statuses: string[]) => initialOrders.filter((o) => statuses.includes(o.status));
 
   return (
     <div className="space-y-6">
@@ -81,9 +82,9 @@ export function BakeryOrdersView() {
           const tabOrders = filteredOrders(tab.statuses);
           return (
             <TabsContent key={tab.value} value={tab.value} className="mt-4">
-              {isLoading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-56 rounded-xl" />)}
+              {isPending ? (
+                <div className="flex items-center justify-center py-16 text-center">
+                  <p className="text-muted text-sm">Yükleniyor...</p>
                 </div>
               ) : tabOrders.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 text-center">

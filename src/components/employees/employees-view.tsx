@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { EmployeeTable } from "@/components/employees/employee-table";
 import { EmployeeForm } from "@/components/employees/employee-form";
@@ -13,34 +14,22 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Loader2, AlertTriangle } from "lucide-react";
-import { useEmployees } from "@/hooks/use-employees";
+import { createEmployee, updateEmployee, deleteEmployee } from "@/actions/employees";
 import type { Employee } from "@/lib/shared";
 
-export function EmployeesView() {
-  const {
-    employees,
-    totalCount,
-    page,
-    pageSize,
-    isLoading,
-    search,
-    statusFilter,
-    setPage,
-    setSearch,
-    setStatusFilter,
-    fetchEmployees,
-    createEmployee,
-    updateEmployee,
-    deleteEmployee,
-  } = useEmployees({ pageSize: 20 });
+interface EmployeesViewProps {
+  initialEmployees: Employee[];
+  totalCount: number;
+}
 
+export function EmployeesView({ initialEmployees, totalCount }: EmployeesViewProps) {
+  const router = useRouter();
   const [formOpen, setFormOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<Employee | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Employee | null>(null);
+  const [isPending, startTransition] = useTransition();
   const [isDeleting, setIsDeleting] = useState(false);
   const { toast } = useToast();
-
-  useEffect(() => { fetchEmployees(); }, [page, search, statusFilter]);
 
   const handleAdd = () => {
     setEditTarget(null);
@@ -54,14 +43,21 @@ export function EmployeesView() {
 
   const handleSubmit = async (data: Partial<Employee>) => {
     try {
+      const formData = new FormData();
+      Object.entries(data).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          formData.append(key, String(value));
+        }
+      });
+
       if (editTarget) {
-        await updateEmployee(editTarget.id, data);
+        await updateEmployee(editTarget.id, formData);
         toast({ title: "Çalışan güncellendi." });
       } else {
-        await createEmployee(data);
+        await createEmployee(formData);
         toast({ title: "Çalışan eklendi." });
       }
-      fetchEmployees();
+      startTransition(() => { router.refresh(); });
     } catch (err) {
       toast({
         title: "Hata",
@@ -76,9 +72,10 @@ export function EmployeesView() {
     if (!deleteTarget) return;
     setIsDeleting(true);
     try {
-      await deleteEmployee(deleteTarget.id);
+      const confirmName = `${deleteTarget.first_name} ${deleteTarget.last_name}`;
+      await deleteEmployee(deleteTarget.id, confirmName);
       toast({ title: "Çalışan silindi." });
-      fetchEmployees();
+      startTransition(() => { router.refresh(); });
       setDeleteTarget(null);
     } catch (err) {
       toast({
@@ -98,11 +95,9 @@ export function EmployeesView() {
         <div>
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-bold text-foreground font-headline">Çalışanlar</h1>
-            {!isLoading && (
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/20 text-primary">
-                {totalCount} kişi
-              </span>
-            )}
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/20 text-primary">
+              {totalCount} kişi
+            </span>
           </div>
           <p className="text-sm text-muted mt-1">
             Şirketinizdeki tüm çalışanları yönetin.
@@ -111,16 +106,16 @@ export function EmployeesView() {
       </div>
 
       <EmployeeTable
-        employees={employees}
+        employees={initialEmployees}
         totalCount={totalCount}
-        page={page}
-        pageSize={pageSize}
-        isLoading={isLoading}
-        search={search}
-        statusFilter={statusFilter}
-        onSearchChange={(v) => { setSearch(v); setPage(1); }}
-        onStatusChange={(v) => { setStatusFilter(v); setPage(1); }}
-        onPageChange={setPage}
+        page={1}
+        pageSize={initialEmployees.length}
+        isLoading={isPending}
+        search=""
+        statusFilter={undefined}
+        onSearchChange={() => {}}
+        onStatusChange={() => {}}
+        onPageChange={() => {}}
         onAdd={handleAdd}
         onEdit={handleEdit}
         onDelete={setDeleteTarget}

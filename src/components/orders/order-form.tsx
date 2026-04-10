@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -17,7 +17,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CakeSelector } from "./cake-selector";
-import { catalogueApi } from "@/lib/api";
 import { DISTRICT_LABELS } from "@/lib/utils";
 import type { CakeType } from "@/lib/shared";
 
@@ -35,6 +34,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 interface OrderFormProps {
+  cakeTypes: CakeType[];
   onSubmit: (data: Partial<FormData>) => Promise<void>;
 }
 
@@ -52,9 +52,8 @@ function SectionCard({ icon: Icon, title, children }: { icon: React.ElementType;
   );
 }
 
-export function OrderForm({ onSubmit }: OrderFormProps) {
-  const [cakeTypes, setCakeTypes] = useState<CakeType[]>([]);
-  const [selectedTypeId, setSelectedTypeId] = useState<string | null>(null);
+export function OrderForm({ cakeTypes, onSubmit }: OrderFormProps) {
+  const [selectedTypeId, setSelectedTypeId] = useState<string | null>(cakeTypes[0]?.id ?? null);
   const [selectedSize, setSelectedSize] = useState<string>("medium");
 
   const {
@@ -64,18 +63,12 @@ export function OrderForm({ onSubmit }: OrderFormProps) {
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { delivery_window: "no_preference", cake_size: "medium" },
+    defaultValues: {
+      delivery_window: "no_preference",
+      cake_size: "medium",
+      cake_type_id: cakeTypes[0]?.id ?? "",
+    },
   });
-
-  useEffect(() => {
-    catalogueApi.list().then((res) => {
-      setCakeTypes(res.data);
-      if (res.data[0]) {
-        setSelectedTypeId(res.data[0].id);
-        setValue("cake_type_id", res.data[0].id);
-      }
-    });
-  }, [setValue]);
 
   const handleTypeChange = (id: string) => {
     setSelectedTypeId(id);

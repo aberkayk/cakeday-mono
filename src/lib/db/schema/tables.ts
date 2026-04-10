@@ -183,6 +183,7 @@ export const companies = pgTable(
   }),
 );
 
+// companyMemberships gerekli değil bir firmayı sadece bir kişi yönetecek
 export const companyMemberships = pgTable(
   "company_memberships",
   {

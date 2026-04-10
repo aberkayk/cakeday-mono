@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { companyApi } from "@/lib/api";
+import { updateCompanyProfile } from "@/actions/companies";
 import { useToast } from "@/hooks/use-toast";
 import { SECTOR_OPTIONS, COMPANY_SIZE_LABELS } from "@/lib/utils";
 import type { Company } from "@/lib/shared";
@@ -58,9 +58,11 @@ function SectionCard({ icon: Icon, title, description, children }: {
   );
 }
 
-export function SettingsView() {
-  const [company, setCompany] = useState<Company | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+interface SettingsViewProps {
+  company: Company;
+}
+
+export function SettingsView({ company }: SettingsViewProps) {
   const [notifEmail, setNotifEmail] = useState(true);
   const [notifWA, setNotifWA] = useState(false);
   const [notifBirthday, setNotifBirthday] = useState(true);
@@ -70,31 +72,22 @@ export function SettingsView() {
     register,
     handleSubmit,
     setValue,
-    reset,
     formState: { errors, isSubmitting, isDirty },
-  } = useForm<FormData>({ resolver: zodResolver(schema) });
-
-  useEffect(() => {
-    companyApi
-      .get()
-      .then((res) => {
-        setCompany(res.data);
-        reset({
-          name: res.data.name,
-          primary_contact_name: res.data.primary_contact_name,
-          primary_contact_phone: res.data.primary_contact_phone,
-          billing_address: res.data.billing_address,
-          sector: res.data.sector ?? "",
-          company_size_range: res.data.company_size_range ?? "",
-        });
-      })
-      .catch(console.error)
-      .finally(() => setIsLoading(false));
-  }, [reset]);
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      name: company.name,
+      primary_contact_name: company.primary_contact_name,
+      primary_contact_phone: company.primary_contact_phone,
+      billing_address: company.billing_address,
+      sector: company.sector ?? "",
+      company_size_range: company.company_size_range ?? "",
+    },
+  });
 
   const onSubmit = async (data: FormData) => {
     try {
-      await companyApi.update(data);
+      await updateCompanyProfile(data);
       toast({ title: "Şirket bilgileri güncellendi." });
     } catch (err) {
       toast({
@@ -128,7 +121,6 @@ export function SettingsView() {
               id="name"
               {...register("name")}
               className="rounded-xl border-border-soft focus:border-primary"
-              disabled={isLoading}
             />
             {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
           </div>
@@ -137,10 +129,10 @@ export function SettingsView() {
             <div className="space-y-1.5">
               <Label className="text-sm font-medium text-foreground">Sektör</Label>
               <Select
-                defaultValue={company?.sector ?? ""}
+                defaultValue={company.sector ?? ""}
                 onValueChange={(v) => setValue("sector", v)}
               >
-                <SelectTrigger className="rounded-xl border-border-soft" disabled={isLoading}>
+                <SelectTrigger className="rounded-xl border-border-soft">
                   <SelectValue placeholder="Seçin" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
@@ -153,10 +145,10 @@ export function SettingsView() {
             <div className="space-y-1.5">
               <Label className="text-sm font-medium text-foreground">Çalışan Sayısı</Label>
               <Select
-                defaultValue={company?.company_size_range ?? ""}
+                defaultValue={company.company_size_range ?? ""}
                 onValueChange={(v) => setValue("company_size_range", v)}
               >
-                <SelectTrigger className="rounded-xl border-border-soft" disabled={isLoading}>
+                <SelectTrigger className="rounded-xl border-border-soft">
                   <SelectValue placeholder="Seçin" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
@@ -178,7 +170,6 @@ export function SettingsView() {
               id="primary_contact_name"
               {...register("primary_contact_name")}
               className="rounded-xl border-border-soft focus:border-primary"
-              disabled={isLoading}
             />
             {errors.primary_contact_name && <p className="text-xs text-red-500">{errors.primary_contact_name.message}</p>}
           </div>
@@ -190,7 +181,6 @@ export function SettingsView() {
               type="tel"
               {...register("primary_contact_phone")}
               className="rounded-xl border-border-soft focus:border-primary"
-              disabled={isLoading}
             />
             {errors.primary_contact_phone && <p className="text-xs text-red-500">{errors.primary_contact_phone.message}</p>}
           </div>
@@ -201,14 +191,13 @@ export function SettingsView() {
               id="billing_address"
               {...register("billing_address")}
               className="rounded-xl border-border-soft focus:border-primary"
-              disabled={isLoading}
             />
             {errors.billing_address && <p className="text-xs text-red-500">{errors.billing_address.message}</p>}
           </div>
 
           <Button
             type="submit"
-            disabled={isSubmitting || !isDirty || isLoading}
+            disabled={isSubmitting || !isDirty}
             size="lg"
             className="w-full"
           >

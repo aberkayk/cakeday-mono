@@ -1,21 +1,18 @@
 "use client";
 
-import { useEffect } from "react";
 import Link from "next/link";
 import { ShoppingBag, CheckCircle, Clock, Truck, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useBakeryOrders } from "@/hooks/use-orders";
 import { formatDate, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS, formatCurrency } from "@/lib/utils";
 import type { Order } from "@/lib/shared";
 
-export function BakeryDashboardView() {
-  const { orders, isLoading, fetchOrders } = useBakeryOrders();
+interface BakeryDashboardViewProps {
+  initialOrders: Order[];
+}
 
-  useEffect(() => {
-    fetchOrders({ pageSize: 20 });
-  }, []);
+export function BakeryDashboardView({ initialOrders }: BakeryDashboardViewProps) {
+  const orders = initialOrders;
 
   const newOrders = orders.filter((o) => o.status === "assigned");
   const acceptedOrders = orders.filter((o) => ["accepted", "preparing"].includes(o.status));
@@ -49,9 +46,7 @@ export function BakeryDashboardView() {
                   <Icon className={`h-4 w-4 ${stat.color}`} />
                 </div>
               </div>
-              {isLoading ? <Skeleton className="h-8 w-12" /> : (
-                <p className="text-3xl font-bold font-headline text-foreground">{stat.value}</p>
-              )}
+              <p className="text-3xl font-bold font-headline text-foreground">{stat.value}</p>
             </div>
           );
         })}
@@ -68,19 +63,7 @@ export function BakeryDashboardView() {
           </Button>
         </div>
         <div className="px-6 py-4">
-          {isLoading ? (
-            <div className="space-y-3">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="flex items-center justify-between py-2">
-                  <div className="space-y-1">
-                    <Skeleton className="h-4 w-36" />
-                    <Skeleton className="h-3 w-24" />
-                  </div>
-                  <Skeleton className="h-5 w-20" />
-                </div>
-              ))}
-            </div>
-          ) : todayDeliveries.length === 0 ? (
+          {todayDeliveries.length === 0 ? (
             <p className="text-center text-sm text-muted py-8">
               Bugün teslimat yok.
             </p>
