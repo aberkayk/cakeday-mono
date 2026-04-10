@@ -81,6 +81,23 @@ export const ORDER_STATUS_COLORS: Record<string, string> = {
   failed: "bg-red-100 text-red-800",
 };
 
+// Company status labels
+export const COMPANY_STATUS_LABELS: Record<string, string> = {
+  pending_verification: "Doğrulama Bekliyor",
+  pending_approval: "Onay Bekliyor",
+  active: "Aktif",
+  suspended: "Askıya Alındı",
+  deactivated: "Deaktif",
+};
+
+// Bakery status labels
+export const BAKERY_STATUS_LABELS: Record<string, string> = {
+  pending_setup: "Kurulum Bekliyor",
+  active: "Aktif",
+  inactive: "Pasif",
+  suspended: "Askıya Alındı",
+};
+
 // District labels
 export const DISTRICT_LABELS: Record<string, string> = {
   besiktas: "Beşiktaş",
