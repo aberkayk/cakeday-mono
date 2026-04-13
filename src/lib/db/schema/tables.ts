@@ -30,7 +30,6 @@ import {
   orderTypeEnum,
   bakeryStatusEnum,
   paymentMethodEnum,
-  billingCycleEnum,
   paymentStatusEnum,
   priceRequestStatusEnum,
   integrationTypeEnum,
@@ -41,24 +40,12 @@ import {
 } from "./enums";
 
 // ─── Auth / Identity ──────────────────────────────────────────────────────────
-// Note: whatsapp_number, whatsapp_opt_in niye var?
-// email_notifications_enabled,whatsapp_notifications_enabled settings tableda olmalı
-// table isi profile degil user olmalı
-// bakery_id, user tableda değil company tableda userId bilgisinde tutulmalı
-export const profiles = pgTable("profiles", {
+
+export const users = pgTable("users", {
   id: uuid("id").primaryKey(), // mirrors auth.users(id)
   full_name: text("full_name").notNull(),
   phone: varchar("phone", { length: 20 }),
   role: userRoleEnum("role").notNull(),
-  whatsapp_number: varchar("whatsapp_number", { length: 20 }),
-  whatsapp_opt_in: boolean("whatsapp_opt_in").notNull().default(false),
-  email_notifications_enabled: boolean("email_notifications_enabled")
-    .notNull()
-    .default(true),
-  whatsapp_notifications_enabled: boolean("whatsapp_notifications_enabled")
-    .notNull()
-    .default(false),
-  bakery_id: uuid("bakery_id"), // FK to bakeries added below (forward reference)
   onboarding_completed: boolean("onboarding_completed")
     .notNull()
     .default(false),
@@ -70,8 +57,8 @@ export const profiles = pgTable("profiles", {
     .defaultNow(),
 });
 
-// ─── Core Platform ────────────────────────────────────────────────────────────
-// Ödeme entegrasyonu sağlanan ürün üzerinden subs plan yönetilebilir mi?
+// ─── Subscription Plans ───────────────────────────────────────────────────────
+
 export const subscriptionPlans = pgTable("subscription_plans", {
   id: uuid("id")
     .primaryKey()
@@ -104,73 +91,34 @@ export const subscriptionPlans = pgTable("subscription_plans", {
     .defaultNow(),
 });
 
-// Company tableda user_id fieldı olmalı mı?
-// company_size entegrasyonda firmaya ait employee sayısından alınacak bu alana gerek yok
-// company table ile contact table olacak contact table içerisinde name, title, email, phone fieldları olmalı
-// company table address table olarak ikiye ayrılmalı address table içerisinde address, district, city, country fieldları olmalı
-// einvoice_alias, einvoice_type, billing_cycle, default_delivery_window,default_delivery_address,kvkk_accepted_at, kvkk_accepted_ip,default_cake_text,onboarding_step,admin_note, subscription_overridden_by,active_payment_method,iyzico_customer_token ,is_live,require_order_approval,order_lead_time_days kaldırılmalı
-// billing_email yerine email alanı olmalı
-//
+// ─── Companies ────────────────────────────────────────────────────────────────
+
 export const companies = pgTable(
   "companies",
   {
     id: uuid("id")
       .primaryKey()
       .default(sql`gen_random_uuid()`),
+    user_id: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "restrict" }),
     name: varchar("name", { length: 255 }).notNull(),
     vkn: varchar("vkn", { length: 10 }).unique(),
     sector: varchar("sector", { length: 100 }),
-    company_size_range: varchar("company_size_range", { length: 50 }),
-    primary_contact_name: varchar("primary_contact_name", {
-      length: 255,
-    }).notNull(),
-    primary_contact_title: varchar("primary_contact_title", { length: 100 }),
-    primary_contact_email: varchar("primary_contact_email", {
-      length: 255,
-    }).notNull(),
-    primary_contact_phone: varchar("primary_contact_phone", {
-      length: 20,
-    }).notNull(),
-    billing_address: text("billing_address"),
-    billing_district: districtEnum("billing_district"),
-    einvoice_alias: varchar("einvoice_alias", { length: 255 }),
-    einvoice_type: varchar("einvoice_type", { length: 20 }),
-    billing_email: varchar("billing_email", { length: 255 }),
+    email: varchar("email", { length: 255 }),
     logo_url: text("logo_url"),
     subscription_plan_id: uuid("subscription_plan_id").references(
       () => subscriptionPlans.id,
     ),
-    billing_cycle: billingCycleEnum("billing_cycle")
-      .notNull()
-      .default("monthly"),
     subscription_started_at: timestamp("subscription_started_at", {
       withTimezone: true,
     }),
     subscription_renews_at: timestamp("subscription_renews_at", {
       withTimezone: true,
     }),
-    subscription_overridden_by: uuid("subscription_overridden_by"),
-    active_payment_method: paymentMethodEnum("active_payment_method"),
-    iyzico_customer_token: text("iyzico_customer_token"),
     status: companyStatusEnum("status")
       .notNull()
       .default("pending_verification"),
-    is_live: boolean("is_live").notNull().default(false),
-    require_order_approval: boolean("require_order_approval")
-      .notNull()
-      .default(false),
-    order_lead_time_days: smallint("order_lead_time_days")
-      .notNull()
-      .default(60),
-    default_delivery_window: deliveryWindowEnum("default_delivery_window")
-      .notNull()
-      .default("no_preference"),
-    default_delivery_address: text("default_delivery_address"),
-    default_cake_text: text("default_cake_text"),
-    onboarding_step: smallint("onboarding_step").notNull().default(1),
-    admin_note: text("admin_note"),
-    kvkk_accepted_at: timestamp("kvkk_accepted_at", { withTimezone: true }),
-    kvkk_accepted_ip: inet("kvkk_accepted_ip"),
     created_at: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -180,45 +128,47 @@ export const companies = pgTable(
   },
   (t) => ({
     vknCheck: check("chk_vkn_format", sql`${t.vkn} ~ '^\d{10}$'`),
+    userIdIdx: uniqueIndex("uq_companies_user_id").on(t.user_id),
   }),
 );
 
-// companyMemberships gerekli değil bir firmayı sadece bir kişi yönetecek
-export const companyMemberships = pgTable(
-  "company_memberships",
-  {
-    id: uuid("id")
-      .primaryKey()
-      .default(sql`gen_random_uuid()`),
-    user_id: uuid("user_id")
-      .notNull()
-      .references(() => profiles.id, { onDelete: "cascade" }),
-    company_id: uuid("company_id")
-      .notNull()
-      .references(() => companies.id, { onDelete: "cascade" }),
-    role: userRoleEnum("role").notNull(),
-    invited_by: uuid("invited_by").references(() => profiles.id, {
-      onDelete: "set null",
-    }),
-    invitation_token: varchar("invitation_token", { length: 128 }).unique(),
-    invitation_expires_at: timestamp("invitation_expires_at", {
-      withTimezone: true,
-    }),
-    invitation_accepted_at: timestamp("invitation_accepted_at", {
-      withTimezone: true,
-    }),
-    is_active: boolean("is_active").notNull().default(true),
-    created_at: timestamp("created_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
-    updated_at: timestamp("updated_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
-  },
-  (t) => ({
-    uqUser: uniqueIndex("uq_company_memberships_user").on(t.user_id),
-  }),
-);
+export const contacts = pgTable("contacts", {
+  id: uuid("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  company_id: uuid("company_id")
+    .notNull()
+    .references(() => companies.id, { onDelete: "cascade" }),
+  name: varchar("name", { length: 255 }).notNull(),
+  title: varchar("title", { length: 100 }),
+  email: varchar("email", { length: 255 }),
+  phone: varchar("phone", { length: 20 }),
+  created_at: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updated_at: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+export const addresses = pgTable("addresses", {
+  id: uuid("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  company_id: uuid("company_id")
+    .notNull()
+    .references(() => companies.id, { onDelete: "cascade" }),
+  address: text("address").notNull(),
+  district: districtEnum("district"),
+  city: varchar("city", { length: 100 }).notNull().default("Istanbul"),
+  country: varchar("country", { length: 100 }).notNull().default("Turkey"),
+  created_at: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updated_at: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
 
 export const companySettings = pgTable("company_settings", {
   company_id: uuid("company_id")
@@ -250,7 +200,7 @@ export const companySettings = pgTable("company_settings", {
     .defaultNow(),
 });
 
-// ─── Bakeries (declared before employees for FK) ──────────────────────────────
+// ─── Bakeries ─────────────────────────────────────────────────────────────────
 
 export const districts = pgTable("districts", {
   id: uuid("id")
@@ -266,41 +216,40 @@ export const districts = pgTable("districts", {
     .defaultNow(),
 });
 
-export const bakeries = pgTable("bakeries", {
-  id: uuid("id")
-    .primaryKey()
-    .default(sql`gen_random_uuid()`),
-  name: varchar("name", { length: 255 }).notNull(),
-  slug: varchar("slug", { length: 100 }).notNull().unique(),
-  description: text("description"),
-  logo_url: text("logo_url"),
-  contact_name: varchar("contact_name", { length: 255 }).notNull(),
-  contact_email: varchar("contact_email", { length: 255 }).notNull().unique(),
-  contact_phone: varchar("contact_phone", { length: 20 }).notNull(),
-  address: text("address").notNull(),
-  iban: varchar("iban", { length: 34 }),
-  bank_name: varchar("bank_name", { length: 100 }),
-  business_hours: jsonb("business_hours").notNull().default("{}"),
-  acceptance_window_hours: smallint("acceptance_window_hours"),
-  status: bakeryStatusEnum("status").notNull().default("pending_setup"),
-  invitation_token: varchar("invitation_token", { length: 128 }).unique(),
-  invitation_expires_at: timestamp("invitation_expires_at", {
-    withTimezone: true,
+export const bakeries = pgTable(
+  "bakeries",
+  {
+    id: uuid("id")
+      .primaryKey()
+      .default(sql`gen_random_uuid()`),
+    user_id: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "restrict" }),
+    name: varchar("name", { length: 255 }).notNull(),
+    slug: varchar("slug", { length: 100 }).notNull().unique(),
+    description: text("description"),
+    logo_url: text("logo_url"),
+    contact_name: varchar("contact_name", { length: 255 }).notNull(),
+    contact_email: varchar("contact_email", { length: 255 }).notNull().unique(),
+    contact_phone: varchar("contact_phone", { length: 20 }).notNull(),
+    address: text("address").notNull(),
+    iban: varchar("iban", { length: 34 }),
+    bank_name: varchar("bank_name", { length: 100 }),
+    business_hours: jsonb("business_hours").notNull().default("{}"),
+    acceptance_window_hours: smallint("acceptance_window_hours"),
+    status: bakeryStatusEnum("status").notNull().default("pending_setup"),
+    admin_note: text("admin_note"),
+    created_at: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updated_at: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => ({
+    userIdIdx: uniqueIndex("uq_bakeries_user_id").on(t.user_id),
   }),
-  invitation_accepted_at: timestamp("invitation_accepted_at", {
-    withTimezone: true,
-  }),
-  invited_by: uuid("invited_by").references(() => profiles.id, {
-    onDelete: "set null",
-  }),
-  admin_note: text("admin_note"),
-  created_at: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  updated_at: timestamp("updated_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-});
+);
 
 export const bakeryDistricts = pgTable(
   "bakery_districts",
@@ -400,7 +349,7 @@ export const priceChangeRequests = pgTable("price_change_requests", {
   effective_date: date("effective_date").notNull(),
   justification: text("justification"),
   status: priceRequestStatusEnum("status").notNull().default("pending"),
-  reviewed_by: uuid("reviewed_by").references(() => profiles.id, {
+  reviewed_by: uuid("reviewed_by").references(() => users.id, {
     onDelete: "set null",
   }),
   reviewed_at: timestamp("reviewed_at", { withTimezone: true }),
@@ -456,7 +405,7 @@ export const hrSyncLogs = pgTable("hr_sync_logs", {
   integration_id: uuid("integration_id")
     .notNull()
     .references(() => hrIntegrations.id, { onDelete: "cascade" }),
-  triggered_by: uuid("triggered_by").references(() => profiles.id, {
+  triggered_by: uuid("triggered_by").references(() => users.id, {
     onDelete: "set null",
   }),
   trigger_type: varchar("trigger_type", { length: 20 })
@@ -517,7 +466,7 @@ export const employees = pgTable(
     skip_cake: boolean("skip_cake").notNull().default(false),
     status: employeeStatusEnum("status").notNull().default("active"),
     deactivated_at: timestamp("deactivated_at", { withTimezone: true }),
-    deactivated_by: uuid("deactivated_by").references(() => profiles.id, {
+    deactivated_by: uuid("deactivated_by").references(() => users.id, {
       onDelete: "set null",
     }),
     created_at: timestamp("created_at", { withTimezone: true })
@@ -559,7 +508,7 @@ export const orderingRules = pgTable("ordering_rules", {
     .default("medium"),
   custom_text_template: varchar("custom_text_template", { length: 60 }),
   is_active: boolean("is_active").notNull().default(true),
-  created_by: uuid("created_by").references(() => profiles.id, {
+  created_by: uuid("created_by").references(() => users.id, {
     onDelete: "set null",
   }),
   created_at: timestamp("created_at", { withTimezone: true })
@@ -677,11 +626,11 @@ export const orders = pgTable(
     rejection_reason: text("rejection_reason"),
     reassignment_count: smallint("reassignment_count").notNull().default(0),
     status: orderStatusEnum("status").notNull().default("draft"),
-    approved_by: uuid("approved_by").references(() => profiles.id, {
+    approved_by: uuid("approved_by").references(() => users.id, {
       onDelete: "set null",
     }),
     approved_at: timestamp("approved_at", { withTimezone: true }),
-    cancelled_by: uuid("cancelled_by").references(() => profiles.id, {
+    cancelled_by: uuid("cancelled_by").references(() => users.id, {
       onDelete: "set null",
     }),
     cancelled_at: timestamp("cancelled_at", { withTimezone: true }),
@@ -714,7 +663,7 @@ export const orders = pgTable(
       onDelete: "set null",
     }),
     last_status_override_by: uuid("last_status_override_by").references(
-      () => profiles.id,
+      () => users.id,
       {
         onDelete: "set null",
       },
@@ -749,7 +698,7 @@ export const orderStatusHistory = pgTable("order_status_history", {
     .references(() => orders.id, { onDelete: "cascade" }),
   from_status: orderStatusEnum("from_status"),
   to_status: orderStatusEnum("to_status").notNull(),
-  changed_by: uuid("changed_by").references(() => profiles.id, {
+  changed_by: uuid("changed_by").references(() => users.id, {
     onDelete: "set null",
   }),
   changed_by_role: userRoleEnum("changed_by_role"),
@@ -826,7 +775,7 @@ export const notificationLog = pgTable("notification_log", {
   order_id: uuid("order_id").references(() => orders.id, {
     onDelete: "set null",
   }),
-  recipient_user_id: uuid("recipient_user_id").references(() => profiles.id, {
+  recipient_user_id: uuid("recipient_user_id").references(() => users.id, {
     onDelete: "set null",
   }),
   event: notificationEventEnum("event").notNull(),
@@ -856,7 +805,7 @@ export const notificationPreferences = pgTable(
       .default(sql`gen_random_uuid()`),
     user_id: uuid("user_id")
       .notNull()
-      .references(() => profiles.id, { onDelete: "cascade" }),
+      .references(() => users.id, { onDelete: "cascade" }),
     event: notificationEventEnum("event").notNull(),
     channel: notificationChannelEnum("channel").notNull(),
     is_enabled: boolean("is_enabled").notNull().default(true),
@@ -880,7 +829,7 @@ export const systemSettings = pgTable("system_settings", {
   value: text("value").notNull(),
   description: text("description"),
   value_type: varchar("value_type", { length: 20 }).notNull().default("string"),
-  updated_by: uuid("updated_by").references(() => profiles.id, {
+  updated_by: uuid("updated_by").references(() => users.id, {
     onDelete: "set null",
   }),
   updated_at: timestamp("updated_at", { withTimezone: true })
@@ -906,7 +855,7 @@ export const auditLog = pgTable("audit_log", {
   id: uuid("id")
     .primaryKey()
     .default(sql`gen_random_uuid()`),
-  actor_id: uuid("actor_id").references(() => profiles.id, {
+  actor_id: uuid("actor_id").references(() => users.id, {
     onDelete: "set null",
   }),
   actor_role: userRoleEnum("actor_role"),

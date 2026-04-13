@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { db } from "@/lib/db";
-import { profiles, companyMemberships } from "@/lib/db/schema";
+import { users, companies, bakeries } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { UnauthorizedError, ForbiddenError } from "@/lib/errors";
 import type { UserRole } from "@/lib/shared";
@@ -18,30 +18,39 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
   const { data: { user: supabaseUser } } = await supabase.auth.getUser();
   if (!supabaseUser) return null;
 
-  const [profile] = await db
+  const [user] = await db
     .select()
-    .from(profiles)
-    .where(eq(profiles.id, supabaseUser.id))
+    .from(users)
+    .where(eq(users.id, supabaseUser.id))
     .limit(1);
 
-  if (!profile) return null;
+  if (!user) return null;
 
   let companyId: string | null = null;
-  if (profile.role !== 'bakery_admin' && profile.role !== 'platform_admin') {
-    const [membership] = await db
-      .select({ company_id: companyMemberships.company_id })
-      .from(companyMemberships)
-      .where(eq(companyMemberships.user_id, profile.id))
+  let bakeryId: string | null = null;
+
+  if (user.role === 'bakery_admin') {
+    const [bakery] = await db
+      .select({ id: bakeries.id })
+      .from(bakeries)
+      .where(eq(bakeries.user_id, user.id))
       .limit(1);
-    companyId = membership?.company_id ?? null;
+    bakeryId = bakery?.id ?? null;
+  } else if (user.role !== 'platform_admin') {
+    const [company] = await db
+      .select({ id: companies.id })
+      .from(companies)
+      .where(eq(companies.user_id, user.id))
+      .limit(1);
+    companyId = company?.id ?? null;
   }
 
   return {
-    id: profile.id,
+    id: user.id,
     email: supabaseUser.email ?? '',
-    role: profile.role as UserRole,
+    role: user.role as UserRole,
     companyId,
-    bakeryId: profile.bakery_id,
+    bakeryId,
   };
 }
 

@@ -6,7 +6,6 @@ import { companyService } from '@/lib/services/company.service';
 import type {
   UpdateCompanyProfileInput,
   UpdateCompanySettingsInput,
-  InviteUserInput,
 } from '@/lib/shared';
 
 export async function updateCompanyProfile(data: UpdateCompanyProfileInput) {
@@ -25,16 +24,6 @@ export async function updateCompanySettings(data: UpdateCompanySettingsInput) {
   const companyId = requireCompanyUser(user);
 
   const result = await companyService.updateCompanySettings(companyId, data);
-  revalidatePath('/dashboard/settings');
-  return result;
-}
-
-export async function inviteUser(data: InviteUserInput) {
-  const user = await requireAuth();
-  requireRole(user, 'company_owner');
-  const companyId = requireCompanyUser(user);
-
-  const result = await companyService.inviteMember(companyId, user.id, data);
   revalidatePath('/dashboard/settings');
   return result;
 }

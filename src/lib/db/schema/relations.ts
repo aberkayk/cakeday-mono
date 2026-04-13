@@ -1,8 +1,9 @@
 import { relations } from 'drizzle-orm';
 import {
-  profiles,
+  users,
   companies,
-  companyMemberships,
+  contacts,
+  addresses,
   companySettings,
   bakeries,
   bakeryDistricts,
@@ -25,16 +26,16 @@ import {
   auditLog,
 } from './tables';
 
-// ─── Profiles ────────────────────────────────────────────────────────────────
+// ─── Users ───────────────────────────────────────────────────────────────────
 
-export const profilesRelations = relations(profiles, ({ one, many }) => ({
-  bakery: one(bakeries, {
-    fields: [profiles.bakery_id],
-    references: [bakeries.id],
+export const usersRelations = relations(users, ({ one, many }) => ({
+  company: one(companies, {
+    fields: [users.id],
+    references: [companies.user_id],
   }),
-  membership: one(companyMemberships, {
-    fields: [profiles.id],
-    references: [companyMemberships.user_id],
+  bakery: one(bakeries, {
+    fields: [users.id],
+    references: [bakeries.user_id],
   }),
   notificationPreferences: many(notificationPreferences),
 }));
@@ -42,6 +43,10 @@ export const profilesRelations = relations(profiles, ({ one, many }) => ({
 // ─── Companies ────────────────────────────────────────────────────────────────
 
 export const companiesRelations = relations(companies, ({ one, many }) => ({
+  owner: one(users, {
+    fields: [companies.user_id],
+    references: [users.id],
+  }),
   subscriptionPlan: one(subscriptionPlans, {
     fields: [companies.subscription_plan_id],
     references: [subscriptionPlans.id],
@@ -50,7 +55,8 @@ export const companiesRelations = relations(companies, ({ one, many }) => ({
     fields: [companies.id],
     references: [companySettings.company_id],
   }),
-  memberships: many(companyMemberships),
+  contacts: many(contacts),
+  addresses: many(addresses),
   employees: many(employees),
   orderingRules: many(orderingRules),
   orders: many(orders),
@@ -59,19 +65,17 @@ export const companiesRelations = relations(companies, ({ one, many }) => ({
   payments: many(payments),
 }));
 
-export const companyMembershipsRelations = relations(companyMemberships, ({ one }) => ({
-  user: one(profiles, {
-    fields: [companyMemberships.user_id],
-    references: [profiles.id],
-  }),
+export const contactsRelations = relations(contacts, ({ one }) => ({
   company: one(companies, {
-    fields: [companyMemberships.company_id],
+    fields: [contacts.company_id],
     references: [companies.id],
   }),
-  invitedBy: one(profiles, {
-    fields: [companyMemberships.invited_by],
-    references: [profiles.id],
-    relationName: 'invitedByProfile',
+}));
+
+export const addressesRelations = relations(addresses, ({ one }) => ({
+  company: one(companies, {
+    fields: [addresses.company_id],
+    references: [companies.id],
   }),
 }));
 
@@ -85,14 +89,13 @@ export const companySettingsRelations = relations(companySettings, ({ one }) => 
 // ─── Bakeries ─────────────────────────────────────────────────────────────────
 
 export const bakeriesRelations = relations(bakeries, ({ one, many }) => ({
-  invitedBy: one(profiles, {
-    fields: [bakeries.invited_by],
-    references: [profiles.id],
+  owner: one(users, {
+    fields: [bakeries.user_id],
+    references: [users.id],
   }),
   districts: many(bakeryDistricts),
   orders: many(orders),
   priceChangeRequests: many(priceChangeRequests),
-  staff: many(profiles),
 }));
 
 export const bakeryDistrictsRelations = relations(bakeryDistricts, ({ one }) => ({
@@ -125,9 +128,9 @@ export const priceChangeRequestsRelations = relations(priceChangeRequests, ({ on
     fields: [priceChangeRequests.cake_type_id],
     references: [cakeTypes.id],
   }),
-  reviewedBy: one(profiles, {
+  reviewedBy: one(users, {
     fields: [priceChangeRequests.reviewed_by],
-    references: [profiles.id],
+    references: [users.id],
   }),
 }));
 
@@ -146,9 +149,9 @@ export const employeesRelations = relations(employees, ({ one, many }) => ({
     fields: [employees.preferred_cake_type_id],
     references: [cakeTypes.id],
   }),
-  deactivatedBy: one(profiles, {
+  deactivatedBy: one(users, {
     fields: [employees.deactivated_by],
-    references: [profiles.id],
+    references: [users.id],
   }),
   orders: many(orders),
 }));
@@ -164,9 +167,9 @@ export const orderingRulesRelations = relations(orderingRules, ({ one, many }) =
     fields: [orderingRules.default_cake_type_id],
     references: [cakeTypes.id],
   }),
-  createdBy: one(profiles, {
+  createdBy: one(users, {
     fields: [orderingRules.created_by],
-    references: [profiles.id],
+    references: [users.id],
   }),
   orders: many(orders),
 }));
@@ -194,15 +197,15 @@ export const ordersRelations = relations(orders, ({ one, many }) => ({
     fields: [orders.bakery_id],
     references: [bakeries.id],
   }),
-  approvedBy: one(profiles, {
+  approvedBy: one(users, {
     fields: [orders.approved_by],
-    references: [profiles.id],
-    relationName: 'approvedByProfile',
+    references: [users.id],
+    relationName: 'approvedByUser',
   }),
-  cancelledBy: one(profiles, {
+  cancelledBy: one(users, {
     fields: [orders.cancelled_by],
-    references: [profiles.id],
-    relationName: 'cancelledByProfile',
+    references: [users.id],
+    relationName: 'cancelledByUser',
   }),
   payment: one(payments, {
     fields: [orders.payment_id],
@@ -218,9 +221,9 @@ export const orderStatusHistoryRelations = relations(orderStatusHistory, ({ one 
     fields: [orderStatusHistory.order_id],
     references: [orders.id],
   }),
-  changedBy: one(profiles, {
+  changedBy: one(users, {
     fields: [orderStatusHistory.changed_by],
-    references: [profiles.id],
+    references: [users.id],
   }),
 }));
 
@@ -240,9 +243,9 @@ export const hrSyncLogsRelations = relations(hrSyncLogs, ({ one }) => ({
     fields: [hrSyncLogs.integration_id],
     references: [hrIntegrations.id],
   }),
-  triggeredBy: one(profiles, {
+  triggeredBy: one(users, {
     fields: [hrSyncLogs.triggered_by],
-    references: [profiles.id],
+    references: [users.id],
   }),
 }));
 
@@ -291,9 +294,9 @@ export const notificationLogRelations = relations(notificationLog, ({ one }) => 
     fields: [notificationLog.order_id],
     references: [orders.id],
   }),
-  recipientUser: one(profiles, {
+  recipientUser: one(users, {
     fields: [notificationLog.recipient_user_id],
-    references: [profiles.id],
+    references: [users.id],
   }),
   template: one(notificationTemplates, {
     fields: [notificationLog.template_id],
@@ -302,18 +305,18 @@ export const notificationLogRelations = relations(notificationLog, ({ one }) => 
 }));
 
 export const notificationPreferencesRelations = relations(notificationPreferences, ({ one }) => ({
-  user: one(profiles, {
+  user: one(users, {
     fields: [notificationPreferences.user_id],
-    references: [profiles.id],
+    references: [users.id],
   }),
 }));
 
 // ─── Audit ────────────────────────────────────────────────────────────────────
 
 export const auditLogRelations = relations(auditLog, ({ one }) => ({
-  actor: one(profiles, {
+  actor: one(users, {
     fields: [auditLog.actor_id],
-    references: [profiles.id],
+    references: [users.id],
   }),
 }));
 

@@ -125,11 +125,8 @@ export class OrderService {
       throw new BadRequestError('Secilen pasta turu ve boyutu icin fiyat bulunamadi.');
     }
 
-    // Fetch company commission rate via subscription plan
     const [company] = await db
-      .select({
-        require_order_approval: companies.require_order_approval,
-      })
+      .select({ id: companies.id })
       .from(companies)
       .where(eq(companies.id, companyId))
       .limit(1);
@@ -140,7 +137,7 @@ export class OrderService {
     const platformFee = basePrice * 0.1; // 10% default commission
     const vatRate = 0.2; // 20% VAT
     const orderTotal = (basePrice + platformFee) * (1 + vatRate);
-    const needsApproval = company.require_order_approval;
+    const needsApproval = false;
 
     const [order] = await db
       .insert(orders)
