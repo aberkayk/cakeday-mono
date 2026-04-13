@@ -19,16 +19,13 @@ import {
 } from "@/components/ui/select";
 import { updateCompanyProfile } from "@/actions/companies";
 import { useToast } from "@/hooks/use-toast";
-import { SECTOR_OPTIONS, COMPANY_SIZE_LABELS } from "@/lib/utils";
-import type { Company } from "@/lib/shared";
+import { SECTOR_OPTIONS } from "@/lib/utils";
+import type { Company, Contact, Address } from "@/lib/shared";
 
 const schema = z.object({
   name: z.string().min(1, "Şirket adı gerekli."),
-  primary_contact_name: z.string().min(1, "Ad Soyad gerekli."),
-  primary_contact_phone: z.string().min(1, "Telefon gerekli."),
-  billing_address: z.string().min(5, "Adres gerekli."),
+  email: z.string().email("Geçerli bir e-posta giriniz.").optional().or(z.literal("")),
   sector: z.string().optional(),
-  company_size_range: z.string().optional(),
 });
 type FormData = z.infer<typeof schema>;
 
@@ -60,13 +57,18 @@ function SectionCard({ icon: Icon, title, description, children }: {
 
 interface SettingsViewProps {
   company: Company;
+  contacts?: Contact[];
+  addresses?: Address[];
 }
 
-export function SettingsView({ company }: SettingsViewProps) {
+export function SettingsView({ company, contacts = [], addresses = [] }: SettingsViewProps) {
   const [notifEmail, setNotifEmail] = useState(true);
   const [notifWA, setNotifWA] = useState(false);
   const [notifBirthday, setNotifBirthday] = useState(true);
   const { toast } = useToast();
+
+  const primaryContact = contacts[0];
+  const primaryAddress = addresses[0];
 
   const {
     register,
@@ -77,17 +79,18 @@ export function SettingsView({ company }: SettingsViewProps) {
     resolver: zodResolver(schema),
     defaultValues: {
       name: company.name,
-      primary_contact_name: company.primary_contact_name,
-      primary_contact_phone: company.primary_contact_phone,
-      billing_address: company.billing_address,
+      email: company.email ?? "",
       sector: company.sector ?? "",
-      company_size_range: company.company_size_range ?? "",
     },
   });
 
   const onSubmit = async (data: FormData) => {
     try {
-      await updateCompanyProfile(data);
+      await updateCompanyProfile({
+        name: data.name,
+        email: data.email || undefined,
+        sector: data.sector || undefined,
+      });
       toast({ title: "Şirket bilgileri güncellendi." });
     } catch (err) {
       toast({
@@ -125,75 +128,56 @@ export function SettingsView({ company }: SettingsViewProps) {
             {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-foreground">Sektör</Label>
-              <Select
-                defaultValue={company.sector ?? ""}
-                onValueChange={(v) => setValue("sector", v)}
-              >
-                <SelectTrigger className="rounded-xl border-border-soft">
-                  <SelectValue placeholder="Seçin" />
-                </SelectTrigger>
-                <SelectContent className="rounded-xl">
-                  {SECTOR_OPTIONS.map((s) => (
-                    <SelectItem key={s} value={s}>{s}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-sm font-medium text-foreground">Çalışan Sayısı</Label>
-              <Select
-                defaultValue={company.company_size_range ?? ""}
-                onValueChange={(v) => setValue("company_size_range", v)}
-              >
-                <SelectTrigger className="rounded-xl border-border-soft">
-                  <SelectValue placeholder="Seçin" />
-                </SelectTrigger>
-                <SelectContent className="rounded-xl">
-                  {Object.entries(COMPANY_SIZE_LABELS).map(([k, v]) => (
-                    <SelectItem key={k} value={k}>{v}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <Separator className="bg-border-soft/50" />
-
-          <p className="text-xs font-semibold text-muted uppercase tracking-wider">Yetkili Bilgileri</p>
-
           <div className="space-y-1.5">
-            <Label htmlFor="primary_contact_name" className="text-sm font-medium text-foreground">Ad Soyad</Label>
+            <Label htmlFor="email" className="text-sm font-medium text-foreground">E-posta</Label>
             <Input
-              id="primary_contact_name"
-              {...register("primary_contact_name")}
+              id="email"
+              type="email"
+              {...register("email")}
               className="rounded-xl border-border-soft focus:border-primary"
             />
-            {errors.primary_contact_name && <p className="text-xs text-red-500">{errors.primary_contact_name.message}</p>}
+            {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="primary_contact_phone" className="text-sm font-medium text-foreground">Telefon</Label>
-            <Input
-              id="primary_contact_phone"
-              type="tel"
-              {...register("primary_contact_phone")}
-              className="rounded-xl border-border-soft focus:border-primary"
-            />
-            {errors.primary_contact_phone && <p className="text-xs text-red-500">{errors.primary_contact_phone.message}</p>}
+            <Label className="text-sm font-medium text-foreground">Sektör</Label>
+            <Select
+              defaultValue={company.sector ?? ""}
+              onValueChange={(v) => setValue("sector", v)}
+            >
+              <SelectTrigger className="rounded-xl border-border-soft">
+                <SelectValue placeholder="Seçin" />
+              </SelectTrigger>
+              <SelectContent className="rounded-xl">
+                {SECTOR_OPTIONS.map((s) => (
+                  <SelectItem key={s} value={s}>{s}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
-          <div className="space-y-1.5">
-            <Label htmlFor="billing_address" className="text-sm font-medium text-foreground">Fatura Adresi</Label>
-            <Input
-              id="billing_address"
-              {...register("billing_address")}
-              className="rounded-xl border-border-soft focus:border-primary"
-            />
-            {errors.billing_address && <p className="text-xs text-red-500">{errors.billing_address.message}</p>}
-          </div>
+          {primaryContact && (
+            <>
+              <Separator className="bg-border-soft/50" />
+              <p className="text-xs font-semibold text-muted uppercase tracking-wider">Yetkili Bilgileri</p>
+              <div className="space-y-2 text-sm">
+                <p><span className="text-muted">Ad:</span> {primaryContact.name}</p>
+                {primaryContact.title && <p><span className="text-muted">Unvan:</span> {primaryContact.title}</p>}
+                {primaryContact.phone && <p><span className="text-muted">Telefon:</span> {primaryContact.phone}</p>}
+                {primaryContact.email && <p><span className="text-muted">E-posta:</span> {primaryContact.email}</p>}
+              </div>
+              {/* TODO: contacts CRUD */}
+            </>
+          )}
+
+          {primaryAddress && (
+            <>
+              <Separator className="bg-border-soft/50" />
+              <p className="text-xs font-semibold text-muted uppercase tracking-wider">Fatura Adresi</p>
+              <p className="text-sm">{primaryAddress.address}</p>
+              {/* TODO: addresses CRUD */}
+            </>
+          )}
 
           <Button
             type="submit"
@@ -223,7 +207,6 @@ export function SettingsView({ company }: SettingsViewProps) {
         description="Hangi bildirimleri almak istediğinizi seçin."
       >
         <div className="space-y-1">
-          {/* Email Notifications */}
           <div className="flex items-center justify-between py-4">
             <div className="flex items-center gap-3">
               <div className="h-9 w-9 rounded-xl bg-background-secondary flex items-center justify-center shrink-0">
@@ -239,7 +222,6 @@ export function SettingsView({ company }: SettingsViewProps) {
 
           <Separator className="bg-border-soft/30" />
 
-          {/* WhatsApp */}
           <div className="flex items-center justify-between py-4">
             <div className="flex items-center gap-3">
               <div className="h-9 w-9 rounded-xl bg-background-secondary flex items-center justify-center shrink-0">
@@ -255,7 +237,6 @@ export function SettingsView({ company }: SettingsViewProps) {
 
           <Separator className="bg-border-soft/30" />
 
-          {/* Birthday reminders */}
           <div className="flex items-center justify-between py-4">
             <div className="flex items-center gap-3">
               <div className="h-9 w-9 rounded-xl bg-primary/20 flex items-center justify-center shrink-0">

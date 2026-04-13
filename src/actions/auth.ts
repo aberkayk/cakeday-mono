@@ -15,7 +15,6 @@ export async function register(formData: FormData) {
     phone: formData.get('phone') as string,
     vkn: (formData.get('vkn') as string) || undefined,
     sector: (formData.get('sector') as string) || undefined,
-    company_size_range: (formData.get('company_size_range') as string) || undefined,
     primary_contact_title: (formData.get('primary_contact_title') as string) || undefined,
     billing_address: (formData.get('billing_address') as string) || undefined,
     billing_district: (formData.get('billing_district') as string) || undefined,

@@ -56,31 +56,12 @@ export interface JwtClaims {
   exp: number;
 }
 
-export interface Profile {
+export interface User {
   id: string;
   full_name: string;
   phone: string | null;
   role: UserRole;
-  whatsapp_number: string | null;
-  whatsapp_opt_in: boolean;
-  email_notifications_enabled: boolean;
-  whatsapp_notifications_enabled: boolean;
-  bakery_id: string | null;
   onboarding_completed: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface CompanyMembership {
-  id: string;
-  user_id: string;
-  company_id: string;
-  role: UserRole;
-  invited_by: string | null;
-  invitation_token: string | null;
-  invitation_expires_at: string | null;
-  invitation_accepted_at: string | null;
-  is_active: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -105,38 +86,38 @@ export interface SubscriptionPlan {
 
 export interface Company {
   id: string;
+  user_id: string;
   name: string;
-  vkn: string;
+  vkn: string | null;
   sector: string | null;
-  company_size_range: string | null;
-  primary_contact_name: string;
-  primary_contact_title: string | null;
-  primary_contact_email: string;
-  primary_contact_phone: string;
-  billing_address: string;
-  billing_district: District | null;
-  einvoice_alias: string | null;
-  einvoice_type: string | null;
-  billing_email: string | null;
+  email: string | null;
   logo_url: string | null;
   subscription_plan_id: string | null;
-  billing_cycle: BillingCycle;
   subscription_started_at: string | null;
   subscription_renews_at: string | null;
-  subscription_overridden_by: string | null;
-  active_payment_method: PaymentMethod | null;
-  iyzico_customer_token: string | null;
   status: CompanyStatus;
-  is_live: boolean;
-  require_order_approval: boolean;
-  order_lead_time_days: number;
-  default_delivery_window: DeliveryWindow;
-  default_delivery_address: string | null;
-  default_cake_text: string | null;
-  onboarding_step: number;
-  admin_note: string | null;
-  kvkk_accepted_at: string | null;
-  kvkk_accepted_ip: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Contact {
+  id: string;
+  company_id: string;
+  name: string;
+  title: string | null;
+  email: string | null;
+  phone: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Address {
+  id: string;
+  company_id: string;
+  address: string;
+  district: District | null;
+  city: string;
+  country: string;
   created_at: string;
   updated_at: string;
 }
@@ -260,6 +241,7 @@ export interface OrderStatusHistory {
 
 export interface Bakery {
   id: string;
+  user_id: string;
   name: string;
   slug: string;
   description: string | null;
@@ -273,10 +255,6 @@ export interface Bakery {
   business_hours: Record<string, { open: string; close: string } | null>;
   acceptance_window_hours: number | null;
   status: BakeryStatus;
-  invitation_token: string | null;
-  invitation_expires_at: string | null;
-  invitation_accepted_at: string | null;
-  invited_by: string | null;
   admin_note: string | null;
   created_at: string;
   updated_at: string;

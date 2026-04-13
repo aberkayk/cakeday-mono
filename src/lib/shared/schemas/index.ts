@@ -25,7 +25,6 @@ export const registerSchema = z.object({
     .regex(/^\d{10}$/, 'VKN yalnizca rakam icermelidir.')
     .optional(),
   sector: z.string().optional(),
-  company_size_range: z.string().optional(),
   primary_contact_name: z.string().min(2, 'Ad Soyad en az 2 karakter olmalidir.'),
   primary_contact_title: z.string().optional(),
   email: z.string().email('Gecerli bir e-posta adresi giriniz.'),
@@ -82,53 +81,17 @@ export const resetPasswordSchema = z.object({
 });
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 
-export const acceptInvitationSchema = z.object({
-  token: z.string().min(1, 'Davet tokeni gereklidir.'),
-  full_name: z.string().min(2, 'Ad Soyad en az 2 karakter olmalidir.'),
-  password: z
-    .string()
-    .min(8, 'Sifre en az 8 karakter olmalidir.'),
-  phone: z
-    .string()
-    .regex(turkishPhoneRegex, 'Gecerli bir Turk cep telefonu giriniz.')
-    .optional(),
-});
-export type AcceptInvitationInput = z.infer<typeof acceptInvitationSchema>;
-
 // ─── Company Schemas ──────────────────────────────────────────────────────────
 
 export const updateCompanyProfileSchema = z.object({
   name: z.string().min(2).optional(),
   sector: z.string().optional(),
-  company_size_range: z.string().optional(),
-  primary_contact_name: z.string().min(2).optional(),
-  primary_contact_title: z.string().optional(),
-  primary_contact_email: z.string().email().optional(),
-  primary_contact_phone: z.string().regex(turkishPhoneRegex).optional(),
-  billing_address: z.string().min(10).optional(),
-  billing_district: z.enum(['besiktas', 'sariyer']).optional(),
-  billing_email: z.string().email().optional(),
-  einvoice_alias: z.string().optional(),
-  einvoice_type: z.enum(['e_fatura', 'e_arsiv']).optional(),
+  email: z.string().email().optional(),
   logo_url: z.string().url().optional(),
-  default_delivery_address: z.string().optional(),
-  default_delivery_window: z.enum(['morning', 'afternoon', 'no_preference']).optional(),
-  default_cake_text: z.string().max(60).optional(),
-  order_lead_time_days: z.number().int().min(1).max(365).optional(),
 });
 export type UpdateCompanyProfileInput = z.infer<typeof updateCompanyProfileSchema>;
 
-export const updateOnboardingSchema = z.object({
-  completed_step: z.number().int().min(1).max(6),
-});
-export type UpdateOnboardingInput = z.infer<typeof updateOnboardingSchema>;
-
 export const updateCompanySettingsSchema = z.object({
-  require_order_approval: z.boolean().optional(),
-  order_lead_time_days: z.number().int().min(1).max(365).optional(),
-  default_delivery_window: z.enum(['morning', 'afternoon', 'no_preference']).optional(),
-  default_delivery_address: z.string().optional(),
-  default_cake_text: z.string().max(60).optional(),
   cancellation_cutoff_hours: z.number().int().min(0).max(168).optional(),
   cancellation_fee_pct: z.number().min(0).max(1).optional(),
   notify_order_events_email: z.boolean().optional(),
@@ -138,17 +101,23 @@ export const updateCompanySettingsSchema = z.object({
 });
 export type UpdateCompanySettingsInput = z.infer<typeof updateCompanySettingsSchema>;
 
-export const inviteUserSchema = z.object({
-  email: z.string().email('Gecerli bir e-posta adresi giriniz.'),
-  role: z.enum(['hr_manager', 'finance', 'viewer']),
-});
-export type InviteUserInput = z.infer<typeof inviteUserSchema>;
+// ─── Contact / Address Schemas ────────────────────────────────────────────────
 
-export const updateUserSchema = z.object({
-  role: z.enum(['hr_manager', 'finance', 'viewer']).optional(),
-  is_active: z.boolean().optional(),
+export const upsertContactSchema = z.object({
+  name: z.string().min(2, 'Ad Soyad en az 2 karakter olmalidir.'),
+  title: z.string().optional(),
+  email: z.string().email().optional(),
+  phone: z.string().regex(turkishPhoneRegex).optional(),
 });
-export type UpdateUserInput = z.infer<typeof updateUserSchema>;
+export type UpsertContactInput = z.infer<typeof upsertContactSchema>;
+
+export const upsertAddressSchema = z.object({
+  address: z.string().min(10, 'Adres en az 10 karakter olmalidir.'),
+  district: z.enum(['besiktas', 'sariyer']).optional(),
+  city: z.string().default('Istanbul'),
+  country: z.string().default('Turkey'),
+});
+export type UpsertAddressInput = z.infer<typeof upsertAddressSchema>;
 
 // ─── Employee Schemas ─────────────────────────────────────────────────────────
 
@@ -373,9 +342,6 @@ export type UpdateSubscriptionInput = z.infer<typeof updateSubscriptionSchema>;
 // ─── Notification Schemas ─────────────────────────────────────────────────────
 
 export const updateNotificationPrefsSchema = z.object({
-  email_notifications_enabled: z.boolean().optional(),
-  whatsapp_notifications_enabled: z.boolean().optional(),
-  whatsapp_number: z.string().regex(turkishPhoneRegex).optional(),
   preferences: z
     .array(
       z.object({
@@ -405,11 +371,7 @@ export type ConnectKolayIkInput = z.infer<typeof connectKolayIkSchema>;
 
 export const adminUpdateCompanySchema = z.object({
   status: z.enum(['pending_verification', 'pending_approval', 'active', 'suspended', 'deactivated']).optional(),
-  admin_note: z.string().optional(),
-  order_lead_time_days: z.number().int().min(1).max(365).optional(),
   subscription_plan_id: z.string().uuid().optional(),
-  billing_cycle: z.enum(['monthly', 'annual']).optional(),
-  is_live: z.boolean().optional(),
 });
 export type AdminUpdateCompanyInput = z.infer<typeof adminUpdateCompanySchema>;
 

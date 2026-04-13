@@ -78,11 +78,11 @@ export default function CompaniesPage() {
                     <TableCell>
                       <div>
                         <p className="font-medium text-sm">{company.name}</p>
-                        <p className="text-xs text-muted-foreground">{company.primary_contact_email}</p>
+                        <p className="text-xs text-muted-foreground">{company.email ?? "—"}</p>
                       </div>
                     </TableCell>
-                    <TableCell className="font-mono text-sm">{company.vkn}</TableCell>
-                    <TableCell className="text-sm">{company.primary_contact_name}</TableCell>
+                    <TableCell className="font-mono text-sm">{company.vkn ?? "—"}</TableCell>
+                    <TableCell className="text-sm">—</TableCell>
                     <TableCell>
                       <Badge className={`text-xs ${STATUS_COLORS[company.status] ?? ""}`}>
                         {COMPANY_STATUS_LABELS[company.status] ?? company.status}

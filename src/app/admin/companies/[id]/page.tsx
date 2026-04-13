@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { formatDate, COMPANY_STATUS_LABELS } from "@/lib/utils";
-import type { Company } from "@/lib/shared";
+import type { Company, Contact, Address } from "@/lib/shared";
 
 // TODO: wire to server actions
 
@@ -21,9 +21,14 @@ const STATUS_COLORS: Record<string, string> = {
 
 // Placeholder until wired to server actions
 const company: Company | null = null;
+const contacts: Contact[] = [];
+const addresses: Address[] = [];
 
 export default function CompanyDetailPage() {
   if (!company) return <p className="text-muted-foreground">Şirket bulunamadı.</p>;
+
+  const primaryContact = contacts[0];
+  const primaryAddress = addresses[0];
 
   return (
     <div className="space-y-6 max-w-4xl">
@@ -40,7 +45,7 @@ export default function CompanyDetailPage() {
           </div>
           <p className="text-muted-foreground text-sm">Kayıt: {formatDate(company.created_at)}</p>
         </div>
-        {/* TODO: wire suspend action in Task 11 */}
+        {/* TODO: wire suspend action */}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -54,7 +59,7 @@ export default function CompanyDetailPage() {
           <CardContent className="space-y-3 text-sm">
             <div className="flex justify-between">
               <span className="text-muted-foreground">VKN</span>
-              <span className="font-mono font-medium">{company.vkn}</span>
+              <span className="font-mono font-medium">{company.vkn ?? "—"}</span>
             </div>
             <Separator />
             <div className="flex justify-between">
@@ -63,8 +68,8 @@ export default function CompanyDetailPage() {
             </div>
             <Separator />
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Çalışan Sayısı</span>
-              <span>{company.company_size_range ?? "—"}</span>
+              <span className="text-muted-foreground">E-posta</span>
+              <span>{company.email ?? "—"}</span>
             </div>
             <Separator />
             <div className="flex justify-between">
@@ -82,37 +87,42 @@ export default function CompanyDetailPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
-            <div className="flex items-center gap-2">
-              <span className="font-medium">{company.primary_contact_name}</span>
-              {company.primary_contact_title && (
-                <span className="text-muted-foreground">· {company.primary_contact_title}</span>
-              )}
-            </div>
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Mail className="h-3.5 w-3.5" />
-              <span>{company.primary_contact_email}</span>
-            </div>
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Phone className="h-3.5 w-3.5" />
-              <span>{company.primary_contact_phone}</span>
-            </div>
-            <Separator />
-            <div className="flex items-start gap-2 text-muted-foreground">
-              <MapPin className="h-3.5 w-3.5 mt-0.5 shrink-0" />
-              <span>{company.billing_address}</span>
-            </div>
+            {primaryContact ? (
+              <>
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">{primaryContact.name}</span>
+                  {primaryContact.title && (
+                    <span className="text-muted-foreground">· {primaryContact.title}</span>
+                  )}
+                </div>
+                {primaryContact.email && (
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Mail className="h-3.5 w-3.5" />
+                    <span>{primaryContact.email}</span>
+                  </div>
+                )}
+                {primaryContact.phone && (
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Phone className="h-3.5 w-3.5" />
+                    <span>{primaryContact.phone}</span>
+                  </div>
+                )}
+              </>
+            ) : (
+              <p className="text-muted-foreground">İletişim bilgisi yok.</p>
+            )}
+            {primaryAddress && (
+              <>
+                <Separator />
+                <div className="flex items-start gap-2 text-muted-foreground">
+                  <MapPin className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+                  <span>{primaryAddress.address}</span>
+                </div>
+              </>
+            )}
           </CardContent>
         </Card>
       </div>
-
-      {company.admin_note && (
-        <Card className="border border-orange-200 bg-orange-50">
-          <CardContent className="pt-4">
-            <p className="text-sm font-medium text-orange-800 mb-1">Admin Notu</p>
-            <p className="text-sm text-orange-700">{company.admin_note}</p>
-          </CardContent>
-        </Card>
-      )}
     </div>
   );
 }
