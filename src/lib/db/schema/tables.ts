@@ -28,7 +28,7 @@ import {
   cakeSizeEnum,
   orderStatusEnum,
   orderTypeEnum,
-  bakeryStatusEnum,
+  supplierStatusEnum,
   paymentMethodEnum,
   paymentStatusEnum,
   priceRequestStatusEnum,
@@ -46,6 +46,9 @@ export const users = pgTable("users", {
   full_name: text("full_name").notNull(),
   phone: varchar("phone", { length: 20 }),
   role: userRoleEnum("role").notNull(),
+  address_id: uuid("address_id").references(() => addresses.id, {
+    onDelete: "set null",
+  }),
   onboarding_completed: boolean("onboarding_completed")
     .notNull()
     .default(false),
@@ -107,6 +110,12 @@ export const companies = pgTable(
     sector: varchar("sector", { length: 100 }),
     email: varchar("email", { length: 255 }),
     logo_url: text("logo_url"),
+    address_id: uuid("address_id").references(() => addresses.id, {
+      onDelete: "set null",
+    }),
+    contact_id: uuid("contact_id").references(() => contacts.id, {
+      onDelete: "set null",
+    }),
     subscription_plan_id: uuid("subscription_plan_id").references(
       () => subscriptionPlans.id,
     ),
@@ -136,9 +145,6 @@ export const contacts = pgTable("contacts", {
   id: uuid("id")
     .primaryKey()
     .default(sql`gen_random_uuid()`),
-  company_id: uuid("company_id")
-    .notNull()
-    .references(() => companies.id, { onDelete: "cascade" }),
   name: varchar("name", { length: 255 }).notNull(),
   title: varchar("title", { length: 100 }),
   email: varchar("email", { length: 255 }),
@@ -155,9 +161,6 @@ export const addresses = pgTable("addresses", {
   id: uuid("id")
     .primaryKey()
     .default(sql`gen_random_uuid()`),
-  company_id: uuid("company_id")
-    .notNull()
-    .references(() => companies.id, { onDelete: "cascade" }),
   address: text("address").notNull(),
   district: districtEnum("district"),
   city: varchar("city", { length: 100 }).notNull().default("Istanbul"),
@@ -200,7 +203,7 @@ export const companySettings = pgTable("company_settings", {
     .defaultNow(),
 });
 
-// ─── Bakeries ─────────────────────────────────────────────────────────────────
+// ─── Suppliers ────────────────────────────────────────────────────────────────
 
 export const districts = pgTable("districts", {
   id: uuid("id")
@@ -216,8 +219,8 @@ export const districts = pgTable("districts", {
     .defaultNow(),
 });
 
-export const bakeries = pgTable(
-  "bakeries",
+export const suppliers = pgTable(
+  "suppliers",
   {
     id: uuid("id")
       .primaryKey()
@@ -229,15 +232,15 @@ export const bakeries = pgTable(
     slug: varchar("slug", { length: 100 }).notNull().unique(),
     description: text("description"),
     logo_url: text("logo_url"),
-    contact_name: varchar("contact_name", { length: 255 }).notNull(),
-    contact_email: varchar("contact_email", { length: 255 }).notNull().unique(),
-    contact_phone: varchar("contact_phone", { length: 20 }).notNull(),
+    contact_id: uuid("contact_id").references(() => contacts.id, {
+      onDelete: "set null",
+    }),
     address: text("address").notNull(),
     iban: varchar("iban", { length: 34 }),
     bank_name: varchar("bank_name", { length: 100 }),
     business_hours: jsonb("business_hours").notNull().default("{}"),
     acceptance_window_hours: smallint("acceptance_window_hours"),
-    status: bakeryStatusEnum("status").notNull().default("pending_setup"),
+    status: supplierStatusEnum("status").notNull().default("pending_setup"),
     admin_note: text("admin_note"),
     created_at: timestamp("created_at", { withTimezone: true })
       .notNull()
@@ -247,16 +250,16 @@ export const bakeries = pgTable(
       .defaultNow(),
   },
   (t) => ({
-    userIdIdx: uniqueIndex("uq_bakeries_user_id").on(t.user_id),
+    userIdIdx: uniqueIndex("uq_suppliers_user_id").on(t.user_id),
   }),
 );
 
-export const bakeryDistricts = pgTable(
-  "bakery_districts",
+export const supplierDistricts = pgTable(
+  "supplier_districts",
   {
-    bakery_id: uuid("bakery_id")
+    supplier_id: uuid("supplier_id")
       .notNull()
-      .references(() => bakeries.id, { onDelete: "cascade" }),
+      .references(() => suppliers.id, { onDelete: "cascade" }),
     district: districtEnum("district").notNull(),
     max_orders_per_day: smallint("max_orders_per_day"),
     created_at: timestamp("created_at", { withTimezone: true })
@@ -264,7 +267,7 @@ export const bakeryDistricts = pgTable(
       .defaultNow(),
   },
   (t) => ({
-    pk: primaryKey({ columns: [t.bakery_id, t.district] }),
+    pk: primaryKey({ columns: [t.supplier_id, t.district] }),
   }),
 );
 
@@ -331,9 +334,9 @@ export const priceChangeRequests = pgTable("price_change_requests", {
   id: uuid("id")
     .primaryKey()
     .default(sql`gen_random_uuid()`),
-  bakery_id: uuid("bakery_id")
+  supplier_id: uuid("supplier_id")
     .notNull()
-    .references(() => bakeries.id, { onDelete: "cascade" }),
+    .references(() => suppliers.id, { onDelete: "cascade" }),
   cake_type_id: uuid("cake_type_id")
     .notNull()
     .references(() => cakeTypes.id, { onDelete: "cascade" }),
@@ -614,7 +617,7 @@ export const orders = pgTable(
     }),
     cake_size: cakeSizeEnum("cake_size").notNull(),
     custom_text: varchar("custom_text", { length: 60 }),
-    bakery_id: uuid("bakery_id").references(() => bakeries.id, {
+    supplier_id: uuid("supplier_id").references(() => suppliers.id, {
       onDelete: "set null",
     }),
     assigned_at: timestamp("assigned_at", { withTimezone: true }),
@@ -684,7 +687,7 @@ export const orders = pgTable(
     companyIdx: index("idx_orders_company_id").on(t.company_id),
     statusIdx: index("idx_orders_status").on(t.status),
     deliveryDateIdx: index("idx_orders_delivery_date").on(t.delivery_date),
-    bakeryIdx: index("idx_orders_bakery_id").on(t.bakery_id),
+    supplierIdx: index("idx_orders_supplier_id").on(t.supplier_id),
     employeeIdx: index("idx_orders_employee_id").on(t.employee_id),
   }),
 );

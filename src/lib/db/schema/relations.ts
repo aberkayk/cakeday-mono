@@ -5,8 +5,8 @@ import {
   contacts,
   addresses,
   companySettings,
-  bakeries,
-  bakeryDistricts,
+  suppliers,
+  supplierDistricts,
   employees,
   orderingRules,
   orders,
@@ -33,9 +33,13 @@ export const usersRelations = relations(users, ({ one, many }) => ({
     fields: [users.id],
     references: [companies.user_id],
   }),
-  bakery: one(bakeries, {
+  supplier: one(suppliers, {
     fields: [users.id],
-    references: [bakeries.user_id],
+    references: [suppliers.user_id],
+  }),
+  address: one(addresses, {
+    fields: [users.address_id],
+    references: [addresses.id],
   }),
   notificationPreferences: many(notificationPreferences),
 }));
@@ -55,28 +59,20 @@ export const companiesRelations = relations(companies, ({ one, many }) => ({
     fields: [companies.id],
     references: [companySettings.company_id],
   }),
-  contacts: many(contacts),
-  addresses: many(addresses),
+  address: one(addresses, {
+    fields: [companies.address_id],
+    references: [addresses.id],
+  }),
+  contact: one(contacts, {
+    fields: [companies.contact_id],
+    references: [contacts.id],
+  }),
   employees: many(employees),
   orderingRules: many(orderingRules),
   orders: many(orders),
   hrIntegrations: many(hrIntegrations),
   invoices: many(invoices),
   payments: many(payments),
-}));
-
-export const contactsRelations = relations(contacts, ({ one }) => ({
-  company: one(companies, {
-    fields: [contacts.company_id],
-    references: [companies.id],
-  }),
-}));
-
-export const addressesRelations = relations(addresses, ({ one }) => ({
-  company: one(companies, {
-    fields: [addresses.company_id],
-    references: [companies.id],
-  }),
 }));
 
 export const companySettingsRelations = relations(companySettings, ({ one }) => ({
@@ -86,22 +82,26 @@ export const companySettingsRelations = relations(companySettings, ({ one }) => 
   }),
 }));
 
-// ─── Bakeries ─────────────────────────────────────────────────────────────────
+// ─── Suppliers ────────────────────────────────────────────────────────────────
 
-export const bakeriesRelations = relations(bakeries, ({ one, many }) => ({
+export const suppliersRelations = relations(suppliers, ({ one, many }) => ({
   owner: one(users, {
-    fields: [bakeries.user_id],
+    fields: [suppliers.user_id],
     references: [users.id],
   }),
-  districts: many(bakeryDistricts),
+  contact: one(contacts, {
+    fields: [suppliers.contact_id],
+    references: [contacts.id],
+  }),
+  districts: many(supplierDistricts),
   orders: many(orders),
   priceChangeRequests: many(priceChangeRequests),
 }));
 
-export const bakeryDistrictsRelations = relations(bakeryDistricts, ({ one }) => ({
-  bakery: one(bakeries, {
-    fields: [bakeryDistricts.bakery_id],
-    references: [bakeries.id],
+export const supplierDistrictsRelations = relations(supplierDistricts, ({ one }) => ({
+  supplier: one(suppliers, {
+    fields: [supplierDistricts.supplier_id],
+    references: [suppliers.id],
   }),
 }));
 
@@ -120,9 +120,9 @@ export const cakePricesRelations = relations(cakePrices, ({ one }) => ({
 }));
 
 export const priceChangeRequestsRelations = relations(priceChangeRequests, ({ one }) => ({
-  bakery: one(bakeries, {
-    fields: [priceChangeRequests.bakery_id],
-    references: [bakeries.id],
+  supplier: one(suppliers, {
+    fields: [priceChangeRequests.supplier_id],
+    references: [suppliers.id],
   }),
   cakeType: one(cakeTypes, {
     fields: [priceChangeRequests.cake_type_id],
@@ -193,9 +193,9 @@ export const ordersRelations = relations(orders, ({ one, many }) => ({
     fields: [orders.cake_type_id],
     references: [cakeTypes.id],
   }),
-  bakery: one(bakeries, {
-    fields: [orders.bakery_id],
-    references: [bakeries.id],
+  supplier: one(suppliers, {
+    fields: [orders.supplier_id],
+    references: [suppliers.id],
   }),
   approvedBy: one(users, {
     fields: [orders.approved_by],

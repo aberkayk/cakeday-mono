@@ -5,7 +5,7 @@ export const userRoleEnum = pgEnum('user_role', [
   'hr_manager',
   'finance',
   'viewer',
-  'bakery_admin',
+  'supplier_admin',
   'platform_admin',
 ]);
 
@@ -53,7 +53,7 @@ export const orderStatusEnum = pgEnum('order_status', [
 
 export const orderTypeEnum = pgEnum('order_type', ['automatic', 'ad_hoc']);
 
-export const bakeryStatusEnum = pgEnum('bakery_status', [
+export const supplierStatusEnum = pgEnum('supplier_status', [
   'pending_setup',
   'active',
   'inactive',
@@ -98,9 +98,9 @@ export const notificationEventEnum = pgEnum('notification_event', [
   'order_draft_created',
   'order_pending_approval',
   'order_confirmed',
-  'order_assigned_to_bakery',
-  'order_accepted_by_bakery',
-  'order_rejected_by_bakery',
+  'order_assigned_to_supplier',
+  'order_accepted_by_supplier',
+  'order_rejected_by_supplier',
   'order_out_for_delivery',
   'order_delivered',
   'order_cancelled',
@@ -115,7 +115,7 @@ export const notificationEventEnum = pgEnum('notification_event', [
   'employee_birthday_reminder',
   'hr_sync_failed',
   'hr_sync_completed',
-  'bakery_invitation',
+  'supplier_invitation',
   'user_invitation',
   'password_reset',
 ]);
