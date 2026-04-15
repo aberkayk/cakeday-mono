@@ -89,6 +89,10 @@ export const suppliersRelations = relations(suppliers, ({ one, many }) => ({
     fields: [suppliers.user_id],
     references: [users.id],
   }),
+  address: one(addresses, {
+    fields: [suppliers.address_id],
+    references: [addresses.id],
+  }),
   contact: one(contacts, {
     fields: [suppliers.contact_id],
     references: [contacts.id],

@@ -93,6 +93,7 @@ erDiagram
     suppliers {
         uuid id PK
         uuid user_id FK "→ users (owner, unique)"
+        uuid address_id FK "→ addresses (optional)"
         uuid contact_id FK "→ contacts (optional)"
         varchar name
         varchar slug UK
@@ -277,6 +278,7 @@ erDiagram
     companies ||--o{ invoices : billed
     companies ||--o{ payments : pays
 
+    suppliers }o--o| addresses : "located at"
     suppliers }o--o| contacts : "primary contact"
     suppliers ||--o{ supplier_districts : "serves in"
     suppliers ||--o{ orders : fulfills
@@ -317,6 +319,7 @@ Both are standalone reference tables — they do **not** know who points at them
 
 - `users.address_id` — a user's personal address (optional, for future profile features).
 - `companies.address_id` — a company's billing/legal address (optional during onboarding).
+- `suppliers.address_id` — a supplier's pickup/operating address (optional during onboarding).
 - `companies.contact_id` — a company's primary point of contact (optional).
 - `suppliers.contact_id` — a supplier's primary point of contact (optional).
 

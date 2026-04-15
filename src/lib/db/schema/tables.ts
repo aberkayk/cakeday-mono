@@ -235,7 +235,9 @@ export const suppliers = pgTable(
     contact_id: uuid("contact_id").references(() => contacts.id, {
       onDelete: "set null",
     }),
-    address: text("address").notNull(),
+    address_id: uuid("address_id").references(() => addresses.id, {
+      onDelete: "set null",
+    }),
     iban: varchar("iban", { length: 34 }),
     bank_name: varchar("bank_name", { length: 100 }),
     business_hours: jsonb("business_hours").notNull().default("{}"),
