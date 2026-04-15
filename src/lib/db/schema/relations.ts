@@ -6,7 +6,6 @@ import {
   addresses,
   companySettings,
   suppliers,
-  supplierDistricts,
   employees,
   orderingRules,
   orders,
@@ -97,16 +96,8 @@ export const suppliersRelations = relations(suppliers, ({ one, many }) => ({
     fields: [suppliers.contact_id],
     references: [contacts.id],
   }),
-  districts: many(supplierDistricts),
   orders: many(orders),
   priceChangeRequests: many(priceChangeRequests),
-}));
-
-export const supplierDistrictsRelations = relations(supplierDistricts, ({ one }) => ({
-  supplier: one(suppliers, {
-    fields: [supplierDistricts.supplier_id],
-    references: [suppliers.id],
-  }),
 }));
 
 // ─── Cake Catalogue ───────────────────────────────────────────────────────────

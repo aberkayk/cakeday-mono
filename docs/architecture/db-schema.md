@@ -14,7 +14,7 @@ Tables are grouped by domain. The ER diagram below shows the principal foreign-k
 | **Shared references** | `addresses`, `contacts`                                                  |
 | **Companies**         | `companies`, `company_settings`                                          |
 | **Subscription**      | `subscription_plans`                                                     |
-| **Suppliers**         | `suppliers`, `supplier_districts`, `districts`                           |
+| **Suppliers**         | `suppliers`, `districts`                                                 |
 | **Cake Catalogue**    | `cake_types`, `cake_prices`, `price_change_requests`                     |
 | **HR Integration**    | `hr_integrations`, `hr_sync_logs`                                        |
 | **Employees**         | `employees`                                                              |
@@ -98,11 +98,6 @@ erDiagram
         varchar name
         varchar slug UK
         status status
-    }
-    supplier_districts {
-        uuid supplier_id PK "FK → suppliers"
-        district district PK
-        smallint max_orders_per_day
     }
 
     %% ─── Cake Catalogue ───────────────────────────────────────
@@ -280,7 +275,6 @@ erDiagram
 
     suppliers }o--o| addresses : "located at"
     suppliers }o--o| contacts : "primary contact"
-    suppliers ||--o{ supplier_districts : "serves in"
     suppliers ||--o{ orders : fulfills
     suppliers ||--o{ price_change_requests : requests
 
@@ -334,7 +328,7 @@ This keeps the reference tables reusable: a future `users.contact_id` or any oth
 
 ### Delete behavior
 
-- **`cascade`** — Data that cannot exist without its parent: company_settings, employees, ordering_rules, hr_integrations, hr_sync_logs, supplier_districts, cake_prices, price_change_requests, invoice_line_items, order_status_history, notification_preferences.
+- **`cascade`** — Data that cannot exist without its parent: company_settings, employees, ordering_rules, hr_integrations, hr_sync_logs, cake_prices, price_change_requests, invoice_line_items, order_status_history, notification_preferences.
 - **`restrict`** — Protects financial/identity integrity: `companies.user_id`, `suppliers.user_id`, `orders.company_id`, `invoices.company_id`, `payments.company_id`, `ordering_rules.default_cake_type_id`, `orders.cake_type_id`.
 - **`set null`** — Soft references that outlive the target (audit trail, shared references): all `address_id` / `contact_id` FKs, `orders.employee_id`, `orders.supplier_id`, `orders.payment_id`, all `*_by` user references, `notification_log.*`, `employees.hr_integration_id`, `employees.preferred_cake_type_id`.
 
@@ -354,7 +348,9 @@ Payments link back to orders via `orders.payment_id`, and invoices aggregate man
 
 ### District system
 
-`district` is both an enum (used inline in `addresses`, `employees`, `orders`, `supplier_districts`) and a lookup table (`districts`) for UI/i18n metadata (display name, sort order, active flag). The enum is the referential type; the table is descriptive.
+`district` is both an enum (used inline in `addresses`, `employees`, `orders`) and a lookup table (`districts`) for UI/i18n metadata (display name, sort order, active flag). The enum is the referential type; the table is descriptive.
+
+A supplier's operating district is **derived** via `suppliers.address_id → addresses.district` — no junction table is needed since each supplier operates from one address. When you need to know "which district does this supplier serve?", join through the address.
 
 ### Supplier abstraction
 

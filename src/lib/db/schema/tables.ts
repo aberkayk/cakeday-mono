@@ -11,7 +11,6 @@ import {
   numeric,
   jsonb,
   inet,
-  primaryKey,
   uniqueIndex,
   index,
   check,
@@ -253,23 +252,6 @@ export const suppliers = pgTable(
   },
   (t) => ({
     userIdIdx: uniqueIndex("uq_suppliers_user_id").on(t.user_id),
-  }),
-);
-
-export const supplierDistricts = pgTable(
-  "supplier_districts",
-  {
-    supplier_id: uuid("supplier_id")
-      .notNull()
-      .references(() => suppliers.id, { onDelete: "cascade" }),
-    district: districtEnum("district").notNull(),
-    max_orders_per_day: smallint("max_orders_per_day"),
-    created_at: timestamp("created_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
-  },
-  (t) => ({
-    pk: primaryKey({ columns: [t.supplier_id, t.district] }),
   }),
 );
 
