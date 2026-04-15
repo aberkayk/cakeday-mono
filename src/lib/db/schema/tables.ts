@@ -24,7 +24,7 @@ import {
   employeeSourceEnum,
   districtEnum,
   ruleTypeEnum,
-  cakeSizeEnum,
+  productSizeEnum,
   orderStatusEnum,
   orderTypeEnum,
   supplierStatusEnum,
@@ -255,9 +255,9 @@ export const suppliers = pgTable(
   }),
 );
 
-// ─── Cake Catalogue ───────────────────────────────────────────────────────────
+// ─── Product Catalogue ────────────────────────────────────────────────────────
 
-export const cakeTypes = pgTable("cake_types", {
+export const productTypes = pgTable("product_types", {
   id: uuid("id")
     .primaryKey()
     .default(sql`gen_random_uuid()`),
@@ -284,16 +284,16 @@ export const cakeTypes = pgTable("cake_types", {
     .defaultNow(),
 });
 
-export const cakePrices = pgTable(
-  "cake_prices",
+export const productPrices = pgTable(
+  "product_prices",
   {
     id: uuid("id")
       .primaryKey()
       .default(sql`gen_random_uuid()`),
-    cake_type_id: uuid("cake_type_id")
+    product_type_id: uuid("product_type_id")
       .notNull()
-      .references(() => cakeTypes.id, { onDelete: "cascade" }),
-    size: cakeSizeEnum("size").notNull(),
+      .references(() => productTypes.id, { onDelete: "cascade" }),
+    size: productSizeEnum("size").notNull(),
     price_try: numeric("price_try", { precision: 10, scale: 2 }).notNull(),
     weight_grams: integer("weight_grams"),
     valid_from: date("valid_from")
@@ -305,12 +305,12 @@ export const cakePrices = pgTable(
       .defaultNow(),
   },
   (t) => ({
-    uqActive: uniqueIndex("uq_cake_prices_active").on(
-      t.cake_type_id,
+    uqActive: uniqueIndex("uq_product_prices_active").on(
+      t.product_type_id,
       t.size,
       t.valid_from,
     ),
-    priceCheck: check("chk_cake_price_positive", sql`${t.price_try} > 0`),
+    priceCheck: check("chk_product_price_positive", sql`${t.price_try} > 0`),
   }),
 );
 
@@ -321,10 +321,10 @@ export const priceChangeRequests = pgTable("price_change_requests", {
   supplier_id: uuid("supplier_id")
     .notNull()
     .references(() => suppliers.id, { onDelete: "cascade" }),
-  cake_type_id: uuid("cake_type_id")
+  product_type_id: uuid("product_type_id")
     .notNull()
-    .references(() => cakeTypes.id, { onDelete: "cascade" }),
-  size: cakeSizeEnum("size").notNull(),
+    .references(() => productTypes.id, { onDelete: "cascade" }),
+  size: productSizeEnum("size").notNull(),
   current_price_try: numeric("current_price_try", {
     precision: 10,
     scale: 2,
@@ -435,22 +435,16 @@ export const employees = pgTable(
     work_email: varchar("work_email", { length: 255 }),
     source: employeeSourceEnum("source").notNull().default("manual"),
     external_id: varchar("external_id", { length: 255 }),
-    hr_integration_id: uuid("hr_integration_id").references(
-      () => hrIntegrations.id,
-      {
-        onDelete: "set null",
-      },
-    ),
     last_synced_at: timestamp("last_synced_at", { withTimezone: true }),
-    preferred_cake_type_id: uuid("preferred_cake_type_id").references(
-      () => cakeTypes.id,
+    preferred_product_type_id: uuid("preferred_product_type_id").references(
+      () => productTypes.id,
       {
         onDelete: "set null",
       },
     ),
-    preferred_cake_size: cakeSizeEnum("preferred_cake_size"),
+    preferred_product_size: productSizeEnum("preferred_product_size"),
     custom_message_override: text("custom_message_override"),
-    skip_cake: boolean("skip_cake").notNull().default(false),
+    skip_product: boolean("skip_product").notNull().default(false),
     status: employeeStatusEnum("status").notNull().default("active"),
     deactivated_at: timestamp("deactivated_at", { withTimezone: true }),
     deactivated_by: uuid("deactivated_by").references(() => users.id, {
@@ -484,13 +478,13 @@ export const orderingRules = pgTable("ordering_rules", {
   rule_type: ruleTypeEnum("rule_type").notNull(),
   milestone_ages: integer("milestone_ages").array(),
   anniversary_years: integer("anniversary_years").array(),
-  default_cake_type_id: uuid("default_cake_type_id").references(
-    () => cakeTypes.id,
+  default_product_type_id: uuid("default_product_type_id").references(
+    () => productTypes.id,
     {
       onDelete: "restrict",
     },
   ),
-  default_cake_size: cakeSizeEnum("default_cake_size")
+  default_product_size: productSizeEnum("default_product_size")
     .notNull()
     .default("medium"),
   custom_text_template: varchar("custom_text_template", { length: 60 }),
@@ -596,10 +590,10 @@ export const orders = pgTable(
     delivery_window: deliveryWindowEnum("delivery_window")
       .notNull()
       .default("no_preference"),
-    cake_type_id: uuid("cake_type_id").references(() => cakeTypes.id, {
+    product_type_id: uuid("product_type_id").references(() => productTypes.id, {
       onDelete: "restrict",
     }),
-    cake_size: cakeSizeEnum("cake_size").notNull(),
+    product_size: productSizeEnum("product_size").notNull(),
     custom_text: varchar("custom_text", { length: 60 }),
     supplier_id: uuid("supplier_id").references(() => suppliers.id, {
       onDelete: "set null",

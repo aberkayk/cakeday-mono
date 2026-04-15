@@ -15,7 +15,7 @@ Tables are grouped by domain. The ER diagram below shows the principal foreign-k
 | **Companies**         | `companies`, `company_settings`                                          |
 | **Subscription**      | `subscription_plans`                                                     |
 | **Suppliers**         | `suppliers`, `districts`                                                 |
-| **Cake Catalogue**    | `cake_types`, `cake_prices`, `price_change_requests`                     |
+| **Product Catalogue** | `product_types`, `product_prices`, `price_change_requests`               |
 | **HR Integration**    | `hr_integrations`, `hr_sync_logs`                                        |
 | **Employees**         | `employees`                                                              |
 | **Ordering**          | `ordering_rules`, `orders`, `order_status_history`                       |
@@ -100,17 +100,17 @@ erDiagram
         status status
     }
 
-    %% ─── Cake Catalogue ───────────────────────────────────────
-    cake_types {
+    %% ─── Product Catalogue ────────────────────────────────────
+    product_types {
         uuid id PK
         varchar name
         varchar slug UK
         bool is_active
     }
-    cake_prices {
+    product_prices {
         uuid id PK
-        uuid cake_type_id FK
-        cake_size size
+        uuid product_type_id FK
+        product_size size
         numeric price_try
         date valid_from
         date valid_until
@@ -118,9 +118,9 @@ erDiagram
     price_change_requests {
         uuid id PK
         uuid supplier_id FK
-        uuid cake_type_id FK
+        uuid product_type_id FK
         uuid reviewed_by FK "→ users"
-        cake_size size
+        product_size size
         numeric requested_price_try
         price_request_status status
     }
@@ -145,8 +145,7 @@ erDiagram
     employees {
         uuid id PK
         uuid company_id FK
-        uuid hr_integration_id FK
-        uuid preferred_cake_type_id FK "→ cake_types"
+        uuid preferred_product_type_id FK "→ product_types"
         uuid deactivated_by FK "→ users"
         date date_of_birth
         employee_source source
@@ -157,17 +156,17 @@ erDiagram
     ordering_rules {
         uuid id PK
         uuid company_id FK
-        uuid default_cake_type_id FK "→ cake_types"
+        uuid default_product_type_id FK "→ product_types"
         uuid created_by FK "→ users"
         rule_type rule_type
-        cake_size default_cake_size
+        product_size default_product_size
     }
     orders {
         uuid id PK
         uuid company_id FK
         uuid employee_id FK
         uuid rule_id FK "→ ordering_rules"
-        uuid cake_type_id FK
+        uuid product_type_id FK
         uuid supplier_id FK
         uuid payment_id FK
         uuid approved_by FK "→ users"
@@ -278,11 +277,11 @@ erDiagram
     suppliers ||--o{ orders : fulfills
     suppliers ||--o{ price_change_requests : requests
 
-    cake_types ||--o{ cake_prices : "priced at"
-    cake_types ||--o{ orders : "ordered as"
-    cake_types ||--o{ ordering_rules : "default for"
-    cake_types ||--o{ employees : "preferred by"
-    cake_types ||--o{ price_change_requests : "price for"
+    product_types ||--o{ product_prices : "priced at"
+    product_types ||--o{ orders : "ordered as"
+    product_types ||--o{ ordering_rules : "default for"
+    product_types ||--o{ employees : "preferred by"
+    product_types ||--o{ price_change_requests : "price for"
 
     hr_integrations ||--o{ hr_sync_logs : logs
     hr_integrations ||--o{ employees : imports
@@ -328,9 +327,9 @@ This keeps the reference tables reusable: a future `users.contact_id` or any oth
 
 ### Delete behavior
 
-- **`cascade`** — Data that cannot exist without its parent: company_settings, employees, ordering_rules, hr_integrations, hr_sync_logs, cake_prices, price_change_requests, invoice_line_items, order_status_history, notification_preferences.
-- **`restrict`** — Protects financial/identity integrity: `companies.user_id`, `suppliers.user_id`, `orders.company_id`, `invoices.company_id`, `payments.company_id`, `ordering_rules.default_cake_type_id`, `orders.cake_type_id`.
-- **`set null`** — Soft references that outlive the target (audit trail, shared references): all `address_id` / `contact_id` FKs, `orders.employee_id`, `orders.supplier_id`, `orders.payment_id`, all `*_by` user references, `notification_log.*`, `employees.hr_integration_id`, `employees.preferred_cake_type_id`.
+- **`cascade`** — Data that cannot exist without its parent: company_settings, employees, ordering_rules, hr_integrations, hr_sync_logs, product_prices, price_change_requests, invoice_line_items, order_status_history, notification_preferences.
+- **`restrict`** — Protects financial/identity integrity: `companies.user_id`, `suppliers.user_id`, `orders.company_id`, `invoices.company_id`, `payments.company_id`, `ordering_rules.default_product_type_id`, `orders.product_type_id`.
+- **`set null`** — Soft references that outlive the target (audit trail, shared references): all `address_id` / `contact_id` FKs, `orders.employee_id`, `orders.supplier_id`, `orders.payment_id`, all `*_by` user references, `notification_log.*`, `employees.preferred_product_type_id`.
 
 ### Polymorphic / soft links
 
@@ -342,9 +341,9 @@ This keeps the reference tables reusable: a future `users.contact_id` or any oth
 `orders → invoice_line_items → invoices → payments → orders.payment_id`
 Payments link back to orders via `orders.payment_id`, and invoices aggregate many order lines. A payment may exist without an invoice (ad-hoc credit-card charge) or settle one (`payments.invoice_id`).
 
-### Cake pricing model
+### Product pricing model
 
-`cake_prices` uses `valid_from` / `valid_until` for time-based versioning (unique on `cake_type_id, size, valid_from`). Suppliers propose price changes via `price_change_requests`, reviewed by a platform admin (`reviewed_by → users`).
+`product_prices` uses `valid_from` / `valid_until` for time-based versioning (unique on `product_type_id, size, valid_from`). Suppliers propose price changes via `price_change_requests`, reviewed by a platform admin (`reviewed_by → users`).
 
 ### District system
 
@@ -354,4 +353,4 @@ A supplier's operating district is **derived** via `suppliers.address_id → add
 
 ### Supplier abstraction
 
-Named `suppliers` (not `bakeries`) to allow future sales channels beyond cakes. The `status` enum and `supplier_admin` user role follow the same abstraction. The current business model is bakery-centric, but the schema is prepared for expansion.
+Named `suppliers` (not `bakeries`) to allow future sales channels beyond bakery products. The `status` enum, `supplier_admin` user role, and `product_types` catalogue follow the same abstraction. The current business model is bakery-centric, but the schema is prepared for expansion.

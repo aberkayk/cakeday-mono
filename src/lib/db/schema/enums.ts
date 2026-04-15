@@ -37,7 +37,7 @@ export const ruleTypeEnum = pgEnum("rule_type", [
   "work_anniversary",
 ]);
 
-export const cakeSizeEnum = pgEnum("cake_size", ["small", "medium", "large"]);
+export const productSizeEnum = pgEnum("product_size", ["small", "medium", "large"]);
 
 export const orderStatusEnum = pgEnum("order_status", [
   "draft",

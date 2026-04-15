@@ -10,8 +10,8 @@ import {
   orderingRules,
   orders,
   orderStatusHistory,
-  cakeTypes,
-  cakePrices,
+  productTypes,
+  productPrices,
   priceChangeRequests,
   hrIntegrations,
   hrSyncLogs,
@@ -100,17 +100,17 @@ export const suppliersRelations = relations(suppliers, ({ one, many }) => ({
   priceChangeRequests: many(priceChangeRequests),
 }));
 
-// ─── Cake Catalogue ───────────────────────────────────────────────────────────
+// ─── Product Catalogue ────────────────────────────────────────────────────────
 
-export const cakeTypesRelations = relations(cakeTypes, ({ many }) => ({
-  prices: many(cakePrices),
+export const productTypesRelations = relations(productTypes, ({ many }) => ({
+  prices: many(productPrices),
   priceChangeRequests: many(priceChangeRequests),
 }));
 
-export const cakePricesRelations = relations(cakePrices, ({ one }) => ({
-  cakeType: one(cakeTypes, {
-    fields: [cakePrices.cake_type_id],
-    references: [cakeTypes.id],
+export const productPricesRelations = relations(productPrices, ({ one }) => ({
+  productType: one(productTypes, {
+    fields: [productPrices.product_type_id],
+    references: [productTypes.id],
   }),
 }));
 
@@ -119,9 +119,9 @@ export const priceChangeRequestsRelations = relations(priceChangeRequests, ({ on
     fields: [priceChangeRequests.supplier_id],
     references: [suppliers.id],
   }),
-  cakeType: one(cakeTypes, {
-    fields: [priceChangeRequests.cake_type_id],
-    references: [cakeTypes.id],
+  productType: one(productTypes, {
+    fields: [priceChangeRequests.product_type_id],
+    references: [productTypes.id],
   }),
   reviewedBy: one(users, {
     fields: [priceChangeRequests.reviewed_by],
@@ -136,13 +136,9 @@ export const employeesRelations = relations(employees, ({ one, many }) => ({
     fields: [employees.company_id],
     references: [companies.id],
   }),
-  hrIntegration: one(hrIntegrations, {
-    fields: [employees.hr_integration_id],
-    references: [hrIntegrations.id],
-  }),
-  preferredCakeType: one(cakeTypes, {
-    fields: [employees.preferred_cake_type_id],
-    references: [cakeTypes.id],
+  preferredProductType: one(productTypes, {
+    fields: [employees.preferred_product_type_id],
+    references: [productTypes.id],
   }),
   deactivatedBy: one(users, {
     fields: [employees.deactivated_by],
@@ -158,9 +154,9 @@ export const orderingRulesRelations = relations(orderingRules, ({ one, many }) =
     fields: [orderingRules.company_id],
     references: [companies.id],
   }),
-  defaultCakeType: one(cakeTypes, {
-    fields: [orderingRules.default_cake_type_id],
-    references: [cakeTypes.id],
+  defaultProductType: one(productTypes, {
+    fields: [orderingRules.default_product_type_id],
+    references: [productTypes.id],
   }),
   createdBy: one(users, {
     fields: [orderingRules.created_by],
@@ -184,9 +180,9 @@ export const ordersRelations = relations(orders, ({ one, many }) => ({
     fields: [orders.rule_id],
     references: [orderingRules.id],
   }),
-  cakeType: one(cakeTypes, {
-    fields: [orders.cake_type_id],
-    references: [cakeTypes.id],
+  productType: one(productTypes, {
+    fields: [orders.product_type_id],
+    references: [productTypes.id],
   }),
   supplier: one(suppliers, {
     fields: [orders.supplier_id],
@@ -230,7 +226,6 @@ export const hrIntegrationsRelations = relations(hrIntegrations, ({ one, many })
     references: [companies.id],
   }),
   syncLogs: many(hrSyncLogs),
-  employees: many(employees),
 }));
 
 export const hrSyncLogsRelations = relations(hrSyncLogs, ({ one }) => ({
