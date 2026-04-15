@@ -146,7 +146,6 @@ erDiagram
         uuid id PK
         uuid company_id FK
         uuid preferred_product_type_id FK "→ product_types"
-        uuid deactivated_by FK "→ users"
         date date_of_birth
         employee_source source
         employee_status status
@@ -169,8 +168,6 @@ erDiagram
         uuid product_type_id FK
         uuid supplier_id FK
         uuid payment_id FK
-        uuid approved_by FK "→ users"
-        uuid cancelled_by FK "→ users"
         order_type order_type
         order_status status
         date delivery_date
@@ -354,3 +351,47 @@ A supplier's operating district is **derived** via `suppliers.address_id → add
 ### Supplier abstraction
 
 Named `suppliers` (not `bakeries`) to allow future sales channels beyond bakery products. The `status` enum, `supplier_admin` user role, and `product_types` catalogue follow the same abstraction. The current business model is bakery-centric, but the schema is prepared for expansion.
+
+### Audit strategy (who did what, when)
+
+The schema deliberately does **not** carry `*_by` / `*_at` columns for status transitions on business entities. Accountability data lives in two dedicated tables:
+
+- **`audit_log`** — generic row-level audit trail (actor, action, before/after JSONB) for any table. Intended to be written by a database trigger reading Supabase's `auth.uid()` so it cannot be bypassed.
+- **`order_status_history`** — specialized lifecycle trail for orders (`from_status`, `to_status`, `changed_by`, `note`). Richer than generic audit for the order state machine.
+
+Consequently, columns like `employees.deactivated_by`, `orders.approved_by/at`, `orders.cancelled_by/at`, `orders.cancellation_reason`, `orders.last_status_override_*`, `orders.rejection_reason`, and `orders.failure_reason` have been removed — the same information is available via the audit tables.
+
+**Denormalized exceptions** — kept on `orders` despite the pattern because they are hot-path timestamps for analytics/dashboards (indexable range queries outperform joins by 10-100×):
+
+- `orders.accepted_at` / `orders.rejected_at` — supplier SLA metrics
+- `orders.delivered_at` / `orders.failed_at` — delivery reporting, success-rate dashboards
+
+Integration-error fields (`payments.failure_reason`, `notification_log.failure_reason`) stay as well — they capture external provider errors (iyzico, Resend, WhatsApp) that don't map to an internal status transition.
+
+---
+
+## Pending follow-ups
+
+These are **not yet implemented** — the schema assumes them, but the actual enforcement / wiring is outstanding. Tackle before first production deploy.
+
+### Security
+
+1. **Row-Level Security (RLS) policies** — tables have no `ENABLE ROW LEVEL SECURITY` yet. Multi-tenant (company × supplier × platform_admin) access requires a policy matrix on every tenant-scoped table. Without RLS, one bug in the service layer's `WHERE company_id = $x` filter = cross-tenant data leak. Must land in the first migration alongside table creation.
+
+2. **Audit-log trigger** — the "who/when" pattern depends on `audit_log` being written on every mutation. Implement as a PostgreSQL trigger function using Supabase's `auth.uid()` for `actor_id` (bypass-proof, works regardless of client — Drizzle, Studio, direct SQL). Tables to attach: `companies`, `suppliers`, `employees`, `orders`, `ordering_rules`, `hr_integrations`, `cake_prices` → `product_prices`, `subscription_plans`, `system_settings`. Skip high-volume tables (`notification_log`, `hr_sync_logs`, `order_status_history`) — they're already append-only trails.
+
+3. **Secrets storage for `hr_integrations.encrypted_api_key`** — currently stored as `text` with app-level encryption. Migrate to Supabase Vault (`vault.secrets`) so the key material never appears in table scans, logs, or platform_admin queries. Requires a small integration-service rewrite to fetch via `vault.decrypted_secrets` view.
+
+4. **PII redaction guards** — `users.phone`, `contacts.phone`, `orders.recipient_phone` etc. are PII. Needs a service-layer redaction helper for log export / analytics dumps / admin panels. Schema-level: consider a `pg_role` that can `SELECT` everything except phone columns for analytics exports.
+
+### Performance
+
+5. **Status + timestamp composite indexes** — for hot analytics queries (`WHERE status='delivered' AND delivered_at BETWEEN ...`), partial indexes like `CREATE INDEX idx_orders_delivered ON orders (delivered_at DESC) WHERE status = 'delivered'` beat plain timestamp indexes. Profile after first data load, then add.
+
+6. **JSONB GIN indexes** — `subscription_plans.features`, `suppliers.business_hours`, `audit_log.before_data/after_data`, `hr_sync_logs.error_details` — if these get queried by key, add GIN. Speculative for now.
+
+### Integration hygiene
+
+7. **`payments.iyzico_conversation_id` uniqueness** — check iyzico docs: if conversation IDs are guaranteed unique per payment attempt, add `UNIQUE` for idempotency-safe retries. Currently just `text` without constraint.
+
+8. **Partial unique on `hr_integrations(company_id)` if we commit to "one HR integration per company"** — current unique is per `(company_id, integration_type)`, which allows a company to have both BambooHR and Kolay İK. If product decides "only one active integration at a time", tighten the constraint and revisit `employees.source` (potentially removable in that world).

@@ -446,10 +446,6 @@ export const employees = pgTable(
     custom_message_override: text("custom_message_override"),
     skip_product: boolean("skip_product").notNull().default(false),
     status: employeeStatusEnum("status").notNull().default("active"),
-    deactivated_at: timestamp("deactivated_at", { withTimezone: true }),
-    deactivated_by: uuid("deactivated_by").references(() => users.id, {
-      onDelete: "set null",
-    }),
     created_at: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -604,21 +600,10 @@ export const orders = pgTable(
     }),
     accepted_at: timestamp("accepted_at", { withTimezone: true }),
     rejected_at: timestamp("rejected_at", { withTimezone: true }),
-    rejection_reason: text("rejection_reason"),
     reassignment_count: smallint("reassignment_count").notNull().default(0),
     status: orderStatusEnum("status").notNull().default("draft"),
-    approved_by: uuid("approved_by").references(() => users.id, {
-      onDelete: "set null",
-    }),
-    approved_at: timestamp("approved_at", { withTimezone: true }),
-    cancelled_by: uuid("cancelled_by").references(() => users.id, {
-      onDelete: "set null",
-    }),
-    cancelled_at: timestamp("cancelled_at", { withTimezone: true }),
-    cancellation_reason: text("cancellation_reason"),
     delivered_at: timestamp("delivered_at", { withTimezone: true }),
     failed_at: timestamp("failed_at", { withTimezone: true }),
-    failure_reason: text("failure_reason"),
     base_price_try: numeric("base_price_try", {
       precision: 10,
       scale: 2,
@@ -643,13 +628,6 @@ export const orders = pgTable(
     payment_id: uuid("payment_id").references(() => payments.id, {
       onDelete: "set null",
     }),
-    last_status_override_by: uuid("last_status_override_by").references(
-      () => users.id,
-      {
-        onDelete: "set null",
-      },
-    ),
-    last_status_override_note: text("last_status_override_note"),
     created_at: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),

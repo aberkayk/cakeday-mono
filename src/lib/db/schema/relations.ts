@@ -140,10 +140,6 @@ export const employeesRelations = relations(employees, ({ one, many }) => ({
     fields: [employees.preferred_product_type_id],
     references: [productTypes.id],
   }),
-  deactivatedBy: one(users, {
-    fields: [employees.deactivated_by],
-    references: [users.id],
-  }),
   orders: many(orders),
 }));
 
@@ -187,16 +183,6 @@ export const ordersRelations = relations(orders, ({ one, many }) => ({
   supplier: one(suppliers, {
     fields: [orders.supplier_id],
     references: [suppliers.id],
-  }),
-  approvedBy: one(users, {
-    fields: [orders.approved_by],
-    references: [users.id],
-    relationName: 'approvedByUser',
-  }),
-  cancelledBy: one(users, {
-    fields: [orders.cancelled_by],
-    references: [users.id],
-    relationName: 'cancelledByUser',
   }),
   payment: one(payments, {
     fields: [orders.payment_id],
