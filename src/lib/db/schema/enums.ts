@@ -1,127 +1,136 @@
-import { pgEnum } from 'drizzle-orm/pg-core';
+import { pgEnum } from "drizzle-orm/pg-core";
 
-export const userRoleEnum = pgEnum('user_role', [
-  'company_owner',
-  'hr_manager',
-  'finance',
-  'viewer',
-  'supplier_admin',
-  'platform_admin',
+export const userRoleEnum = pgEnum("user_role", [
+  "company_owner",
+  "hr_manager",
+  "finance",
+  "viewer",
+  "supplier_admin",
+  "platform_admin",
 ]);
 
-export const companyStatusEnum = pgEnum('company_status', [
-  'pending_verification',
-  'pending_approval',
-  'active',
-  'suspended',
-  'deactivated',
+export const companyStatusEnum = pgEnum("company_status", [
+  "pending_verification",
+  "pending_approval",
+  "active",
+  "suspended",
+  "deactivated",
 ]);
 
-export const employeeStatusEnum = pgEnum('employee_status', ['active', 'inactive']);
-
-export const employeeSourceEnum = pgEnum('employee_source', [
-  'manual',
-  'csv',
-  'bamboohr',
-  'kolayik',
+export const employeeStatusEnum = pgEnum("employee_status", [
+  "active",
+  "inactive",
 ]);
 
-export const districtEnum = pgEnum('district', ['besiktas', 'sariyer']);
-
-export const ruleTypeEnum = pgEnum('rule_type', [
-  'all_birthdays',
-  'round_birthdays',
-  'work_anniversary',
+export const employeeSourceEnum = pgEnum("employee_source", [
+  "manual",
+  "csv",
+  "bamboohr",
+  "kolayik",
 ]);
 
-export const cakeSizeEnum = pgEnum('cake_size', ['small', 'medium', 'large']);
+export const districtEnum = pgEnum("district", ["besiktas", "sariyer"]);
 
-export const orderStatusEnum = pgEnum('order_status', [
-  'draft',
-  'pending_approval',
-  'confirmed',
-  'assigned',
-  'accepted',
-  'preparing',
-  'out_for_delivery',
-  'delivered',
-  'cancellation_requested',
-  'cancelled',
-  'failed',
-  'rejected',
+export const ruleTypeEnum = pgEnum("rule_type", [
+  "all_birthdays",
+  "round_birthdays",
+  "work_anniversary",
 ]);
 
-export const orderTypeEnum = pgEnum('order_type', ['automatic', 'ad_hoc']);
+export const cakeSizeEnum = pgEnum("cake_size", ["small", "medium", "large"]);
 
-export const supplierStatusEnum = pgEnum('supplier_status', [
-  'pending_setup',
-  'active',
-  'inactive',
-  'suspended',
+export const orderStatusEnum = pgEnum("order_status", [
+  "draft",
+  "pending_approval",
+  "confirmed",
+  "assigned",
+  "accepted",
+  "preparing",
+  "out_for_delivery",
+  "delivered",
+  "cancellation_requested",
+  "cancelled",
+  "failed",
+  "rejected",
 ]);
 
-export const paymentMethodEnum = pgEnum('payment_method', ['credit_card', 'monthly_invoice']);
+export const orderTypeEnum = pgEnum("order_type", ["automatic", "ad_hoc"]);
 
-export const billingCycleEnum = pgEnum('billing_cycle', ['monthly', 'annual']);
-
-export const paymentStatusEnum = pgEnum('payment_status', [
-  'pending',
-  'succeeded',
-  'failed',
-  'refunded',
-  'partially_refunded',
-  'void',
+export const supplierStatusEnum = pgEnum("status", [
+  "pending_setup",
+  "active",
+  "inactive",
+  "suspended",
 ]);
 
-export const priceRequestStatusEnum = pgEnum('price_request_status', [
-  'pending',
-  'approved',
-  'rejected',
+export const paymentMethodEnum = pgEnum("payment_method", [
+  "credit_card",
+  "monthly_invoice",
 ]);
 
-export const integrationTypeEnum = pgEnum('integration_type', ['bamboohr', 'kolayik']);
+export const billingCycleEnum = pgEnum("billing_cycle", ["monthly", "annual"]);
 
-export const notificationChannelEnum = pgEnum('notification_channel', [
-  'email',
-  'whatsapp',
-  'sms',
+export const paymentStatusEnum = pgEnum("payment_status", [
+  "pending",
+  "succeeded",
+  "failed",
+  "refunded",
+  "partially_refunded",
+  "void",
 ]);
 
-export const notificationStatusEnum = pgEnum('notification_status', [
-  'pending',
-  'sent',
-  'delivered',
-  'failed',
+export const priceRequestStatusEnum = pgEnum("price_request_status", [
+  "pending",
+  "approved",
+  "rejected",
 ]);
 
-export const notificationEventEnum = pgEnum('notification_event', [
-  'order_draft_created',
-  'order_pending_approval',
-  'order_confirmed',
-  'order_assigned_to_supplier',
-  'order_accepted_by_supplier',
-  'order_rejected_by_supplier',
-  'order_out_for_delivery',
-  'order_delivered',
-  'order_cancelled',
-  'order_failed',
-  'cancellation_requested',
-  'payment_failed',
-  'payment_succeeded',
-  'invoice_generated',
-  'invoice_overdue',
-  'subscription_renewal_reminder',
-  'subscription_plan_changed',
-  'employee_birthday_reminder',
-  'hr_sync_failed',
-  'hr_sync_completed',
-  'supplier_invitation',
-  'user_invitation',
-  'password_reset',
+export const integrationTypeEnum = pgEnum("integration_type", [
+  "bamboohr",
+  "kolayik",
 ]);
 
-export const deliveryWindowEnum = pgEnum('delivery_window', [
-  'morning',
-  'afternoon',
-  'no_preference',
+export const notificationChannelEnum = pgEnum("notification_channel", [
+  "email",
+  "whatsapp",
+  "sms",
+]);
+
+export const notificationStatusEnum = pgEnum("notification_status", [
+  "pending",
+  "sent",
+  "delivered",
+  "failed",
+]);
+
+export const notificationEventEnum = pgEnum("notification_event", [
+  "order_draft_created",
+  "order_pending_approval",
+  "order_confirmed",
+  "order_assigned_to_supplier",
+  "order_accepted_by_supplier",
+  "order_rejected_by_supplier",
+  "order_out_for_delivery",
+  "order_delivered",
+  "order_cancelled",
+  "order_failed",
+  "cancellation_requested",
+  "payment_failed",
+  "payment_succeeded",
+  "invoice_generated",
+  "invoice_overdue",
+  "subscription_renewal_reminder",
+  "subscription_plan_changed",
+  "employee_birthday_reminder",
+  "hr_sync_failed",
+  "hr_sync_completed",
+  "supplier_invitation",
+  "user_invitation",
+  "password_reset",
+]);
+
+export const deliveryWindowEnum = pgEnum("delivery_window", [
+  "morning",
+  "afternoon",
+  "no_preference",
 ]);

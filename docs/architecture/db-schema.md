@@ -8,20 +8,20 @@ Tables are grouped by domain. The ER diagram below shows the principal foreign-k
 
 ## Domain Map
 
-| Domain | Tables |
-|---|---|
-| **Identity** | `users` |
-| **Shared references** | `addresses`, `contacts` |
-| **Companies** | `companies`, `company_settings` |
-| **Subscription** | `subscription_plans` |
-| **Suppliers** | `suppliers`, `supplier_districts`, `districts` |
-| **Cake Catalogue** | `cake_types`, `cake_prices`, `price_change_requests` |
-| **HR Integration** | `hr_integrations`, `hr_sync_logs` |
-| **Employees** | `employees` |
-| **Ordering** | `ordering_rules`, `orders`, `order_status_history` |
-| **Billing** | `invoices`, `invoice_line_items`, `payments` |
-| **Notifications** | `notification_templates`, `notification_log`, `notification_preferences` |
-| **System / Audit** | `system_settings`, `public_holidays`, `audit_log` |
+| Domain                | Tables                                                                   |
+| --------------------- | ------------------------------------------------------------------------ |
+| **Identity**          | `users`                                                                  |
+| **Shared references** | `addresses`, `contacts`                                                  |
+| **Companies**         | `companies`, `company_settings`                                          |
+| **Subscription**      | `subscription_plans`                                                     |
+| **Suppliers**         | `suppliers`, `supplier_districts`, `districts`                           |
+| **Cake Catalogue**    | `cake_types`, `cake_prices`, `price_change_requests`                     |
+| **HR Integration**    | `hr_integrations`, `hr_sync_logs`                                        |
+| **Employees**         | `employees`                                                              |
+| **Ordering**          | `ordering_rules`, `orders`, `order_status_history`                       |
+| **Billing**           | `invoices`, `invoice_line_items`, `payments`                             |
+| **Notifications**     | `notification_templates`, `notification_log`, `notification_preferences` |
+| **System / Audit**    | `system_settings`, `public_holidays`, `audit_log`                        |
 
 ---
 
@@ -97,7 +97,7 @@ erDiagram
         uuid contact_id FK "→ contacts (optional)"
         varchar name
         varchar slug UK
-        supplier_status status
+        status status
     }
     supplier_districts {
         uuid supplier_id PK "FK → suppliers"
@@ -315,6 +315,7 @@ erDiagram
 ## Relationship Notes
 
 ### Shared reference tables (`addresses`, `contacts`)
+
 Both are standalone reference tables — they do **not** know who points at them. Owners link out via a nullable FK column:
 
 - `users.address_id` — a user's personal address (optional, for future profile features).
@@ -328,26 +329,33 @@ This keeps the reference tables reusable: a future `users.contact_id` or any oth
 **Tradeoff:** This design assumes **one primary** address/contact per entity. If a company later needs multiple contacts (HR, Finance) or addresses (HQ, Warehouse), a dedicated junction table (e.g., `company_contacts`) can be added on top without touching the reference tables.
 
 ### Ownership cardinality
+
 - `users ⇢ companies` and `users ⇢ suppliers` are enforced as **1:1** via the `uq_companies_user_id` and `uq_suppliers_user_id` unique indexes. One account = one tenant.
 
 ### Delete behavior
+
 - **`cascade`** — Data that cannot exist without its parent: company_settings, employees, ordering_rules, hr_integrations, hr_sync_logs, supplier_districts, cake_prices, price_change_requests, invoice_line_items, order_status_history, notification_preferences.
 - **`restrict`** — Protects financial/identity integrity: `companies.user_id`, `suppliers.user_id`, `orders.company_id`, `invoices.company_id`, `payments.company_id`, `ordering_rules.default_cake_type_id`, `orders.cake_type_id`.
 - **`set null`** — Soft references that outlive the target (audit trail, shared references): all `address_id` / `contact_id` FKs, `orders.employee_id`, `orders.supplier_id`, `orders.payment_id`, all `*_by` user references, `notification_log.*`, `employees.hr_integration_id`, `employees.preferred_cake_type_id`.
 
 ### Polymorphic / soft links
+
 - `audit_log.record_id` is a plain UUID (no FK) paired with `table_name`, intentionally polymorphic so it can target any table.
 - `notification_log` references `company_id`, `order_id`, and `recipient_user_id` as `set null` — the log survives deletion of its subjects.
 
 ### Financial flow
+
 `orders → invoice_line_items → invoices → payments → orders.payment_id`
 Payments link back to orders via `orders.payment_id`, and invoices aggregate many order lines. A payment may exist without an invoice (ad-hoc credit-card charge) or settle one (`payments.invoice_id`).
 
 ### Cake pricing model
+
 `cake_prices` uses `valid_from` / `valid_until` for time-based versioning (unique on `cake_type_id, size, valid_from`). Suppliers propose price changes via `price_change_requests`, reviewed by a platform admin (`reviewed_by → users`).
 
 ### District system
+
 `district` is both an enum (used inline in `addresses`, `employees`, `orders`, `supplier_districts`) and a lookup table (`districts`) for UI/i18n metadata (display name, sort order, active flag). The enum is the referential type; the table is descriptive.
 
 ### Supplier abstraction
-Named `suppliers` (not `bakeries`) to allow future sales channels beyond cakes. The `supplier_status` enum and `supplier_admin` user role follow the same abstraction. The current business model is bakery-centric, but the schema is prepared for expansion.
+
+Named `suppliers` (not `bakeries`) to allow future sales channels beyond cakes. The `status` enum and `supplier_admin` user role follow the same abstraction. The current business model is bakery-centric, but the schema is prepared for expansion.
