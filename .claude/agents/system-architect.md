@@ -77,8 +77,7 @@ Create API specifications under `docs/api/`:
 
 - Apply SOLID, DRY, KISS principles
 - Follow 12-Factor App methodology
-- Design API-first
-- Decide microservice vs monolith based on project scale
+- Single Next.js app architecture — Server Actions for UI mutations, API Routes for external access only
+- Service layer must be framework-agnostic pure functions
 - Identify performance bottlenecks proactively
-- Plan for horizontal scalability
 - Coordinate database schema design with the DBA agent

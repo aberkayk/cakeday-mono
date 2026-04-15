@@ -77,6 +77,13 @@ describe('[Feature]', () => {
 });
 ```
 
+## What to Test
+
+- **Service layer** (`src/lib/services/`): Unit tests for business logic (pure functions)
+- **Server Actions** (`src/actions/`): Integration tests (auth + validation + service call)
+- **API Routes** (`src/app/api/`): Integration tests for webhook/cron endpoints
+- **Components**: Component tests for interactive UI elements
+
 ## Rules
 
 - Base tests on acceptance criteria from `docs/requirements/`

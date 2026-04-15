@@ -58,9 +58,9 @@ For each new feature or task, follow these phases:
 - Run `dba` agent → Design database schema
 
 ### Phase 3: Development
-- Run `backend-developer` agent → Code the server side
-- Run `frontend-developer` agent → Code the UI
-- These two agents can run in parallel
+- Run `backend-developer` agent → Server Actions, API Routes, services, DB operations
+- Run `frontend-developer` agent → Pages, components, layouts, client-side interactivity
+- These two agents can run in parallel (backend works on `src/actions/`, `src/lib/`; frontend works on `src/app/`, `src/components/`)
 
 ### Phase 4: Quality Assurance
 - Run `code-reviewer` agent → Review the code
