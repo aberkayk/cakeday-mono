@@ -12,6 +12,7 @@ build/
 .next/
 out/
 .turbo/
+tsconfig.tsbuildinfo
 
 # IDE
 .vscode/
