@@ -7,14 +7,14 @@ import { formatCurrency } from "@/lib/utils";
 // TODO: wire to server actions
 interface Stats {
   totalCompanies: number;
-  totalBakeries: number;
+  totalSuppliers: number;
   totalOrders: number;
   totalRevenueTry: number;
 }
 
 const placeholderStats: Stats = {
   totalCompanies: 0,
-  totalBakeries: 0,
+  totalSuppliers: 0,
   totalOrders: 0,
   totalRevenueTry: 0,
 };
@@ -24,7 +24,7 @@ export default function AdminDashboardPage() {
 
   const cards = [
     { label: "Toplam Şirket", value: stats.totalCompanies, icon: Building2, color: "text-blue-600", bg: "bg-blue-50", format: "number" },
-    { label: "Toplam Pastane", value: stats.totalBakeries, icon: Store, color: "text-orange-600", bg: "bg-orange-50", format: "number" },
+    { label: "Toplam Tedarikçi", value: stats.totalSuppliers, icon: Store, color: "text-orange-600", bg: "bg-orange-50", format: "number" },
     { label: "Toplam Sipariş", value: stats.totalOrders, icon: ShoppingBag, color: "text-purple-600", bg: "bg-purple-50", format: "number" },
     { label: "Toplam Ciro", value: stats.totalRevenueTry, icon: TrendingUp, color: "text-green-600", bg: "bg-green-50", format: "currency" },
   ];

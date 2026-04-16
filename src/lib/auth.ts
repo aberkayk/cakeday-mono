@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { db } from "@/lib/db";
-import { users, companies, bakeries } from "@/lib/db/schema";
+import { users, companies, suppliers } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { UnauthorizedError, ForbiddenError } from "@/lib/errors";
 import type { UserRole } from "@/lib/shared";
@@ -10,7 +10,7 @@ export interface AuthUser {
   email: string;
   role: UserRole;
   companyId: string | null;
-  bakeryId: string | null;
+  supplierId: string | null;
 }
 
 export async function getCurrentUser(): Promise<AuthUser | null> {
@@ -27,15 +27,15 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
   if (!user) return null;
 
   let companyId: string | null = null;
-  let bakeryId: string | null = null;
+  let supplierId: string | null = null;
 
-  if (user.role === 'bakery_admin') {
-    const [bakery] = await db
-      .select({ id: bakeries.id })
-      .from(bakeries)
-      .where(eq(bakeries.user_id, user.id))
+  if (user.role === 'supplier_admin') {
+    const [supplier] = await db
+      .select({ id: suppliers.id })
+      .from(suppliers)
+      .where(eq(suppliers.user_id, user.id))
       .limit(1);
-    bakeryId = bakery?.id ?? null;
+    supplierId = supplier?.id ?? null;
   } else if (user.role !== 'platform_admin') {
     const [company] = await db
       .select({ id: companies.id })
@@ -50,7 +50,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
     email: supabaseUser.email ?? '',
     role: user.role as UserRole,
     companyId,
-    bakeryId,
+    supplierId,
   };
 }
 
@@ -73,9 +73,9 @@ export function requireCompanyUser(user: AuthUser): string {
   return user.companyId;
 }
 
-export function requireBakeryUser(user: AuthUser): string {
-  if (user.role !== 'bakery_admin' || !user.bakeryId) {
-    throw new ForbiddenError('Bu işlem için pastane hesabı gereklidir.');
+export function requireSupplierUser(user: AuthUser): string {
+  if (user.role !== 'supplier_admin' || !user.supplierId) {
+    throw new ForbiddenError('Bu işlem için tedarikçi hesabı gereklidir.');
   }
-  return user.bakeryId;
+  return user.supplierId;
 }

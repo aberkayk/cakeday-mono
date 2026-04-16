@@ -8,8 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { formatDate, BAKERY_STATUS_LABELS } from "@/lib/utils";
-import type { Bakery } from "@/lib/shared";
+import { formatDate, SUPPLIER_STATUS_LABELS } from "@/lib/utils";
+import type { Supplier } from "@/lib/shared";
 
 // TODO: wire to server actions
 
@@ -20,8 +20,8 @@ const STATUS_COLORS: Record<string, string> = {
   suspended: "bg-red-100 text-red-800",
 };
 
-export default function BakeriesPage() {
-  const [bakeries] = useState<Bakery[]>([]);
+export default function SuppliersPage() {
+  const [suppliers] = useState<Supplier[]>([]);
   const [totalCount] = useState(0);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -33,15 +33,15 @@ export default function BakeriesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Pastaneler</h1>
-          <p className="text-muted-foreground text-sm mt-1">Partner pastaneler ve durumları.</p>
+          <h1 className="text-2xl font-bold">Tedarikçiler</h1>
+          <p className="text-muted-foreground text-sm mt-1">Partner tedarikçiler ve durumları.</p>
         </div>
-        <Badge variant="secondary" className="text-sm px-3 py-1">{totalCount} pastane</Badge>
+        <Badge variant="secondary" className="text-sm px-3 py-1">{totalCount} tedarikçi</Badge>
       </div>
 
       <div className="relative max-w-sm">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input placeholder="Pastane adı veya slug..." className="pl-9" value={search}
+        <Input placeholder="Tedarikçi adı veya slug..." className="pl-9" value={search}
           onChange={(e) => { setSearch(e.target.value); setPage(1); }} />
       </div>
 
@@ -50,42 +50,40 @@ export default function BakeriesPage() {
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/30">
-                <TableHead>Pastane</TableHead>
-                <TableHead>İletişim</TableHead>
+                <TableHead>Tedarikçi</TableHead>
+                <TableHead>Slug</TableHead>
                 <TableHead>Durum</TableHead>
                 <TableHead>Kayıt Tarihi</TableHead>
                 <TableHead className="w-12"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {bakeries.length === 0 ? (
+              {suppliers.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5} className="py-12 text-center text-muted-foreground text-sm">
-                    Pastane bulunamadı.
+                    Tedarikçi bulunamadı.
                   </TableCell>
                 </TableRow>
               ) : (
-                bakeries.map((bakery) => (
-                  <TableRow key={bakery.id} className="hover:bg-muted/20">
+                suppliers.map((supplier) => (
+                  <TableRow key={supplier.id} className="hover:bg-muted/20">
                     <TableCell>
                       <div>
-                        <p className="font-medium text-sm">{bakery.name}</p>
-                        <p className="text-xs text-muted-foreground">/{bakery.slug}</p>
+                        <p className="font-medium text-sm">{supplier.name}</p>
                       </div>
                     </TableCell>
-                    <TableCell className="text-sm">
-                      <p>{bakery.contact_name}</p>
-                      <p className="text-xs text-muted-foreground">{bakery.contact_email}</p>
+                    <TableCell className="text-sm text-muted-foreground">
+                      /{supplier.slug}
                     </TableCell>
                     <TableCell>
-                      <Badge className={`text-xs ${STATUS_COLORS[bakery.status] ?? ""}`}>
-                        {BAKERY_STATUS_LABELS[bakery.status] ?? bakery.status}
+                      <Badge className={`text-xs ${STATUS_COLORS[supplier.status] ?? ""}`}>
+                        {SUPPLIER_STATUS_LABELS[supplier.status] ?? supplier.status}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">{formatDate(bakery.created_at)}</TableCell>
+                    <TableCell className="text-sm text-muted-foreground">{formatDate(supplier.created_at)}</TableCell>
                     <TableCell>
                       <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-                        <Link href={`/admin/bakeries/${bakery.id}`}><ChevronRight className="h-4 w-4" /></Link>
+                        <Link href={`/admin/suppliers/${supplier.id}`}><ChevronRight className="h-4 w-4" /></Link>
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -98,7 +96,7 @@ export default function BakeriesPage() {
 
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">Toplam {totalCount} pastane</p>
+          <p className="text-sm text-muted-foreground">Toplam {totalCount} tedarikçi</p>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" onClick={() => setPage(p => p - 1)} disabled={page <= 1}>
               <ChevronLeft className="h-4 w-4" />

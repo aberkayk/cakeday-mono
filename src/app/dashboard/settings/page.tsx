@@ -12,17 +12,17 @@ export default async function SettingsPage() {
   const user = await requireAuth();
   const companyId = requireCompanyUser(user);
 
-  const [company, contacts, addresses] = await Promise.all([
+  const [company, contact, address] = await Promise.all([
     companyService.getCompany(companyId),
-    companyService.getContacts(companyId),
-    companyService.getAddresses(companyId),
+    companyService.getContact(companyId),
+    companyService.getAddress(companyId),
   ]);
 
   return (
     <SettingsView
       company={company as unknown as Company}
-      contacts={contacts as unknown as Contact[]}
-      addresses={addresses as unknown as Address[]}
+      contact={contact as unknown as Contact | null}
+      address={address as unknown as Address | null}
     />
   );
 }

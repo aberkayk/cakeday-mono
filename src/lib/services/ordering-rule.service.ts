@@ -37,8 +37,8 @@ export class OrderingRuleService {
         rule_type: input.rule_type,
         milestone_ages: input.milestone_ages,
         anniversary_years: input.anniversary_years,
-        default_cake_type_id: input.default_cake_type_id,
-        default_cake_size: input.default_cake_size ?? 'medium',
+        default_product_type_id: input.default_product_type_id,
+        default_product_size: input.default_product_size ?? 'medium',
         custom_text_template: input.custom_text_template,
         is_active: input.is_active ?? true,
       })

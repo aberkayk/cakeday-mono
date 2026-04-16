@@ -1,7 +1,7 @@
 import { requireAuth, requireCompanyUser } from "@/lib/auth";
-import { cakeService } from "@/lib/services/cake.service";
+import { productService } from "@/lib/services/product.service";
 import { NewOrderView } from "@/components/orders/new-order-view";
-import type { CakeType } from "@/lib/shared";
+import type { ProductType } from "@/lib/shared";
 
 export const metadata = {
   title: "Yeni Sipariş | CakeDay",
@@ -12,8 +12,8 @@ export default async function NewOrderPage() {
   const user = await requireAuth();
   requireCompanyUser(user);
 
-  const cakesWithPrices = await cakeService.listCakes();
-  const cakeTypes = cakesWithPrices.map(({ prices: _prices, ...rest }) => rest) as unknown as CakeType[];
+  const productsWithPrices = await productService.listProducts();
+  const productTypes = productsWithPrices.map(({ prices: _prices, ...rest }) => rest) as unknown as ProductType[];
 
-  return <NewOrderView cakeTypes={cakeTypes} />;
+  return <NewOrderView productTypes={productTypes} />;
 }

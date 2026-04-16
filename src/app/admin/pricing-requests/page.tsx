@@ -27,8 +27,8 @@ const STATUS_LABELS: Record<string, string> = {
 
 type PricingRequest = {
   id: string;
-  bakery_id: string;
-  cake_type_id: string;
+  supplier_id: string;
+  product_type_id: string;
   size: string;
   current_price_try: number;
   requested_price_try: number;
@@ -60,7 +60,7 @@ export default function PricingRequestsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Fiyat Değişiklik Talepleri</h1>
-          <p className="text-muted-foreground text-sm mt-1">Pastanelerden gelen fiyat değişiklik talepleri.</p>
+          <p className="text-muted-foreground text-sm mt-1">Tedarikçilerden gelen fiyat değişiklik talepleri.</p>
         </div>
         {pendingRequests.length > 0 && (
           <Badge className="bg-yellow-100 text-yellow-800 text-sm px-3 py-1">
@@ -77,8 +77,8 @@ export default function PricingRequestsPage() {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-muted/30">
-                    <TableHead>Pastane ID</TableHead>
-                    <TableHead>Pasta / Boyut</TableHead>
+                    <TableHead>Tedarikçi ID</TableHead>
+                    <TableHead>Ürün / Boyut</TableHead>
                     <TableHead>Mevcut</TableHead>
                     <TableHead>Talep Edilen</TableHead>
                     <TableHead>Gerekçe</TableHead>
@@ -89,9 +89,9 @@ export default function PricingRequestsPage() {
                 <TableBody>
                   {pendingRequests.map((req) => (
                     <TableRow key={req.id} className="hover:bg-muted/20">
-                      <TableCell className="font-mono text-xs">{req.bakery_id.slice(0, 8)}</TableCell>
+                      <TableCell className="font-mono text-xs">{req.supplier_id.slice(0, 8)}</TableCell>
                       <TableCell className="text-sm">
-                        <span className="font-mono text-xs text-muted-foreground">{req.cake_type_id.slice(0, 8)}</span>
+                        <span className="font-mono text-xs text-muted-foreground">{req.product_type_id.slice(0, 8)}</span>
                         <p className="text-xs">{CAKE_SIZE_LABELS[req.size] ?? req.size}</p>
                       </TableCell>
                       <TableCell className="text-sm">{formatCurrency(req.current_price_try)}</TableCell>
@@ -127,7 +127,7 @@ export default function PricingRequestsPage() {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-muted/30">
-                    <TableHead>Pastane ID</TableHead>
+                    <TableHead>Tedarikçi ID</TableHead>
                     <TableHead>Boyut</TableHead>
                     <TableHead>Talep Edilen</TableHead>
                     <TableHead>Durum</TableHead>
@@ -137,7 +137,7 @@ export default function PricingRequestsPage() {
                 <TableBody>
                   {processedRequests.map((req) => (
                     <TableRow key={req.id} className="hover:bg-muted/20">
-                      <TableCell className="font-mono text-xs">{req.bakery_id.slice(0, 8)}</TableCell>
+                      <TableCell className="font-mono text-xs">{req.supplier_id.slice(0, 8)}</TableCell>
                       <TableCell className="text-sm">{CAKE_SIZE_LABELS[req.size] ?? req.size}</TableCell>
                       <TableCell className="text-sm">{formatCurrency(req.requested_price_try)}</TableCell>
                       <TableCell>

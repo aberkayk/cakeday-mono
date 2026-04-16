@@ -57,18 +57,18 @@ function SectionCard({ icon: Icon, title, description, children }: {
 
 interface SettingsViewProps {
   company: Company;
-  contacts?: Contact[];
-  addresses?: Address[];
+  contact?: Contact | null;
+  address?: Address | null;
 }
 
-export function SettingsView({ company, contacts = [], addresses = [] }: SettingsViewProps) {
+export function SettingsView({ company, contact = null, address = null }: SettingsViewProps) {
   const [notifEmail, setNotifEmail] = useState(true);
   const [notifWA, setNotifWA] = useState(false);
   const [notifBirthday, setNotifBirthday] = useState(true);
   const { toast } = useToast();
 
-  const primaryContact = contacts[0];
-  const primaryAddress = addresses[0];
+  const primaryContact = contact;
+  const primaryAddress = address;
 
   const {
     register,

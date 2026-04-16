@@ -7,13 +7,13 @@ import { Button } from "@/components/ui/button";
 import { OrderForm } from "@/components/orders/order-form";
 import { createOrder } from "@/actions/orders";
 import { useToast } from "@/hooks/use-toast";
-import type { CakeType } from "@/lib/shared";
+import type { ProductType } from "@/lib/shared";
 
 interface NewOrderViewProps {
-  cakeTypes: CakeType[];
+  productTypes: ProductType[];
 }
 
-export function NewOrderView({ cakeTypes }: NewOrderViewProps) {
+export function NewOrderView({ productTypes }: NewOrderViewProps) {
   const router = useRouter();
   const { toast } = useToast();
 
@@ -61,7 +61,7 @@ export function NewOrderView({ cakeTypes }: NewOrderViewProps) {
         </div>
       </div>
 
-      <OrderForm cakeTypes={cakeTypes} onSubmit={handleSubmit} />
+      <OrderForm productTypes={productTypes} onSubmit={handleSubmit} />
     </div>
   );
 }

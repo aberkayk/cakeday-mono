@@ -13,10 +13,7 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 
 const schema = z.object({
-  name: z.string().min(1, "Pastane adı gerekli."),
-  contact_name: z.string().min(1, "İletişim kişisi gerekli."),
-  contact_email: z.string().email("Geçerli e-posta girin."),
-  contact_phone: z.string().min(1, "Telefon gerekli."),
+  name: z.string().min(1, "Tedarikçi adı gerekli."),
   address: z.string().min(5, "Adres gerekli."),
   description: z.string().optional(),
 });
@@ -44,7 +41,7 @@ function SectionCard({ icon: Icon, title, children }: {
   );
 }
 
-export default function BakerySettingsPage() {
+export default function SupplierSettingsPage() {
   const { toast } = useToast();
 
   const {
@@ -55,9 +52,6 @@ export default function BakerySettingsPage() {
     resolver: zodResolver(schema),
     defaultValues: {
       name: "",
-      contact_name: "",
-      contact_email: "",
-      contact_phone: "",
       address: "",
       description: "",
     },
@@ -65,20 +59,20 @@ export default function BakerySettingsPage() {
 
   const onSubmit = async (data: FormData) => {
     await new Promise((r) => setTimeout(r, 500));
-    toast({ title: "Pastane bilgileri güncellendi." });
+    toast({ title: "Tedarikçi bilgileri güncellendi." });
   };
 
   return (
     <div className="space-y-6 max-w-2xl">
       <div>
         <h1 className="text-2xl font-bold font-headline text-foreground">Ayarlar</h1>
-        <p className="text-muted text-sm mt-1">Pastane profili ve bildirim tercihlerinizi yönetin.</p>
+        <p className="text-muted text-sm mt-1">Tedarikçi profili ve bildirim tercihlerinizi yönetin.</p>
       </div>
 
-      <SectionCard icon={Store} title="Pastane Profili">
+      <SectionCard icon={Store} title="Tedarikçi Profili">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name" className="text-sm font-medium text-foreground">Pastane Adı</Label>
+            <Label htmlFor="name" className="text-sm font-medium text-foreground">Tedarikçi Adı</Label>
             <Input
               id="name"
               {...register("name")}
@@ -91,7 +85,7 @@ export default function BakerySettingsPage() {
             <Label htmlFor="description" className="text-sm font-medium text-foreground">Açıklama</Label>
             <Textarea
               id="description"
-              placeholder="Pastane hakkında kısa bilgi..."
+              placeholder="Tedarikçi hakkında kısa bilgi..."
               rows={2}
               className="rounded-xl border-border-soft focus:border-primary resize-none"
               {...register("description")}
@@ -107,41 +101,6 @@ export default function BakerySettingsPage() {
               {...register("address")}
             />
             {errors.address && <p className="text-xs text-red-500">{errors.address.message}</p>}
-          </div>
-
-          <Separator className="bg-border-soft/50" />
-
-          <div className="space-y-2">
-            <Label htmlFor="contact_name" className="text-sm font-medium text-foreground">İletişim Kişisi</Label>
-            <Input
-              id="contact_name"
-              className="rounded-xl border-border-soft focus:border-primary"
-              {...register("contact_name")}
-            />
-            {errors.contact_name && <p className="text-xs text-red-500">{errors.contact_name.message}</p>}
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="contact_email" className="text-sm font-medium text-foreground">E-posta</Label>
-              <Input
-                id="contact_email"
-                type="email"
-                className="rounded-xl border-border-soft focus:border-primary"
-                {...register("contact_email")}
-              />
-              {errors.contact_email && <p className="text-xs text-red-500">{errors.contact_email.message}</p>}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="contact_phone" className="text-sm font-medium text-foreground">Telefon</Label>
-              <Input
-                id="contact_phone"
-                type="tel"
-                className="rounded-xl border-border-soft focus:border-primary"
-                {...register("contact_phone")}
-              />
-              {errors.contact_phone && <p className="text-xs text-red-500">{errors.contact_phone.message}</p>}
-            </div>
           </div>
 
           <Button

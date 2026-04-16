@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { BakerySidebar } from "@/components/layout/bakery-sidebar";
+import { SupplierSidebar } from "@/components/layout/supplier-sidebar";
 import { Header } from "@/components/layout/header";
 import { X, Menu, Cake } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,13 +11,13 @@ import { cn } from "@/lib/utils";
 import { LayoutDashboard, ShoppingBag, Tag, Settings } from "lucide-react";
 
 const navItems = [
-  { href: "/bakery", label: "Genel Bakış", icon: LayoutDashboard },
-  { href: "/bakery/orders", label: "Siparişler", icon: ShoppingBag },
-  { href: "/bakery/pricing", label: "Fiyatlandırma", icon: Tag },
-  { href: "/bakery/settings", label: "Ayarlar", icon: Settings },
+  { href: "/supplier", label: "Genel Bakış", icon: LayoutDashboard },
+  { href: "/supplier/orders", label: "Siparişler", icon: ShoppingBag },
+  { href: "/supplier/pricing", label: "Fiyatlandırma", icon: Tag },
+  { href: "/supplier/settings", label: "Ayarlar", icon: Settings },
 ];
 
-function BakeryMobileNav({ open, onClose }: { open: boolean; onClose: () => void }) {
+function SupplierMobileNav({ open, onClose }: { open: boolean; onClose: () => void }) {
   const pathname = usePathname();
   if (!open) return null;
   return (
@@ -34,7 +34,7 @@ function BakeryMobileNav({ open, onClose }: { open: boolean; onClose: () => void
         <nav className="flex-1 px-3 py-4 space-y-1">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = item.href === "/bakery" ? pathname === "/bakery" : pathname.startsWith(item.href);
+            const isActive = item.href === "/supplier" ? pathname === "/supplier" : pathname.startsWith(item.href);
             return (
               <Link key={item.href} href={item.href} onClick={onClose}
                 className={cn("flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors",
@@ -50,15 +50,15 @@ function BakeryMobileNav({ open, onClose }: { open: boolean; onClose: () => void
   );
 }
 
-export default function BakeryLayout({ children }: { children: React.ReactNode }) {
+export default function SupplierLayout({ children }: { children: React.ReactNode }) {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
     <div className="flex min-h-screen bg-background-secondary">
       <div className="hidden lg:flex">
-        <BakerySidebar />
+        <SupplierSidebar />
       </div>
-      <BakeryMobileNav open={mobileNavOpen} onClose={() => setMobileNavOpen(false)} />
+      <SupplierMobileNav open={mobileNavOpen} onClose={() => setMobileNavOpen(false)} />
       <div className="flex flex-1 flex-col min-w-0">
         <Header onMenuToggle={() => setMobileNavOpen(true)} />
         <main className="flex-1 p-6 overflow-auto">{children}</main>

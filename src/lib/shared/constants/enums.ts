@@ -3,7 +3,7 @@ export const USER_ROLES = [
   'hr_manager',
   'finance',
   'viewer',
-  'bakery_admin',
+  'supplier_admin',
   'platform_admin',
 ] as const;
 export type UserRole = (typeof USER_ROLES)[number];
@@ -29,8 +29,8 @@ export type District = (typeof DISTRICTS)[number];
 export const RULE_TYPES = ['all_birthdays', 'round_birthdays', 'work_anniversary'] as const;
 export type RuleType = (typeof RULE_TYPES)[number];
 
-export const CAKE_SIZES = ['small', 'medium', 'large'] as const;
-export type CakeSize = (typeof CAKE_SIZES)[number];
+export const PRODUCT_SIZES = ['small', 'medium', 'large'] as const;
+export type ProductSize = (typeof PRODUCT_SIZES)[number];
 
 export const ORDER_STATUSES = [
   'draft',
@@ -51,13 +51,13 @@ export type OrderStatus = (typeof ORDER_STATUSES)[number];
 export const ORDER_TYPES = ['automatic', 'ad_hoc'] as const;
 export type OrderType = (typeof ORDER_TYPES)[number];
 
-export const BAKERY_STATUSES = [
+export const SUPPLIER_STATUSES = [
   'pending_setup',
   'active',
   'inactive',
   'suspended',
 ] as const;
-export type BakeryStatus = (typeof BAKERY_STATUSES)[number];
+export type SupplierStatus = (typeof SUPPLIER_STATUSES)[number];
 
 export const PAYMENT_METHODS = ['credit_card', 'monthly_invoice'] as const;
 export type PaymentMethod = (typeof PAYMENT_METHODS)[number];
@@ -91,9 +91,9 @@ export const NOTIFICATION_EVENTS = [
   'order_draft_created',
   'order_pending_approval',
   'order_confirmed',
-  'order_assigned_to_bakery',
-  'order_accepted_by_bakery',
-  'order_rejected_by_bakery',
+  'order_assigned_to_supplier',
+  'order_accepted_by_supplier',
+  'order_rejected_by_supplier',
   'order_out_for_delivery',
   'order_delivered',
   'order_cancelled',
@@ -108,7 +108,7 @@ export const NOTIFICATION_EVENTS = [
   'employee_birthday_reminder',
   'hr_sync_failed',
   'hr_sync_completed',
-  'bakery_invitation',
+  'supplier_invitation',
   'user_invitation',
   'password_reset',
 ] as const;

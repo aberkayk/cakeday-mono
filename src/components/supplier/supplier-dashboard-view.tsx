@@ -7,11 +7,11 @@ import { Badge } from "@/components/ui/badge";
 import { formatDate, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS, formatCurrency } from "@/lib/utils";
 import type { Order } from "@/lib/shared";
 
-interface BakeryDashboardViewProps {
+interface SupplierDashboardViewProps {
   initialOrders: Order[];
 }
 
-export function BakeryDashboardView({ initialOrders }: BakeryDashboardViewProps) {
+export function SupplierDashboardView({ initialOrders }: SupplierDashboardViewProps) {
   const orders = initialOrders;
 
   const newOrders = orders.filter((o) => o.status === "assigned");
@@ -31,7 +31,7 @@ export function BakeryDashboardView({ initialOrders }: BakeryDashboardViewProps)
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold font-headline text-foreground">Pastane Paneli</h1>
+        <h1 className="text-2xl font-bold font-headline text-foreground">Tedarikçi Paneli</h1>
         <p className="text-muted text-sm mt-1">Bugünün siparişleri ve özet bilgiler.</p>
       </div>
 
@@ -57,7 +57,7 @@ export function BakeryDashboardView({ initialOrders }: BakeryDashboardViewProps)
         <div className="flex items-center justify-between px-6 py-5 border-b border-border-soft/50">
           <h2 className="text-base font-semibold font-headline text-foreground">Bugünün Teslimatları</h2>
           <Button variant="ghost" size="sm" asChild className="text-primary hover:text-primary hover:bg-primary/50">
-            <Link href="/bakery/orders">
+            <Link href="/supplier/orders">
               Tümü <ArrowRight className="ml-1 h-4 w-4" />
             </Link>
           </Button>

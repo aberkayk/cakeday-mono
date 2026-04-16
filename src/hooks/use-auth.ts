@@ -8,7 +8,7 @@ import { login as loginAction, logout as logoutAction, register as registerActio
 
 export function useAuth() {
   const router = useRouter();
-  const { user, session, isLoading, userRole, companyId, bakeryId, setSession, setLoading, clearAuth } =
+  const { user, session, isLoading, userRole, companyId, supplierId, setSession, setLoading, clearAuth } =
     useAuthStore();
 
   // Create a stable supabase client reference for this hook instance
@@ -93,7 +93,7 @@ export function useAuth() {
     isLoading,
     userRole,
     companyId,
-    bakeryId,
+    supplierId,
     isAuthenticated: !!session,
     login,
     register,

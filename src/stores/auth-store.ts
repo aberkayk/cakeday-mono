@@ -8,7 +8,7 @@ interface AuthState {
   isLoading: boolean;
   userRole: string | null;
   companyId: string | null;
-  bakeryId: string | null;
+  supplierId: string | null;
   setUser: (user: User | null) => void;
   setSession: (session: Session | null) => void;
   setLoading: (loading: boolean) => void;
@@ -23,7 +23,7 @@ export const useAuthStore = create<AuthState>()(
       isLoading: true,
       userRole: null,
       companyId: null,
-      bakeryId: null,
+      supplierId: null,
 
       setUser: (user) => {
         const meta = user?.user_metadata ?? {};
@@ -31,7 +31,7 @@ export const useAuthStore = create<AuthState>()(
           user,
           userRole: meta.role ?? null,
           companyId: meta.company_id ?? null,
-          bakeryId: meta.bakery_id ?? null,
+          supplierId: meta.supplier_id ?? null,
         });
       },
 
@@ -46,7 +46,7 @@ export const useAuthStore = create<AuthState>()(
             user: session.user,
             userRole: meta.role ?? null,
             companyId: meta.company_id ?? null,
-            bakeryId: meta.bakery_id ?? null,
+            supplierId: meta.supplier_id ?? null,
           });
         } else {
           if (typeof window !== "undefined") {
@@ -68,7 +68,7 @@ export const useAuthStore = create<AuthState>()(
           isLoading: false,
           userRole: null,
           companyId: null,
-          bakeryId: null,
+          supplierId: null,
         });
       },
     }),
@@ -77,7 +77,7 @@ export const useAuthStore = create<AuthState>()(
       partialize: (state) => ({
         userRole: state.userRole,
         companyId: state.companyId,
-        bakeryId: state.bakeryId,
+        supplierId: state.supplierId,
       }),
     }
   )

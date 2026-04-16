@@ -53,8 +53,8 @@ export function getInitials(name: string): string {
     .toUpperCase();
 }
 
-// Cake size labels
-export const CAKE_SIZE_LABELS: Record<string, string> = {
+// Product size labels
+export const PRODUCT_SIZE_LABELS: Record<string, string> = {
   small: "Küçük",
   medium: "Orta",
   large: "Büyük",
@@ -90,8 +90,8 @@ export const COMPANY_STATUS_LABELS: Record<string, string> = {
   deactivated: "Deaktif",
 };
 
-// Bakery status labels
-export const BAKERY_STATUS_LABELS: Record<string, string> = {
+// Supplier status labels
+export const SUPPLIER_STATUS_LABELS: Record<string, string> = {
   pending_setup: "Kurulum Bekliyor",
   active: "Aktif",
   inactive: "Pasif",

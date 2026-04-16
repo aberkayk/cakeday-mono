@@ -1,12 +1,12 @@
 "use client";
 
 import { Check } from "lucide-react";
-import { cn, CAKE_SIZE_LABELS, formatCurrency } from "@/lib/utils";
+import { cn, PRODUCT_SIZE_LABELS, formatCurrency } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import type { CakeType } from "@/lib/shared";
+import type { ProductType } from "@/lib/shared";
 
-interface CakeSelectorProps {
-  cakeTypes: CakeType[];
+interface ProductSelectorProps {
+  productTypes: ProductType[];
   selectedTypeId: string | null;
   selectedSize: string;
   onTypeChange: (id: string) => void;
@@ -25,19 +25,19 @@ const SIZE_CONFIG: Record<string, { emoji: string; desc: string }> = {
   large: { emoji: "🎉", desc: "10–12 kişilik" },
 };
 
-export function CakeSelector({
-  cakeTypes,
+export function ProductSelector({
+  productTypes,
   selectedTypeId,
   selectedSize,
   onTypeChange,
   onSizeChange,
-}: CakeSelectorProps) {
+}: ProductSelectorProps) {
   return (
     <div className="space-y-6">
       {/* Cake type selection */}
       <div>
         <p className="text-sm font-semibold text-foreground mb-3">Pasta Türü</p>
-        {cakeTypes.length === 0 ? (
+        {productTypes.length === 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {[...Array(3)].map((_, i) => (
               <div key={i} className="rounded-2xl border-2 border-border-soft bg-background-secondary h-28 animate-pulse" />
@@ -45,7 +45,7 @@ export function CakeSelector({
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {cakeTypes.map((cake) => (
+            {productTypes.map((cake) => (
               <button
                 key={cake.id}
                 type="button"
@@ -86,7 +86,7 @@ export function CakeSelector({
       <div>
         <p className="text-sm font-semibold text-foreground mb-3">Pasta Boyutu</p>
         <div className="grid grid-cols-3 gap-3">
-          {Object.entries(CAKE_SIZE_LABELS).map(([key, label]) => {
+          {Object.entries(PRODUCT_SIZE_LABELS).map(([key, label]) => {
             const config = SIZE_CONFIG[key] ?? { emoji: "🎂", desc: "" };
             return (
               <button

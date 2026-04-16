@@ -24,10 +24,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { requestPriceChange } from "@/actions/bakery";
-import { formatCurrency, CAKE_SIZE_LABELS } from "@/lib/utils";
+import { requestPriceChange } from "@/actions/supplier";
+import { formatCurrency, PRODUCT_SIZE_LABELS } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
-import type { CakeType } from "@/lib/shared";
+import type { ProductType } from "@/lib/shared";
 
 const MOCK_CURRENT_PRICES: Record<string, Record<string, number>> = {
   small: { default: 280 },
@@ -36,7 +36,7 @@ const MOCK_CURRENT_PRICES: Record<string, Record<string, number>> = {
 };
 
 const requestSchema = z.object({
-  cake_type_id: z.string().min(1, "Pasta türü seçin."),
+  product_type_id: z.string().min(1, "Pasta türü seçin."),
   size: z.enum(["small", "medium", "large"]),
   requested_price_try: z.number().min(1, "Fiyat gerekli."),
   effective_date: z.string().min(1, "Geçerlilik tarihi seçin."),
@@ -44,11 +44,11 @@ const requestSchema = z.object({
 });
 type RequestFormData = z.infer<typeof requestSchema>;
 
-interface BakeryPricingClientProps {
-  cakeTypes: CakeType[];
+interface SupplierPricingClientProps {
+  productTypes: ProductType[];
 }
 
-export function BakeryPricingClient({ cakeTypes }: BakeryPricingClientProps) {
+export function SupplierPricingClient({ productTypes }: SupplierPricingClientProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const { toast } = useToast();
@@ -104,11 +104,11 @@ export function BakeryPricingClient({ cakeTypes }: BakeryPricingClientProps) {
           </h2>
         </div>
         <div className="px-6 py-5">
-          {cakeTypes.length === 0 ? (
+          {productTypes.length === 0 ? (
             <p className="text-sm text-muted">Katalogda pasta türü bulunamadı.</p>
           ) : (
             <div className="space-y-4">
-              {cakeTypes.map((cake) => (
+              {productTypes.map((cake) => (
                 <div key={cake.id} className="rounded-xl border border-border-soft p-4">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
@@ -124,7 +124,7 @@ export function BakeryPricingClient({ cakeTypes }: BakeryPricingClientProps) {
                   <div className="grid grid-cols-3 gap-3">
                     {(["small", "medium", "large"] as const).map((size) => (
                       <div key={size} className="text-center rounded-xl bg-background-secondary p-2">
-                        <p className="text-xs text-muted mb-1">{CAKE_SIZE_LABELS[size]}</p>
+                        <p className="text-xs text-muted mb-1">{PRODUCT_SIZE_LABELS[size]}</p>
                         <p className="font-semibold text-sm text-foreground">
                           {formatCurrency(MOCK_CURRENT_PRICES[size]?.["default"] ?? 0)}
                         </p>
@@ -161,17 +161,17 @@ export function BakeryPricingClient({ cakeTypes }: BakeryPricingClientProps) {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-2">
                 <Label className="text-foreground">Pasta Türü</Label>
-                <Select onValueChange={(v) => setValue("cake_type_id", v)}>
+                <Select onValueChange={(v) => setValue("product_type_id", v)}>
                   <SelectTrigger className="rounded-xl border-border-soft">
                     <SelectValue placeholder="Pasta seçin" />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl">
-                    {cakeTypes.map((c) => (
+                    {productTypes.map((c) => (
                       <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-                {errors.cake_type_id && <p className="text-xs text-red-500">{errors.cake_type_id.message}</p>}
+                {errors.product_type_id && <p className="text-xs text-red-500">{errors.product_type_id.message}</p>}
               </div>
 
               <div className="space-y-2">
@@ -179,7 +179,7 @@ export function BakeryPricingClient({ cakeTypes }: BakeryPricingClientProps) {
                 <Select defaultValue="medium" onValueChange={(v) => setValue("size", v as "small" | "medium" | "large")}>
                   <SelectTrigger className="rounded-xl border-border-soft"><SelectValue /></SelectTrigger>
                   <SelectContent className="rounded-xl">
-                    {Object.entries(CAKE_SIZE_LABELS).map(([k, v]) => (
+                    {Object.entries(PRODUCT_SIZE_LABELS).map(([k, v]) => (
                       <SelectItem key={k} value={k}>{v}</SelectItem>
                     ))}
                   </SelectContent>

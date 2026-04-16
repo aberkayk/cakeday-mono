@@ -5,10 +5,10 @@ import type {
   EmployeeSource,
   District,
   RuleType,
-  CakeSize,
+  ProductSize,
   OrderStatus,
   OrderType,
-  BakeryStatus,
+  SupplierStatus,
   PaymentMethod,
   BillingCycle,
   PaymentStatus,
@@ -28,10 +28,10 @@ export type {
   EmployeeSource,
   District,
   RuleType,
-  CakeSize,
+  ProductSize,
   OrderStatus,
   OrderType,
-  BakeryStatus,
+  SupplierStatus,
   PaymentMethod,
   BillingCycle,
   PaymentStatus,
@@ -48,9 +48,9 @@ export type {
 export interface JwtClaims {
   sub: string;
   email: string;
-  user_type: 'company_user' | 'bakery_user' | 'platform_admin';
+  user_type: 'company_user' | 'supplier_user' | 'platform_admin';
   company_id: string | null;
-  bakery_id: string | null;
+  supplier_id: string | null;
   role: UserRole;
   iat: number;
   exp: number;
@@ -61,7 +61,30 @@ export interface User {
   full_name: string;
   phone: string | null;
   role: UserRole;
+  address_id: string | null;
   onboarding_completed: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+// ─── Shared references ────────────────────────────────────────────────────────
+
+export interface Contact {
+  id: string;
+  name: string;
+  title: string | null;
+  email: string | null;
+  phone: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Address {
+  id: string;
+  address: string;
+  district: District | null;
+  city: string;
+  country: string;
   created_at: string;
   updated_at: string;
 }
@@ -92,32 +115,12 @@ export interface Company {
   sector: string | null;
   email: string | null;
   logo_url: string | null;
+  address_id: string | null;
+  contact_id: string | null;
   subscription_plan_id: string | null;
   subscription_started_at: string | null;
   subscription_renews_at: string | null;
   status: CompanyStatus;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface Contact {
-  id: string;
-  company_id: string;
-  name: string;
-  title: string | null;
-  email: string | null;
-  phone: string | null;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface Address {
-  id: string;
-  company_id: string;
-  address: string;
-  district: District | null;
-  city: string;
-  country: string;
   created_at: string;
   updated_at: string;
 }
@@ -150,15 +153,12 @@ export interface Employee {
   work_email: string | null;
   source: EmployeeSource;
   external_id: string | null;
-  hr_integration_id: string | null;
   last_synced_at: string | null;
-  preferred_cake_type_id: string | null;
-  preferred_cake_size: CakeSize | null;
+  preferred_product_type_id: string | null;
+  preferred_product_size: ProductSize | null;
   custom_message_override: string | null;
-  skip_cake: boolean;
+  skip_product: boolean;
   status: EmployeeStatus;
-  deactivated_at: string | null;
-  deactivated_by: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -172,8 +172,8 @@ export interface OrderingRule {
   rule_type: RuleType;
   milestone_ages: number[] | null;
   anniversary_years: number[] | null;
-  default_cake_type_id: string | null;
-  default_cake_size: CakeSize;
+  default_product_type_id: string | null;
+  default_product_size: ProductSize;
   custom_text_template: string | null;
   is_active: boolean;
   created_by: string | null;
@@ -195,33 +195,24 @@ export interface Order {
   delivery_address: string;
   delivery_district: District;
   delivery_window: DeliveryWindow;
-  cake_type_id: string | null;
-  cake_size: CakeSize;
+  product_type_id: string | null;
+  product_size: ProductSize;
   custom_text: string | null;
-  bakery_id: string | null;
+  supplier_id: string | null;
   assigned_at: string | null;
   acceptance_deadline: string | null;
   accepted_at: string | null;
   rejected_at: string | null;
-  rejection_reason: string | null;
   reassignment_count: number;
   status: OrderStatus;
-  approved_by: string | null;
-  approved_at: string | null;
-  cancelled_by: string | null;
-  cancelled_at: string | null;
-  cancellation_reason: string | null;
   delivered_at: string | null;
   failed_at: string | null;
-  failure_reason: string | null;
   base_price_try: number;
   platform_fee_try: number;
   vat_rate: number;
   order_total_try: number;
   cancellation_fee_try: number;
   payment_id: string | null;
-  last_status_override_by: string | null;
-  last_status_override_note: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -237,39 +228,30 @@ export interface OrderStatusHistory {
   created_at: string;
 }
 
-// ─── Bakeries ─────────────────────────────────────────────────────────────────
+// ─── Suppliers ────────────────────────────────────────────────────────────────
 
-export interface Bakery {
+export interface Supplier {
   id: string;
   user_id: string;
   name: string;
   slug: string;
   description: string | null;
   logo_url: string | null;
-  contact_name: string;
-  contact_email: string;
-  contact_phone: string;
-  address: string;
+  contact_id: string | null;
+  address_id: string | null;
   iban: string | null;
   bank_name: string | null;
   business_hours: Record<string, { open: string; close: string } | null>;
   acceptance_window_hours: number | null;
-  status: BakeryStatus;
+  status: SupplierStatus;
   admin_note: string | null;
   created_at: string;
   updated_at: string;
 }
 
-export interface BakeryDistrict {
-  bakery_id: string;
-  district: District;
-  max_orders_per_day: number | null;
-  created_at: string;
-}
+// ─── Product Catalogue ────────────────────────────────────────────────────────
 
-// ─── Cake Catalogue ───────────────────────────────────────────────────────────
-
-export interface CakeType {
+export interface ProductType {
   id: string;
   name: string;
   slug: string;
@@ -287,10 +269,10 @@ export interface CakeType {
   updated_at: string;
 }
 
-export interface CakePrice {
+export interface ProductPrice {
   id: string;
-  cake_type_id: string;
-  size: CakeSize;
+  product_type_id: string;
+  size: ProductSize;
   price_try: number;
   weight_grams: number | null;
   valid_from: string;
@@ -300,9 +282,9 @@ export interface CakePrice {
 
 export interface PriceChangeRequest {
   id: string;
-  bakery_id: string;
-  cake_type_id: string;
-  size: CakeSize;
+  supplier_id: string;
+  product_type_id: string;
+  size: ProductSize;
   current_price_try: number;
   requested_price_try: number;
   effective_date: string;

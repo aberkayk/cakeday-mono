@@ -6,7 +6,7 @@ import type { PaginationParams } from '@/lib/utils/pagination';
 import { buildMeta } from '@/lib/utils/pagination';
 import type { UserRole } from '@/lib/shared';
 
-type BakeryOrderStatus =
+type SupplierOrderStatus =
   | 'assigned'
   | 'accepted'
   | 'preparing'
@@ -14,7 +14,7 @@ type BakeryOrderStatus =
   | 'delivered'
   | 'rejected';
 
-const BAKERY_VISIBLE_STATUSES: BakeryOrderStatus[] = [
+const SUPPLIER_VISIBLE_STATUSES: SupplierOrderStatus[] = [
   'assigned',
   'accepted',
   'preparing',
@@ -23,24 +23,24 @@ const BAKERY_VISIBLE_STATUSES: BakeryOrderStatus[] = [
   'rejected',
 ];
 
-export class BakeryService {
-  async listBakeryOrders(
-    bakeryId: string,
+export class SupplierService {
+  async listSupplierOrders(
+    supplierId: string,
     pagination: PaginationParams,
     filters: { status?: string; date_from?: string; date_to?: string },
   ) {
-    const conditions = [eq(orders.bakery_id, bakeryId)];
+    const conditions = [eq(orders.supplier_id, supplierId)];
 
     if (filters.status) {
-      const statuses = filters.status.split(',').map((s) => s.trim()) as BakeryOrderStatus[];
+      const statuses = filters.status.split(',').map((s) => s.trim()) as SupplierOrderStatus[];
       if (statuses.length === 1) {
         conditions.push(eq(orders.status, statuses[0]));
       } else {
         conditions.push(inArray(orders.status, statuses));
       }
     } else {
-      // Default: only show bakery-relevant statuses
-      conditions.push(inArray(orders.status, BAKERY_VISIBLE_STATUSES));
+      // Default: only show supplier-relevant statuses
+      conditions.push(inArray(orders.status, SUPPLIER_VISIBLE_STATUSES));
     }
 
     if (filters.date_from) {
@@ -74,11 +74,11 @@ export class BakeryService {
     };
   }
 
-  async getBakeryOrder(bakeryId: string, orderId: string) {
+  async getSupplierOrder(supplierId: string, orderId: string) {
     const [order] = await db
       .select()
       .from(orders)
-      .where(and(eq(orders.id, orderId), eq(orders.bakery_id, bakeryId)))
+      .where(and(eq(orders.id, orderId), eq(orders.supplier_id, supplierId)))
       .limit(1);
 
     if (!order) throw new NotFoundError('Order', orderId);
@@ -86,19 +86,19 @@ export class BakeryService {
   }
 
   private async transitionOrderStatus(
-    bakeryId: string,
+    supplierId: string,
     orderId: string,
     userId: string,
     userRole: UserRole,
     fromStatuses: string[],
-    toStatus: BakeryOrderStatus,
+    toStatus: SupplierOrderStatus,
     note: string,
     extraFields: Record<string, unknown> = {},
   ) {
     const [order] = await db
       .select()
       .from(orders)
-      .where(and(eq(orders.id, orderId), eq(orders.bakery_id, bakeryId)))
+      .where(and(eq(orders.id, orderId), eq(orders.supplier_id, supplierId)))
       .limit(1);
 
     if (!order) throw new NotFoundError('Order', orderId);
@@ -131,53 +131,53 @@ export class BakeryService {
     return updated;
   }
 
-  async acceptOrder(bakeryId: string, orderId: string, userId: string, role: UserRole) {
+  async acceptOrder(supplierId: string, orderId: string, userId: string, role: UserRole) {
     return this.transitionOrderStatus(
-      bakeryId, orderId, userId, role,
+      supplierId, orderId, userId, role,
       ['assigned'],
       'accepted',
-      'Pastane tarafindan kabul edildi.',
+      'Tedarikci tarafindan kabul edildi.',
       { accepted_at: new Date() },
     );
   }
 
   async rejectOrder(
-    bakeryId: string,
+    supplierId: string,
     orderId: string,
     userId: string,
     role: UserRole,
     reason: string,
   ) {
     return this.transitionOrderStatus(
-      bakeryId, orderId, userId, role,
+      supplierId, orderId, userId, role,
       ['assigned', 'accepted'],
       'rejected',
-      `Pastane tarafindan reddedildi: ${reason}`,
-      { rejected_at: new Date(), rejection_reason: reason },
+      `Tedarikci tarafindan reddedildi: ${reason}`,
+      { rejected_at: new Date() },
     );
   }
 
-  async markPreparing(bakeryId: string, orderId: string, userId: string, role: UserRole) {
+  async markPreparing(supplierId: string, orderId: string, userId: string, role: UserRole) {
     return this.transitionOrderStatus(
-      bakeryId, orderId, userId, role,
+      supplierId, orderId, userId, role,
       ['accepted'],
       'preparing',
       'Siparis hazirlanmaya baslandi.',
     );
   }
 
-  async markOutForDelivery(bakeryId: string, orderId: string, userId: string, role: UserRole) {
+  async markOutForDelivery(supplierId: string, orderId: string, userId: string, role: UserRole) {
     return this.transitionOrderStatus(
-      bakeryId, orderId, userId, role,
+      supplierId, orderId, userId, role,
       ['preparing'],
       'out_for_delivery',
       'Siparis teslimatta.',
     );
   }
 
-  async markDelivered(bakeryId: string, orderId: string, userId: string, role: UserRole) {
+  async markDelivered(supplierId: string, orderId: string, userId: string, role: UserRole) {
     return this.transitionOrderStatus(
-      bakeryId, orderId, userId, role,
+      supplierId, orderId, userId, role,
       ['out_for_delivery'],
       'delivered',
       'Siparis teslim edildi.',
@@ -186,4 +186,4 @@ export class BakeryService {
   }
 }
 
-export const bakeryService = new BakeryService();
+export const supplierService = new SupplierService();

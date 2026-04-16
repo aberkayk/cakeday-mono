@@ -6,13 +6,13 @@ import { LayoutDashboard, ShoppingBag, Tag, Settings, Cake } from "lucide-react"
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { href: "/bakery", label: "Genel Bakış", icon: LayoutDashboard },
-  { href: "/bakery/orders", label: "Siparişler", icon: ShoppingBag },
-  { href: "/bakery/pricing", label: "Fiyatlandırma", icon: Tag },
-  { href: "/bakery/settings", label: "Ayarlar", icon: Settings },
+  { href: "/supplier", label: "Genel Bakış", icon: LayoutDashboard },
+  { href: "/supplier/orders", label: "Siparişler", icon: ShoppingBag },
+  { href: "/supplier/pricing", label: "Fiyatlandırma", icon: Tag },
+  { href: "/supplier/settings", label: "Ayarlar", icon: Settings },
 ];
 
-export function BakerySidebar() {
+export function SupplierSidebar() {
   const pathname = usePathname();
 
   return (
@@ -21,7 +21,7 @@ export function BakerySidebar() {
         <Cake className="h-7 w-7 text-primary" />
         <div>
           <span className="text-lg font-bold font-headline text-foreground">CakeDay</span>
-          <p className="text-xs text-muted">Pastane Portalı</p>
+          <p className="text-xs text-muted">Tedarikçi Portalı</p>
         </div>
       </div>
 
@@ -29,8 +29,8 @@ export function BakerySidebar() {
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive =
-            item.href === "/bakery"
-              ? pathname === "/bakery"
+            item.href === "/supplier"
+              ? pathname === "/supplier"
               : pathname.startsWith(item.href);
           return (
             <Link

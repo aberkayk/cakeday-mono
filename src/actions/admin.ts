@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { requireAuth, requireRole } from '@/lib/auth';
 import { db } from '@/lib/db';
-import { companies, cakeTypes, priceChangeRequests } from '@/lib/db/schema';
+import { companies, productTypes, priceChangeRequests } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 
 export async function approveCompany(companyId: string) {
@@ -34,7 +34,7 @@ export async function suspendCompany(companyId: string) {
   return result[0];
 }
 
-export async function createCakeType(data: {
+export async function createProductType(data: {
   name: string;
   slug: string;
   description?: string;
@@ -48,8 +48,8 @@ export async function createCakeType(data: {
   const user = await requireAuth();
   requireRole(user, 'platform_admin');
 
-  const [cakeType] = await db
-    .insert(cakeTypes)
+  const [productType] = await db
+    .insert(productTypes)
     .values({
       name: data.name,
       slug: data.slug,
@@ -64,10 +64,10 @@ export async function createCakeType(data: {
     .returning();
 
   revalidatePath('/admin');
-  return cakeType;
+  return productType;
 }
 
-export async function updateCakeType(
+export async function updateProductType(
   id: string,
   data: {
     name?: string;
@@ -86,9 +86,9 @@ export async function updateCakeType(
   requireRole(user, 'platform_admin');
 
   const [updated] = await db
-    .update(cakeTypes)
+    .update(productTypes)
     .set({ ...data, updated_at: new Date() })
-    .where(eq(cakeTypes.id, id))
+    .where(eq(productTypes.id, id))
     .returning();
 
   revalidatePath('/admin');

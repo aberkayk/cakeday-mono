@@ -1,7 +1,7 @@
 import { db } from '@/lib/db';
-import { orders, orderStatusHistory, cakePrices, cakeTypes, companies } from '@/lib/db/schema';
+import { orders, orderStatusHistory, productPrices, companies } from '@/lib/db/schema';
 import { eq, and, or, ilike, inArray, gte, lte, count, asc, desc, sql } from 'drizzle-orm';
-import { NotFoundError, BadRequestError, ForbiddenError } from '@/lib/errors';
+import { NotFoundError, BadRequestError } from '@/lib/errors';
 import type { CreateAdHocOrderInput, CancelOrderInput } from '@/lib/shared';
 import type { PaginationParams } from '@/lib/utils/pagination';
 import { buildMeta } from '@/lib/utils/pagination';
@@ -24,7 +24,6 @@ export class OrderService {
 
     if (filters.status) {
       const statuses = filters.status.split(',').map((s) => s.trim());
-      // Build or clause for multiple statuses
       if (statuses.length === 1) {
         const status = statuses[0] as typeof orders.status._.data;
         conditions.push(eq(orders.status, status));
@@ -107,22 +106,22 @@ export class OrderService {
     userId: string,
     input: CreateAdHocOrderInput,
   ) {
-    // Fetch current price for the cake type + size
+    // Fetch current price for the product type + size
     const [priceRow] = await db
-      .select({ price_try: cakePrices.price_try })
-      .from(cakePrices)
+      .select({ price_try: productPrices.price_try })
+      .from(productPrices)
       .where(
         and(
-          eq(cakePrices.cake_type_id, input.cake_type_id),
-          eq(cakePrices.size, input.cake_size),
-          sql`(${cakePrices.valid_until} IS NULL OR ${cakePrices.valid_until} >= CURRENT_DATE)`,
+          eq(productPrices.product_type_id, input.product_type_id),
+          eq(productPrices.size, input.product_size),
+          sql`(${productPrices.valid_until} IS NULL OR ${productPrices.valid_until} >= CURRENT_DATE)`,
         ),
       )
-      .orderBy(desc(cakePrices.valid_from))
+      .orderBy(desc(productPrices.valid_from))
       .limit(1);
 
     if (!priceRow) {
-      throw new BadRequestError('Secilen pasta turu ve boyutu icin fiyat bulunamadi.');
+      throw new BadRequestError('Secilen urun turu ve boyutu icin fiyat bulunamadi.');
     }
 
     const [company] = await db
@@ -151,8 +150,8 @@ export class OrderService {
         delivery_address: input.delivery_address,
         delivery_district: input.delivery_district,
         delivery_window: input.delivery_window ?? 'no_preference',
-        cake_type_id: input.cake_type_id,
-        cake_size: input.cake_size,
+        product_type_id: input.product_type_id,
+        product_size: input.product_size,
         custom_text: input.custom_text,
         status: needsApproval ? 'pending_approval' : 'confirmed',
         base_price_try: String(basePrice),
@@ -168,7 +167,7 @@ export class OrderService {
       from_status: null,
       to_status: order.status,
       changed_by: userId,
-      changed_by_role: 'company_owner', // will be actual role in production
+      changed_by_role: 'company_owner',
       note: 'Ad-hoc siparis olusturuldu.',
     });
 
@@ -206,9 +205,6 @@ export class OrderService {
       .update(orders)
       .set({
         status: newStatus,
-        cancelled_by: userId,
-        cancelled_at: new Date(),
-        cancellation_reason: input.reason,
         updated_at: new Date(),
       })
       .where(eq(orders.id, orderId))

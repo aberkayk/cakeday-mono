@@ -23,13 +23,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CAKE_SIZE_LABELS } from "@/lib/utils";
+import { PRODUCT_SIZE_LABELS } from "@/lib/utils";
 import type { OrderingRule } from "@/lib/shared";
 
 const schema = z.object({
   name: z.string().min(1, "Kural adı gerekli."),
   rule_type: z.enum(["all_birthdays", "round_birthdays", "work_anniversary"]),
-  default_cake_size: z.enum(["small", "medium", "large"]),
+  default_product_size: z.enum(["small", "medium", "large"]),
   milestone_ages: z.string().optional(),
   anniversary_years: z.string().optional(),
   custom_text_template: z.string().optional(),
@@ -54,7 +54,7 @@ export function RuleForm({ open, onClose, onSubmit, rule }: RuleFormProps) {
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { rule_type: "all_birthdays", default_cake_size: "medium" },
+    defaultValues: { rule_type: "all_birthdays", default_product_size: "medium" },
   });
 
   const ruleType = watch("rule_type");
@@ -64,13 +64,13 @@ export function RuleForm({ open, onClose, onSubmit, rule }: RuleFormProps) {
       reset({
         name: rule.name,
         rule_type: rule.rule_type,
-        default_cake_size: rule.default_cake_size,
+        default_product_size: rule.default_product_size,
         milestone_ages: rule.milestone_ages?.join(", ") ?? "",
         anniversary_years: rule.anniversary_years?.join(", ") ?? "",
         custom_text_template: rule.custom_text_template ?? "",
       });
     } else {
-      reset({ rule_type: "all_birthdays", default_cake_size: "medium" });
+      reset({ rule_type: "all_birthdays", default_product_size: "medium" });
     }
   }, [rule, reset]);
 
@@ -85,7 +85,7 @@ export function RuleForm({ open, onClose, onSubmit, rule }: RuleFormProps) {
     await onSubmit({
       name: data.name,
       rule_type: data.rule_type,
-      default_cake_size: data.default_cake_size,
+      default_product_size: data.default_product_size,
       milestone_ages: parsedMilestoneAges,
       anniversary_years: parsedAnniversaryYears,
       custom_text_template: data.custom_text_template || null,
@@ -170,14 +170,14 @@ export function RuleForm({ open, onClose, onSubmit, rule }: RuleFormProps) {
             <div className="space-y-1.5">
               <Label className="text-sm font-medium text-foreground">Varsayılan Pasta Boyutu *</Label>
               <Select
-                defaultValue={rule?.default_cake_size ?? "medium"}
-                onValueChange={(v) => setValue("default_cake_size", v as FormData["default_cake_size"])}
+                defaultValue={rule?.default_product_size ?? "medium"}
+                onValueChange={(v) => setValue("default_product_size", v as FormData["default_product_size"])}
               >
                 <SelectTrigger className="rounded-xl border-border-soft">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
-                  {Object.entries(CAKE_SIZE_LABELS).map(([k, v]) => (
+                  {Object.entries(PRODUCT_SIZE_LABELS).map(([k, v]) => (
                     <SelectItem key={k} value={k}>{v}</SelectItem>
                   ))}
                 </SelectContent>

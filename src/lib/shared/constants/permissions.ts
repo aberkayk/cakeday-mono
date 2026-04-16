@@ -27,10 +27,10 @@ export const PERMISSIONS = {
   'billing:read': ['company_owner', 'finance', 'platform_admin'] as UserRole[],
   'billing:write': ['company_owner', 'finance', 'platform_admin'] as UserRole[],
   'users:manage': ['company_owner', 'platform_admin'] as UserRole[],
-  'bakery:orders:read': ['bakery_admin', 'platform_admin'] as UserRole[],
-  'bakery:orders:write': ['bakery_admin', 'platform_admin'] as UserRole[],
-  'bakery:prices:read': ['bakery_admin', 'platform_admin'] as UserRole[],
-  'bakery:prices:write': ['bakery_admin', 'platform_admin'] as UserRole[],
+  'supplier:orders:read': ['supplier_admin', 'platform_admin'] as UserRole[],
+  'supplier:orders:write': ['supplier_admin', 'platform_admin'] as UserRole[],
+  'supplier:prices:read': ['supplier_admin', 'platform_admin'] as UserRole[],
+  'supplier:prices:write': ['supplier_admin', 'platform_admin'] as UserRole[],
   'admin:*': ['platform_admin'] as UserRole[],
 } as const;
 

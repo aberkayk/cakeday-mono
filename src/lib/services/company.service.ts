@@ -24,18 +24,40 @@ export class CompanyService {
     return company;
   }
 
-  async getContacts(companyId: string) {
-    return db
+  async getContact(companyId: string) {
+    const [company] = await db
+      .select({ contact_id: companies.contact_id })
+      .from(companies)
+      .where(eq(companies.id, companyId))
+      .limit(1);
+
+    if (!company?.contact_id) return null;
+
+    const [contact] = await db
       .select()
       .from(contacts)
-      .where(eq(contacts.company_id, companyId));
+      .where(eq(contacts.id, company.contact_id))
+      .limit(1);
+
+    return contact ?? null;
   }
 
-  async getAddresses(companyId: string) {
-    return db
+  async getAddress(companyId: string) {
+    const [company] = await db
+      .select({ address_id: companies.address_id })
+      .from(companies)
+      .where(eq(companies.id, companyId))
+      .limit(1);
+
+    if (!company?.address_id) return null;
+
+    const [address] = await db
       .select()
       .from(addresses)
-      .where(eq(addresses.company_id, companyId));
+      .where(eq(addresses.id, company.address_id))
+      .limit(1);
+
+    return address ?? null;
   }
 
   async updateCompany(companyId: string, input: UpdateCompanyProfileInput) {

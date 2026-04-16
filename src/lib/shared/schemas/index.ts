@@ -151,10 +151,10 @@ export const updateEmployeeStatusSchema = z.object({
 export type UpdateEmployeeStatusInput = z.infer<typeof updateEmployeeStatusSchema>;
 
 export const updateEmployeeOverridesSchema = z.object({
-  preferred_cake_type_id: z.string().uuid().nullable().optional(),
-  preferred_cake_size: z.enum(['small', 'medium', 'large']).nullable().optional(),
+  preferred_product_type_id: z.string().uuid().nullable().optional(),
+  preferred_product_size: z.enum(['small', 'medium', 'large']).nullable().optional(),
   custom_message_override: z.string().max(60).nullable().optional(),
-  skip_cake: z.boolean().optional(),
+  skip_product: z.boolean().optional(),
 });
 export type UpdateEmployeeOverridesInput = z.infer<typeof updateEmployeeOverridesSchema>;
 
@@ -177,8 +177,8 @@ export const createOrderingRuleSchema = z.object({
   rule_type: z.enum(['all_birthdays', 'round_birthdays', 'work_anniversary']),
   milestone_ages: z.array(z.number().int().positive()).optional(),
   anniversary_years: z.array(z.number().int().positive()).optional(),
-  default_cake_type_id: z.string().uuid().optional(),
-  default_cake_size: z.enum(['small', 'medium', 'large']).default('medium'),
+  default_product_type_id: z.string().uuid().optional(),
+  default_product_size: z.enum(['small', 'medium', 'large']).default('medium'),
   custom_text_template: z.string().max(60).optional(),
   is_active: z.boolean().default(true),
 });
@@ -224,8 +224,8 @@ export const createAdHocOrderSchema = z.object({
   delivery_address: z.string().min(5, 'Teslimat adresi giriniz.'),
   delivery_district: z.enum(['besiktas', 'sariyer']),
   delivery_window: z.enum(['morning', 'afternoon', 'no_preference']).default('no_preference'),
-  cake_type_id: z.string().uuid('Gecerli bir pasta turu secin.'),
-  cake_size: z.enum(['small', 'medium', 'large']),
+  product_type_id: z.string().uuid('Gecerli bir urun turu secin.'),
+  product_size: z.enum(['small', 'medium', 'large']),
   custom_text: z.string().max(60).optional(),
 });
 export type CreateAdHocOrderInput = z.infer<typeof createAdHocOrderSchema>;
@@ -238,8 +238,8 @@ export const updateOrderSchema = z.object({
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/)
     .optional(),
-  cake_type_id: z.string().uuid().optional(),
-  cake_size: z.enum(['small', 'medium', 'large']).optional(),
+  product_type_id: z.string().uuid().optional(),
+  product_size: z.enum(['small', 'medium', 'large']).optional(),
   recipient_name: z.string().min(1).optional(),
   recipient_phone: z.string().regex(turkishPhoneRegex).optional(),
 });
@@ -255,7 +255,7 @@ export const cancelOrderSchema = z.object({
 });
 export type CancelOrderInput = z.infer<typeof cancelOrderSchema>;
 
-// ─── Bakery Schemas ───────────────────────────────────────────────────────────
+// ─── Supplier Schemas ─────────────────────────────────────────────────────────
 
 export const businessHoursSchema = z.object({
   monday: z
@@ -289,33 +289,33 @@ export const businessHoursSchema = z.object({
 });
 export type BusinessHoursInput = z.infer<typeof businessHoursSchema>;
 
-export const bakerySetupSchema = z.object({
-  name: z.string().min(2, 'Pastane adi en az 2 karakter olmalidir.').max(255),
+export const supplierSetupSchema = z.object({
+  name: z.string().min(2, 'Tedarikci adi en az 2 karakter olmalidir.').max(255),
   description: z.string().max(200).optional(),
   logo_url: z.string().url().optional(),
   business_hours: businessHoursSchema.optional(),
-  contact_phone: z.string().regex(turkishPhoneRegex).optional(),
-  address: z.string().min(10).optional(),
+  contact: upsertContactSchema.optional(),
+  address: upsertAddressSchema.optional(),
   iban: z.string().max(34).optional(),
   bank_name: z.string().max(100).optional(),
 });
-export type BakerySetupInput = z.infer<typeof bakerySetupSchema>;
+export type SupplierSetupInput = z.infer<typeof supplierSetupSchema>;
 
-export const updateBakeryProfileSchema = bakerySetupSchema.partial();
-export type UpdateBakeryProfileInput = z.infer<typeof updateBakeryProfileSchema>;
+export const updateSupplierProfileSchema = supplierSetupSchema.partial();
+export type UpdateSupplierProfileInput = z.infer<typeof updateSupplierProfileSchema>;
 
-export const bakeryRejectOrderSchema = z.object({
+export const supplierRejectOrderSchema = z.object({
   reason: z.string().min(1, 'Red nedeni giriniz.'),
 });
-export type BakeryRejectOrderInput = z.infer<typeof bakeryRejectOrderSchema>;
+export type SupplierRejectOrderInput = z.infer<typeof supplierRejectOrderSchema>;
 
-export const bakeryDeliveredSchema = z.object({
+export const supplierDeliveredSchema = z.object({
   delivery_photo_url: z.string().url().optional(),
 });
-export type BakeryDeliveredInput = z.infer<typeof bakeryDeliveredSchema>;
+export type SupplierDeliveredInput = z.infer<typeof supplierDeliveredSchema>;
 
 export const submitPriceRequestSchema = z.object({
-  cake_type_id: z.string().uuid('Gecerli bir pasta turu secin.'),
+  product_type_id: z.string().uuid('Gecerli bir urun turu secin.'),
   size: z.enum(['small', 'medium', 'large']),
   requested_price_try: z.number().positive('Fiyat sifirdan buyuk olmalidir.'),
   effective_date: z
@@ -375,27 +375,23 @@ export const adminUpdateCompanySchema = z.object({
 });
 export type AdminUpdateCompanyInput = z.infer<typeof adminUpdateCompanySchema>;
 
-export const createBakerySchema = z.object({
+export const createSupplierSchema = z.object({
   name: z.string().min(2).max(255),
   slug: z.string().min(2).max(100).regex(/^[a-z0-9-]+$/, 'Slug yalnizca kucuk harf, rakam ve tire icermelidir.'),
-  contact_name: z.string().min(2),
-  contact_email: z.string().email(),
-  contact_phone: z.string().regex(turkishPhoneRegex),
-  address: z.string().min(10),
-  districts: z.array(z.enum(['besiktas', 'sariyer'])).min(1, 'En az bir ilce secin.'),
   description: z.string().max(200).optional(),
   admin_note: z.string().optional(),
+  contact: upsertContactSchema,
+  address: upsertAddressSchema,
 });
-export type CreateBakeryInput = z.infer<typeof createBakerySchema>;
+export type CreateSupplierInput = z.infer<typeof createSupplierSchema>;
 
-export const adminUpdateBakerySchema = z.object({
+export const adminUpdateSupplierSchema = z.object({
   name: z.string().min(2).max(255).optional(),
   status: z.enum(['pending_setup', 'active', 'inactive', 'suspended']).optional(),
-  districts: z.array(z.enum(['besiktas', 'sariyer'])).optional(),
   admin_note: z.string().optional(),
   acceptance_window_hours: z.number().int().min(1).max(48).optional(),
 });
-export type AdminUpdateBakeryInput = z.infer<typeof adminUpdateBakerySchema>;
+export type AdminUpdateSupplierInput = z.infer<typeof adminUpdateSupplierSchema>;
 
 export const reviewPriceRequestSchema = z.object({
   action: z.enum(['approve', 'reject']),

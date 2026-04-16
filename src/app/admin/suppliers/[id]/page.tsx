@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { formatDate, BAKERY_STATUS_LABELS } from "@/lib/utils";
-import type { Bakery } from "@/lib/shared";
+import { formatDate, SUPPLIER_STATUS_LABELS } from "@/lib/utils";
+import type { Supplier } from "@/lib/shared";
 
 // TODO: wire to server actions
 
@@ -19,25 +19,25 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 // Placeholder until wired to server actions
-const bakery: Bakery | null = null;
+const supplier: Supplier | null = null;
 
-export default function BakeryDetailPage() {
-  if (!bakery) return <p className="text-muted-foreground">Pastane bulunamadı.</p>;
+export default function SupplierDetailPage() {
+  if (!supplier) return <p className="text-muted-foreground">Tedarikçi bulunamadı.</p>;
 
   return (
     <div className="space-y-6 max-w-4xl">
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" asChild>
-          <Link href="/admin/bakeries"><ArrowLeft className="h-5 w-5" /></Link>
+          <Link href="/admin/suppliers"><ArrowLeft className="h-5 w-5" /></Link>
         </Button>
         <div className="flex-1">
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold">{bakery.name}</h1>
-            <Badge className={`text-xs ${STATUS_COLORS[bakery.status] ?? ""}`}>
-              {BAKERY_STATUS_LABELS[bakery.status] ?? bakery.status}
+            <h1 className="text-2xl font-bold">{supplier.name}</h1>
+            <Badge className={`text-xs ${STATUS_COLORS[supplier.status] ?? ""}`}>
+              {SUPPLIER_STATUS_LABELS[supplier.status] ?? supplier.status}
             </Badge>
           </div>
-          <p className="text-muted-foreground text-sm">/{bakery.slug} · Kayıt: {formatDate(bakery.created_at)}</p>
+          <p className="text-muted-foreground text-sm">/{supplier.slug} · Kayıt: {formatDate(supplier.created_at)}</p>
         </div>
       </div>
 
@@ -46,26 +46,28 @@ export default function BakeryDetailPage() {
           <CardHeader className="pb-3">
             <CardTitle className="text-base font-semibold flex items-center gap-2">
               <Store className="h-5 w-5 text-muted-foreground" />
-              Pastane Bilgileri
+              Tedarikçi Bilgileri
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
-            {bakery.description && (
+            {supplier.description && (
               <>
-                <p className="text-muted-foreground">{bakery.description}</p>
+                <p className="text-muted-foreground">{supplier.description}</p>
                 <Separator />
               </>
             )}
-            <div className="flex items-start gap-2 text-muted-foreground">
-              <MapPin className="h-3.5 w-3.5 mt-0.5 shrink-0" />
-              <span>{bakery.address}</span>
-            </div>
-            {bakery.iban && (
+            {supplier.address_id && (
+              <div className="flex items-start gap-2 text-muted-foreground">
+                <MapPin className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+                <span className="font-mono text-xs">{supplier.address_id}</span>
+              </div>
+            )}
+            {supplier.iban && (
               <>
                 <Separator />
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">IBAN</span>
-                  <span className="font-mono text-xs">{bakery.iban}</span>
+                  <span className="font-mono text-xs">{supplier.iban}</span>
                 </div>
               </>
             )}
@@ -80,22 +82,16 @@ export default function BakeryDetailPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
-            <p className="font-medium">{bakery.contact_name}</p>
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Mail className="h-3.5 w-3.5" /><span>{bakery.contact_email}</span>
-            </div>
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Phone className="h-3.5 w-3.5" /><span>{bakery.contact_phone}</span>
-            </div>
+            <p className="text-muted-foreground">İletişim bilgileri henüz eklenmedi.</p>
           </CardContent>
         </Card>
       </div>
 
-      {bakery.admin_note && (
+      {supplier.admin_note && (
         <Card className="border border-orange-200 bg-orange-50">
           <CardContent className="pt-4">
             <p className="text-sm font-medium text-orange-800 mb-1">Admin Notu</p>
-            <p className="text-sm text-orange-700">{bakery.admin_note}</p>
+            <p className="text-sm text-orange-700">{supplier.admin_note}</p>
           </CardContent>
         </Card>
       )}

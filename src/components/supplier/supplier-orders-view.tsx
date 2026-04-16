@@ -3,9 +3,9 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BakeryOrderCard } from "@/components/bakery/bakery-order-card";
+import { SupplierOrderCard } from "@/components/supplier/supplier-order-card";
 import { ShoppingBag } from "lucide-react";
-import { acceptOrder, rejectOrder, markDelivered } from "@/actions/bakery";
+import { acceptOrder, rejectOrder, markDelivered } from "@/actions/supplier";
 import { useToast } from "@/hooks/use-toast";
 import type { Order } from "@/lib/shared";
 
@@ -17,11 +17,11 @@ const TABS = [
   { value: "rejected", label: "Reddedilen", statuses: ["rejected"] },
 ];
 
-interface BakeryOrdersViewProps {
+interface SupplierOrdersViewProps {
   initialOrders: Order[];
 }
 
-export function BakeryOrdersView({ initialOrders }: BakeryOrdersViewProps) {
+export function SupplierOrdersView({ initialOrders }: SupplierOrdersViewProps) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("new");
   const [isPending, startTransition] = useTransition();
@@ -94,7 +94,7 @@ export function BakeryOrdersView({ initialOrders }: BakeryOrdersViewProps) {
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {tabOrders.map((order: Order) => (
-                    <BakeryOrderCard
+                    <SupplierOrderCard
                       key={order.id}
                       order={order}
                       onAccept={tab.value === "new" ? handleAccept : undefined}

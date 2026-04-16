@@ -4,7 +4,7 @@ import { Pencil, Trash2, Cake, Star, Briefcase } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { CAKE_SIZE_LABELS } from "@/lib/utils";
+import { PRODUCT_SIZE_LABELS } from "@/lib/utils";
 import type { OrderingRule } from "@/lib/shared";
 
 const RULE_TYPE_CONFIG: Record<string, { label: string; color: string; borderColor: string; icon: React.ElementType; badgeBg: string }> = {
@@ -81,7 +81,7 @@ export function RuleCard({ rule, onEdit, onDelete, onToggle }: RuleCardProps) {
           <div className="flex items-center justify-between text-xs">
             <span className="text-muted">Pasta Boyutu</span>
             <span className="font-semibold text-foreground">
-              {CAKE_SIZE_LABELS[rule.default_cake_size] ?? rule.default_cake_size}
+              {PRODUCT_SIZE_LABELS[rule.default_product_size] ?? rule.default_product_size}
             </span>
           </div>
 

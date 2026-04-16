@@ -376,9 +376,9 @@ These are **not yet implemented** — the schema assumes them, but the actual en
 
 ### Security
 
-1. **Row-Level Security (RLS) policies** — tables have no `ENABLE ROW LEVEL SECURITY` yet. Multi-tenant (company × supplier × platform_admin) access requires a policy matrix on every tenant-scoped table. Without RLS, one bug in the service layer's `WHERE company_id = $x` filter = cross-tenant data leak. Must land in the first migration alongside table creation.
+1. ~~**Row-Level Security (RLS) policies**~~ — **DONE** (`drizzle/0001_rls_and_audit.sql`). Previously: tables have no `ENABLE ROW LEVEL SECURITY` yet. Multi-tenant (company × supplier × platform_admin) access requires a policy matrix on every tenant-scoped table. Without RLS, one bug in the service layer's `WHERE company_id = $x` filter = cross-tenant data leak. Must land in the first migration alongside table creation.
 
-2. **Audit-log trigger** — the "who/when" pattern depends on `audit_log` being written on every mutation. Implement as a PostgreSQL trigger function using Supabase's `auth.uid()` for `actor_id` (bypass-proof, works regardless of client — Drizzle, Studio, direct SQL). Tables to attach: `companies`, `suppliers`, `employees`, `orders`, `ordering_rules`, `hr_integrations`, `cake_prices` → `product_prices`, `subscription_plans`, `system_settings`. Skip high-volume tables (`notification_log`, `hr_sync_logs`, `order_status_history`) — they're already append-only trails.
+2. ~~**Audit-log trigger**~~ — **DONE** (`drizzle/0001_rls_and_audit.sql`). Previously: the "who/when" pattern depends on `audit_log` being written on every mutation. Implement as a PostgreSQL trigger function using Supabase's `auth.uid()` for `actor_id` (bypass-proof, works regardless of client — Drizzle, Studio, direct SQL). Tables to attach: `companies`, `suppliers`, `employees`, `orders`, `ordering_rules`, `hr_integrations`, `cake_prices` → `product_prices`, `subscription_plans`, `system_settings`. Skip high-volume tables (`notification_log`, `hr_sync_logs`, `order_status_history`) — they're already append-only trails.
 
 3. **Secrets storage for `hr_integrations.encrypted_api_key`** — currently stored as `text` with app-level encryption. Migrate to Supabase Vault (`vault.secrets`) so the key material never appears in table scans, logs, or platform_admin queries. Requires a small integration-service rewrite to fetch via `vault.decrypted_secrets` view.
 
@@ -395,3 +395,17 @@ These are **not yet implemented** — the schema assumes them, but the actual en
 7. **`payments.iyzico_conversation_id` uniqueness** — check iyzico docs: if conversation IDs are guaranteed unique per payment attempt, add `UNIQUE` for idempotency-safe retries. Currently just `text` without constraint.
 
 8. **Partial unique on `hr_integrations(company_id)` if we commit to "one HR integration per company"** — current unique is per `(company_id, integration_type)`, which allows a company to have both BambooHR and Kolay İK. If product decides "only one active integration at a time", tighten the constraint and revisit `employees.source` (potentially removable in that world).
+
+### Schema invariants (prerequisites for the audit-based design)
+
+The current schema removed columns like `orders.approved_by/at`, `cancelled_by/at`, `cancellation_reason`, `rejection_reason`, `failure_reason`, and `employees.deactivated_by/at` because their data is available from `order_status_history` and `audit_log`. For the design to actually work, the following invariants **must hold** — otherwise accountability data is silently lost:
+
+9. ~~**Every status change writes to `order_status_history`**~~ — **DONE** (DB trigger `trg_order_status_changed` in `drizzle/0001_rls_and_audit.sql`). Previously: non-negotiable. Two acceptable implementations:
+    - **(a) Service-layer wrapper:** a single `updateOrderStatus(orderId, newStatus, actorId, note?)` function that atomically writes the new status AND inserts the history row in one transaction. Nothing else in the codebase may write directly to `orders.status`. Enforceable via code review / ESLint rule.
+    - **(b) Database trigger (preferred):** an `AFTER UPDATE OF status ON orders` trigger that inserts the history row automatically, reading `auth.uid()` for `changed_by`. Bypass-proof — catches Drizzle, Supabase Studio, direct SQL. Same mechanism as the audit-log trigger in follow-up #2.
+
+10. **`order_status_history` must not be deleted or fully archived** — if volume becomes a concern, move cold rows to a compressed/partitioned table or cold storage, but keep them queryable. Permanent deletion breaks "who approved order X two years ago?" forever.
+
+11. **UI must consume history via a shared helper** — don't let every screen re-implement "find the row where `to_status='confirmed'` and join `users`". Create a `getOrderWithTimeline(orderId)` service function returning `{ order, timeline: [{ status, at, by, note }] }`. All screens that previously read `orders.approved_by` etc. use this helper.
+
+If any of these three invariants cannot be guaranteed, the column removal should be reverted for the affected fields.

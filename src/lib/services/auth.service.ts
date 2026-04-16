@@ -7,7 +7,7 @@ import {
   contacts,
   addresses,
   companySettings,
-  bakeries,
+  suppliers,
 } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import {
@@ -83,7 +83,33 @@ export class AuthService {
         role: "company_owner",
       });
 
-      // Create company owned by user
+      // Create primary contact (standalone, no company_id)
+      const [newContact] = await db
+        .insert(contacts)
+        .values({
+          name: input.primary_contact_name,
+          title: input.primary_contact_title || undefined,
+          email: input.email,
+          phone: input.phone,
+        })
+        .returning({ id: contacts.id });
+
+      // Create billing address if provided (standalone, no company_id)
+      let addressId: string | undefined;
+      if (input.billing_address) {
+        const [newAddress] = await db
+          .insert(addresses)
+          .values({
+            address: input.billing_address,
+            district: (input.billing_district || undefined) as
+              | typeof addresses.district._.data
+              | undefined,
+          })
+          .returning({ id: addresses.id });
+        addressId = newAddress.id;
+      }
+
+      // Create company linking to contact and (optional) address
       const [newCompany] = await db
         .insert(companies)
         .values({
@@ -92,29 +118,11 @@ export class AuthService {
           vkn: input.vkn || undefined,
           sector: input.sector || undefined,
           email: input.email,
+          contact_id: newContact.id,
+          address_id: addressId,
           status: "pending_verification",
         })
         .returning();
-
-      // Create primary contact
-      await db.insert(contacts).values({
-        company_id: newCompany.id,
-        name: input.primary_contact_name,
-        title: input.primary_contact_title || undefined,
-        email: input.email,
-        phone: input.phone,
-      });
-
-      // Create billing address if provided
-      if (input.billing_address) {
-        await db.insert(addresses).values({
-          company_id: newCompany.id,
-          address: input.billing_address,
-          district: (input.billing_district || undefined) as
-            | typeof addresses.district._.data
-            | undefined,
-        });
-      }
 
       // Create default company settings
       await db.insert(companySettings).values({
@@ -182,17 +190,17 @@ export class AuthService {
       throw new NotFoundError("User");
     }
 
-    // Resolve company_id or bakery_id by role
+    // Resolve company_id or supplier_id by role
     let company_id: string | null = null;
-    let bakery_id: string | null = null;
+    let supplier_id: string | null = null;
 
-    if (user.role === "bakery_admin") {
-      const [bakery] = await db
-        .select({ id: bakeries.id })
-        .from(bakeries)
-        .where(eq(bakeries.user_id, user.id))
+    if (user.role === "supplier_admin") {
+      const [supplier] = await db
+        .select({ id: suppliers.id })
+        .from(suppliers)
+        .where(eq(suppliers.user_id, user.id))
         .limit(1);
-      bakery_id = bakery?.id ?? null;
+      supplier_id = supplier?.id ?? null;
     } else if (user.role !== "platform_admin") {
       const [company] = await db
         .select({ id: companies.id })
@@ -212,7 +220,7 @@ export class AuthService {
         full_name: user.full_name,
         role: user.role,
         company_id,
-        bakery_id,
+        supplier_id,
         onboarding_completed: user.onboarding_completed,
       },
     };
@@ -307,15 +315,15 @@ export class AuthService {
     }
 
     let company_id: string | null = null;
-    let bakery_id: string | null = null;
+    let supplier_id: string | null = null;
 
-    if (user.role === "bakery_admin") {
-      const [bakery] = await db
-        .select({ id: bakeries.id })
-        .from(bakeries)
-        .where(eq(bakeries.user_id, userId))
+    if (user.role === "supplier_admin") {
+      const [supplier] = await db
+        .select({ id: suppliers.id })
+        .from(suppliers)
+        .where(eq(suppliers.user_id, userId))
         .limit(1);
-      bakery_id = bakery?.id ?? null;
+      supplier_id = supplier?.id ?? null;
     } else if (user.role !== "platform_admin") {
       const [company] = await db
         .select({ id: companies.id })
@@ -330,7 +338,7 @@ export class AuthService {
       full_name: user.full_name,
       phone: user.phone,
       role: user.role,
-      bakery_id,
+      supplier_id,
       company_id,
       onboarding_completed: user.onboarding_completed,
       created_at: user.created_at,

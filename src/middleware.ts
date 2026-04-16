@@ -43,7 +43,7 @@ export async function middleware(request: NextRequest) {
   if (authPaths.includes(pathname) && user) {
     const role = user.user_metadata?.role as string | undefined;
     if (role === 'platform_admin') return NextResponse.redirect(new URL('/admin', request.url));
-    if (role === 'bakery_admin') return NextResponse.redirect(new URL('/bakery', request.url));
+    if (role === 'supplier_admin') return NextResponse.redirect(new URL('/supplier', request.url));
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
@@ -61,7 +61,7 @@ export async function middleware(request: NextRequest) {
   if (pathname.startsWith('/admin') && role !== 'platform_admin') {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
-  if (pathname.startsWith('/bakery') && role !== 'bakery_admin') {
+  if (pathname.startsWith('/supplier') && role !== 'supplier_admin') {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 

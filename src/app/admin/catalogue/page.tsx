@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import type { CakeType } from "@/lib/shared";
+import type { ProductType } from "@/lib/shared";
 
 // TODO: wire to server actions
 
@@ -25,10 +25,10 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export default function CataloguePage() {
-  const [cakeTypes] = useState<CakeType[]>([]);
+  const [productTypes] = useState<ProductType[]>([]);
   const [formOpen, setFormOpen] = useState(false);
-  const [editTarget, setEditTarget] = useState<CakeType | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<CakeType | null>(null);
+  const [editTarget, setEditTarget] = useState<ProductType | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<ProductType | null>(null);
 
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -40,7 +40,7 @@ export default function CataloguePage() {
     setFormOpen(true);
   };
 
-  const openEdit = (cake: CakeType) => {
+  const openEdit = (cake: ProductType) => {
     setEditTarget(cake);
     reset({ name: cake.name, slug: cake.slug, description: cake.description ?? "" });
     setFormOpen(true);
@@ -79,14 +79,14 @@ export default function CataloguePage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {cakeTypes.length === 0 ? (
+              {productTypes.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5} className="py-12 text-center text-muted-foreground text-sm">
                     Katalog boş. Yeni pasta türü ekleyin.
                   </TableCell>
                 </TableRow>
               ) : (
-                cakeTypes.map((cake) => (
+                productTypes.map((cake) => (
                   <TableRow key={cake.id} className="hover:bg-muted/20">
                     <TableCell>
                       <div className="flex items-center gap-2">

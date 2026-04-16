@@ -13,17 +13,17 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { formatDate, formatCurrency, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS, CAKE_SIZE_LABELS, DISTRICT_LABELS } from "@/lib/utils";
+import { formatDate, formatCurrency, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS, PRODUCT_SIZE_LABELS, DISTRICT_LABELS } from "@/lib/utils";
 import type { Order } from "@/lib/shared";
 
-interface BakeryOrderCardProps {
+interface SupplierOrderCardProps {
   order: Order;
   onAccept?: (id: string) => Promise<void>;
   onReject?: (id: string, reason: string) => Promise<void>;
   onDeliver?: (id: string) => Promise<void>;
 }
 
-export function BakeryOrderCard({ order, onAccept, onReject, onDeliver }: BakeryOrderCardProps) {
+export function SupplierOrderCard({ order, onAccept, onReject, onDeliver }: SupplierOrderCardProps) {
   const [rejectOpen, setRejectOpen] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -77,7 +77,7 @@ export function BakeryOrderCard({ order, onAccept, onReject, onDeliver }: Bakery
           </div>
           <div className="flex items-center gap-2">
             <Cake className="h-3.5 w-3.5 shrink-0" />
-            <span>{CAKE_SIZE_LABELS[order.cake_size] ?? order.cake_size} · {DISTRICT_LABELS[order.delivery_district] ?? order.delivery_district}</span>
+            <span>{PRODUCT_SIZE_LABELS[order.product_size] ?? order.product_size} · {DISTRICT_LABELS[order.delivery_district] ?? order.delivery_district}</span>
           </div>
         </div>
 

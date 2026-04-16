@@ -146,7 +146,7 @@ export class EmployeeService {
     // Soft delete: set status to inactive
     await db
       .update(employees)
-      .set({ status: 'inactive', deactivated_at: new Date(), updated_at: new Date() })
+      .set({ status: 'inactive', updated_at: new Date() })
       .where(eq(employees.id, employeeId));
 
     return { message: 'Calisan basariyla silindi.' };

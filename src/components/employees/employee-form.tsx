@@ -24,7 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { DISTRICT_LABELS, CAKE_SIZE_LABELS } from "@/lib/utils";
+import { DISTRICT_LABELS, PRODUCT_SIZE_LABELS } from "@/lib/utils";
 import type { Employee } from "@/lib/shared";
 
 const schema = z.object({
@@ -37,8 +37,8 @@ const schema = z.object({
   delivery_address: z.string().optional(),
   delivery_district: z.string().optional(),
   custom_message_override: z.string().optional(),
-  preferred_cake_size: z.string().optional(),
-  skip_cake: z.boolean().optional(),
+  preferred_product_size: z.string().optional(),
+  skip_product: z.boolean().optional(),
   office_location: z.string().optional(),
 });
 type FormData = z.infer<typeof schema>;
@@ -61,7 +61,7 @@ export function EmployeeForm({ open, onClose, onSubmit, employee }: EmployeeForm
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { skip_cake: false },
+    defaultValues: { skip_product: false },
   });
 
   useEffect(() => {
@@ -76,12 +76,12 @@ export function EmployeeForm({ open, onClose, onSubmit, employee }: EmployeeForm
         delivery_address: employee.delivery_address ?? "",
         delivery_district: employee.delivery_district ?? "",
         custom_message_override: employee.custom_message_override ?? "",
-        preferred_cake_size: employee.preferred_cake_size ?? "",
-        skip_cake: employee.skip_cake,
+        preferred_product_size: employee.preferred_product_size ?? "",
+        skip_product: employee.skip_product,
         office_location: employee.office_location ?? "",
       });
     } else {
-      reset({ skip_cake: false });
+      reset({ skip_product: false });
     }
   }, [employee, reset]);
 
@@ -96,8 +96,8 @@ export function EmployeeForm({ open, onClose, onSubmit, employee }: EmployeeForm
       delivery_address: data.delivery_address || undefined,
       delivery_district: (data.delivery_district as Employee["delivery_district"]) || undefined,
       custom_message_override: data.custom_message_override || undefined,
-      preferred_cake_size: (data.preferred_cake_size as Employee["preferred_cake_size"]) || undefined,
-      skip_cake: data.skip_cake ?? false,
+      preferred_product_size: (data.preferred_product_size as Employee["preferred_product_size"]) || undefined,
+      skip_product: data.skip_product ?? false,
       office_location: data.office_location || undefined,
     });
     onClose();
@@ -241,14 +241,14 @@ export function EmployeeForm({ open, onClose, onSubmit, employee }: EmployeeForm
             <div className="space-y-1.5">
               <Label className="text-sm font-medium text-foreground">Tercih Edilen Pasta Boyutu</Label>
               <Select
-                defaultValue={employee?.preferred_cake_size ?? ""}
-                onValueChange={(v) => setValue("preferred_cake_size", v)}
+                defaultValue={employee?.preferred_product_size ?? ""}
+                onValueChange={(v) => setValue("preferred_product_size", v)}
               >
                 <SelectTrigger className="rounded-xl border-border-soft">
                   <SelectValue placeholder="Boyut seçin" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
-                  {Object.entries(CAKE_SIZE_LABELS).map(([k, v]) => (
+                  {Object.entries(PRODUCT_SIZE_LABELS).map(([k, v]) => (
                     <SelectItem key={k} value={k}>{v}</SelectItem>
                   ))}
                 </SelectContent>
@@ -272,8 +272,8 @@ export function EmployeeForm({ open, onClose, onSubmit, employee }: EmployeeForm
                 <p className="text-xs text-muted mt-0.5">Bu çalışana pasta gönderilmez.</p>
               </div>
               <Switch
-                checked={watch("skip_cake") ?? false}
-                onCheckedChange={(v) => setValue("skip_cake", v)}
+                checked={watch("skip_product") ?? false}
+                onCheckedChange={(v) => setValue("skip_product", v)}
               />
             </div>
           </div>

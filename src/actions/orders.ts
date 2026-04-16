@@ -18,8 +18,8 @@ export async function createOrder(formData: FormData) {
     delivery_address: formData.get('delivery_address') as string,
     delivery_district: formData.get('delivery_district') as District,
     delivery_window: (formData.get('delivery_window') as 'morning' | 'afternoon' | 'no_preference') || undefined,
-    cake_type_id: formData.get('cake_type_id') as string,
-    cake_size: formData.get('cake_size') as 'small' | 'medium' | 'large',
+    product_type_id: formData.get('product_type_id') as string,
+    product_size: formData.get('product_size') as 'small' | 'medium' | 'large',
     custom_text: (formData.get('custom_text') as string) || undefined,
   };
 

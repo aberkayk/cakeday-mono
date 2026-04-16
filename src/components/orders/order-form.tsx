@@ -16,9 +16,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CakeSelector } from "./cake-selector";
+import { ProductSelector } from "./product-selector";
 import { DISTRICT_LABELS } from "@/lib/utils";
-import type { CakeType } from "@/lib/shared";
+import type { ProductType } from "@/lib/shared";
 
 const schema = z.object({
   recipient_name: z.string().min(1, "Alıcı adı gerekli."),
@@ -28,13 +28,13 @@ const schema = z.object({
   delivery_district: z.string().min(1, "İlçe seçin."),
   delivery_window: z.enum(["morning", "afternoon", "no_preference"]),
   custom_text: z.string().optional(),
-  cake_type_id: z.string().min(1, "Pasta türü seçin."),
-  cake_size: z.enum(["small", "medium", "large"]),
+  product_type_id: z.string().min(1, "Pasta türü seçin."),
+  product_size: z.enum(["small", "medium", "large"]),
 });
 type FormData = z.infer<typeof schema>;
 
 interface OrderFormProps {
-  cakeTypes: CakeType[];
+  productTypes: ProductType[];
   onSubmit: (data: Partial<FormData>) => Promise<void>;
 }
 
@@ -52,8 +52,8 @@ function SectionCard({ icon: Icon, title, children }: { icon: React.ElementType;
   );
 }
 
-export function OrderForm({ cakeTypes, onSubmit }: OrderFormProps) {
-  const [selectedTypeId, setSelectedTypeId] = useState<string | null>(cakeTypes[0]?.id ?? null);
+export function OrderForm({ productTypes, onSubmit }: OrderFormProps) {
+  const [selectedTypeId, setSelectedTypeId] = useState<string | null>(productTypes[0]?.id ?? null);
   const [selectedSize, setSelectedSize] = useState<string>("medium");
 
   const {
@@ -65,26 +65,26 @@ export function OrderForm({ cakeTypes, onSubmit }: OrderFormProps) {
     resolver: zodResolver(schema),
     defaultValues: {
       delivery_window: "no_preference",
-      cake_size: "medium",
-      cake_type_id: cakeTypes[0]?.id ?? "",
+      product_size: "medium",
+      product_type_id: productTypes[0]?.id ?? "",
     },
   });
 
   const handleTypeChange = (id: string) => {
     setSelectedTypeId(id);
-    setValue("cake_type_id", id);
+    setValue("product_type_id", id);
   };
 
   const handleSizeChange = (size: string) => {
     setSelectedSize(size);
-    setValue("cake_size", size as FormData["cake_size"]);
+    setValue("product_size", size as FormData["product_size"]);
   };
 
   const handleFormSubmit = async (data: FormData) => {
     await onSubmit({
       ...data,
-      cake_type_id: selectedTypeId ?? undefined,
-      cake_size: selectedSize as FormData["cake_size"],
+      product_type_id: selectedTypeId ?? undefined,
+      product_size: selectedSize as FormData["product_size"],
     });
   };
 
@@ -174,14 +174,14 @@ export function OrderForm({ cakeTypes, onSubmit }: OrderFormProps) {
 
       {/* Cake Selection */}
       <SectionCard icon={Cake} title="Pasta Seçimi">
-        <CakeSelector
-          cakeTypes={cakeTypes}
+        <ProductSelector
+          productTypes={productTypes}
           selectedTypeId={selectedTypeId}
           selectedSize={selectedSize}
           onTypeChange={handleTypeChange}
           onSizeChange={handleSizeChange}
         />
-        {errors.cake_type_id && <p className="text-xs text-red-500">{errors.cake_type_id.message}</p>}
+        {errors.product_type_id && <p className="text-xs text-red-500">{errors.product_type_id.message}</p>}
       </SectionCard>
 
       {/* Custom Message */}

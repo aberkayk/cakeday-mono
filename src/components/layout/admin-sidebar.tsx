@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { href: "/admin", label: "Genel Bakış", icon: LayoutDashboard },
   { href: "/admin/companies", label: "Şirketler", icon: Building2 },
-  { href: "/admin/bakeries", label: "Pastaneler", icon: Store },
+  { href: "/admin/suppliers", label: "Tedarikçiler", icon: Store },
   { href: "/admin/orders", label: "Siparişler", icon: ShoppingBag },
   { href: "/admin/catalogue", label: "Pasta Kataloğu", icon: Cake },
   { href: "/admin/pricing-requests", label: "Fiyat Talepleri", icon: Tag },

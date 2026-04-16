@@ -3,7 +3,7 @@
 import { Calendar, MapPin, Cake, XCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { formatDate, formatCurrency, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS, CAKE_SIZE_LABELS, DISTRICT_LABELS } from "@/lib/utils";
+import { formatDate, formatCurrency, ORDER_STATUS_LABELS, ORDER_STATUS_COLORS, PRODUCT_SIZE_LABELS, DISTRICT_LABELS } from "@/lib/utils";
 import type { Order } from "@/lib/shared";
 
 interface OrderCardProps {
@@ -54,7 +54,7 @@ export function OrderCard({ order, onCancel }: OrderCardProps) {
           <div className="h-6 w-6 rounded-lg bg-background-secondary flex items-center justify-center shrink-0">
             <Cake className="h-3.5 w-3.5 text-muted" />
           </div>
-          <span className="font-medium">{CAKE_SIZE_LABELS[order.cake_size] ?? order.cake_size}</span>
+          <span className="font-medium">{PRODUCT_SIZE_LABELS[order.product_size] ?? order.product_size}</span>
         </div>
       </div>
 
